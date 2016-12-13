@@ -27,4 +27,7 @@ public class MSG_ROLE
 
     //本人主角创建完成
     public const int HERO_CREATED = 8;
+
+    //模型被销毁
+    public const int DESTROY_MODEL = 9;
 }

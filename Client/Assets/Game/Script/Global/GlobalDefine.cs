@@ -8,7 +8,7 @@ public enum enPart
     tran,
     ani,
     render,
-    rsm,
+    state,
     buff,
     hate,
     dead,
