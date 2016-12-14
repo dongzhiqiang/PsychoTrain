@@ -122,7 +122,7 @@ public class TranPart : RolePart
     {
         if (!RoleModel.IsShow)
             return;
-        if (RSM.IsNoCollider)
+        if (StatePart.IsNoCollider)
             return;
     }
 }

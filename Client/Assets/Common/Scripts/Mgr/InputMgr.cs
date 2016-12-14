@@ -1,8 +1,6 @@
 ﻿#region Header
 /**
  * 名称：监听一些全局的输入事件
- * 作者：CloudCage
- * 日期：2016.4.23
  * 描述：
  **/
 #endregion

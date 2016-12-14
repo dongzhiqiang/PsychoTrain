@@ -1,8 +1,6 @@
 ﻿#region Header
 /**
  * 名称：用于标记一个基类类被json序列化的时候是不是支持多态的特性
- * 作者：CloudCage
- * 日期：2015.9.16
  * 描述：
  **/
 #endregion

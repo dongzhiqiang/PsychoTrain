@@ -16,8 +16,24 @@ public abstract class RolePart
     public RoleModel RoleModel { get { return m_parent.RoleModel; } }
     public Transform transform { get { return m_parent.transform; } }
     public TranPart TranPart { get { return m_parent.TranPart; } }
+    public AniPart AniPart { get { return m_parent.AniPart; } }
+    public RenderPart RenderPart { get { return m_parent.RenderPart; } }
+    public StatePart StatePart { get { return m_parent.StatePart; } }
+
+    //数据层（属性，状态，仇恨）
+    public PropPart PropPart { get { return m_parent.PropPart; } }
+    public BuffPart BuffPart { get { return m_parent.BuffPart; } }
+    public HatePart HatePart { get { return m_parent.HatePart; } }
+
+    //战斗层(移动，战斗，死亡，状态)
+    public DeadPart DeadPart { get { return m_parent.DeadPart; } }
+    public MovePart MovePart { get { return m_parent.MovePart; } }
+    public CombatPart CombatPart { get { return m_parent.CombatPart; } }
+
+    //控制层
 
 
+    //上层逻辑
     #endregion
 
     #region Frame
