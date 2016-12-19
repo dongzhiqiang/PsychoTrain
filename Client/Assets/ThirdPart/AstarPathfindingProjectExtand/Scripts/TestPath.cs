@@ -2,8 +2,10 @@
 using System.Collections;
 using System.Collections.Generic;
 
-public class TestPath : MonoBehaviour {
-    public enum enType{
+public class TestPath : MonoBehaviour
+{
+    public enum enType
+    {
         touch,//点到哪里走到哪里
         multiOnce,//多点寻路，单次
         multiLoop,//多点寻路，多点寻路循环
@@ -11,7 +13,7 @@ public class TestPath : MonoBehaviour {
         twoPointAvoid,//面对面走，测试回避
         max
     }
-    
+
     public static string[] TypeNames = {
         "点到哪里走到哪里",
         "多点寻路，单次",
@@ -32,13 +34,14 @@ public class TestPath : MonoBehaviour {
     List<Vector3> m_pingPongPoss = new List<Vector3>();
     Vector3 m_avoid1;
     Vector3 m_avoid2;
-    int m_avoidCounter=0;
+    int m_avoidCounter = 0;
 
-	// Use this for initialization
-	void Start () {
+    // Use this for initialization
+    void Start()
+    {
         m_roles = Object.FindObjectsOfType<SimpleRole>();
-        m_ca= this.GetComponent<Camera>();
-        if(m_ca== null)
+        m_ca = this.GetComponent<Camera>();
+        if (m_ca == null)
             Debuger.LogError("找不到相机，这个脚本需要挂在相机上");
 
         if (m_multiLoopTrans == null || m_multiLoopTrans.Length <= 1)
@@ -46,7 +49,7 @@ public class TestPath : MonoBehaviour {
         else
         {
             foreach (var t in m_multiLoopTrans)
-                if(t!= null)
+                if (t != null)
                     m_loopPoss.Add(t.transform.position);
         }
 
@@ -67,10 +70,11 @@ public class TestPath : MonoBehaviour {
             m_avoid2 = m_avoidTran2.transform.position;
         }
 
-	}
-	
-	// Update is called once per frame
-	void Update () {
+    }
+
+    // Update is called once per frame
+    void Update()
+    {
 #if UNITY_STANDALONE_WIN ||UNITY_EDITOR
         //修改时间缩放
         if (Input.GetKeyDown(KeyCode.KeypadPlus))
@@ -86,9 +90,9 @@ public class TestPath : MonoBehaviour {
                 Time.timeScale /= 2f;
         }
 
-        
+
 #endif
-        if(!Input.GetMouseButtonUp(0) || m_ca == null )
+        if (!Input.GetMouseButtonUp(0) || m_ca == null)
             return;
 
         if (m_type == enType.touch)
@@ -124,17 +128,17 @@ public class TestPath : MonoBehaviour {
         }
         else if (m_type == enType.twoPointAvoid)
         {
-            if(m_roles.Length >=2)
+            if (m_roles.Length >= 2)
             {
                 ++m_avoidCounter;
 
-                m_roles[0].MovePos(m_avoidCounter%2==0?m_avoid1: m_avoid2);
+                m_roles[0].MovePos(m_avoidCounter % 2 == 0 ? m_avoid1 : m_avoid2);
                 m_roles[1].MovePos(m_avoidCounter % 2 == 0 ? m_avoid2 : m_avoid1);
 
             }
-        
+
         }
-	}
+    }
 
     void OnGUI()
     {
