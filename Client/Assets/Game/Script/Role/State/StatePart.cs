@@ -33,8 +33,9 @@ public enum enRoleState
     dead = 0x0020,  //死亡
     ani = 0x0040,   //动作序列
     fall = 0x0080,  //下落
-    round = 0x0100, //包围
-    pauseAni = 0x0200, //定身
+    switchWeapon = 0x0100, //换武器
+    round = 0x0200, //包围
+    pauseAni = 0x0400, //定身
 }
 
 public class StatePart : RolePart
@@ -73,6 +74,21 @@ public class StatePart : RolePart
 
     #region Properties
     public override enPart Type { get { return enPart.state; } }
+
+    public RoleState CurState { get { return m_curState; } }
+    public enRoleState CurStateType { get { return m_curState.Type; } }
+    public RoleStateEmpty StateEmpty { get { return m_stateEmpty; } }
+    public RoleStateBorn StateBorn { get { return m_stateBorn; } }
+    public RoleStateFree StateFree { get { return m_stateFree; } }
+    public RoleStateMove StateMove { get { return m_stateMove; } }
+    public RoleStateCombat StateCombat { get { return m_stateCombat; } }
+    public RoleStateBehit StateBehit { get { return m_stateBihit; } }
+    public RoleStateDead StateDead { get { return m_stateDead; } }
+    public RoleStateAni StateAni { get { return m_stateAni; } }
+    public RoleStateFall StateFall { get { return m_stateFall; } }
+    public RoleStateRound StateRound { get { return m_stateRound; } }
+    public RoleStateSwitchWeapon StateSwitchWeapon { get { return m_stateSwitchWeapon; } }
+    public RoleStatePauseAni StatePauseAni { get { return m_statePauseAni; } }
 
     #endregion
 
@@ -138,33 +154,305 @@ public class StatePart : RolePart
     }
     #endregion
 
-    
 
-    #region Frame    
-    //属于角色的部件在角色第一次创建的时候调用，属于模型的部件在模型第一次创建的时候调用
-    public override void OnCreate(RoleModel model)
+
+    #region Frame
+
+    static StatePart()
     {
+        s_stateTypes["空"] = enRoleState.empty;
+        s_stateTypes["出生"] = enRoleState.born;
+        s_stateTypes["空闲"] = enRoleState.free;
+        s_stateTypes["移动"] = enRoleState.move;
+        s_stateTypes["战斗"] = enRoleState.combat;
+        s_stateTypes["被击"] = enRoleState.beHit;
+        s_stateTypes["死亡"] = enRoleState.dead;
+        s_stateTypes["动作序列"] = enRoleState.ani;
+        s_stateTypes["下落"] = enRoleState.fall;
+        s_stateTypes["换武器"] = enRoleState.switchWeapon;
+        s_stateTypes["包围"] = enRoleState.round;
+        s_stateTypes["定身"] = enRoleState.pauseAni;
+    }
+
+    public static bool TryParse(string param, ref HashSet<enRoleState> sts, char spilt = '|')
+    {
+        sts.Clear();
+        if (string.IsNullOrEmpty(param))
+            return true;
+        string[] pp = param.Split(spilt);
+        for (int i = 0; i < pp.Length; ++i)
+        {
+            enRoleState st;
+            if (s_stateTypes.TryGetValue(pp[i], out st))
+                sts.Add(st);
+            else
+                return false;
+        }
+        return true;
+    }
+
+
+    public StatePart()
+    {
+        //创建状态机
+        m_states[enRoleState.empty] = m_stateEmpty = new RoleStateEmpty(this, enRoleState.empty);
+        m_states[enRoleState.born] = m_stateBorn = new RoleStateBorn(this, enRoleState.dead | enRoleState.beHit);
+        m_states[enRoleState.free] = m_stateFree = new RoleStateFree(this, enRoleState.dead | enRoleState.beHit | enRoleState.pauseAni);
+        m_states[enRoleState.move] = m_stateMove = new RoleStateMove(this, enRoleState.dead | enRoleState.beHit | enRoleState.pauseAni);
+        m_states[enRoleState.combat] = m_stateCombat = new RoleStateCombat(this, enRoleState.dead | enRoleState.beHit | enRoleState.pauseAni);
+        m_states[enRoleState.beHit] = m_stateBihit = new RoleStateBehit(this, enRoleState.dead | enRoleState.pauseAni);
+        m_states[enRoleState.dead] = m_stateDead = new RoleStateDead(this, enRoleState.empty);
+        m_states[enRoleState.ani] = m_stateAni = new RoleStateAni(this, enRoleState.dead | enRoleState.pauseAni);
+        m_states[enRoleState.fall] = m_stateFall = new RoleStateFall(this, enRoleState.combat | enRoleState.beHit | enRoleState.dead | enRoleState.pauseAni);
+        m_states[enRoleState.switchWeapon] = m_stateSwitchWeapon = new RoleStateSwitchWeapon(this, enRoleState.dead | enRoleState.pauseAni);
+        m_states[enRoleState.round] = m_stateRound = new RoleStateRound(this, enRoleState.dead | enRoleState.beHit | enRoleState.pauseAni);
+        m_states[enRoleState.pauseAni] = m_statePauseAni = new RoleStatePauseAni(this, enRoleState.dead);
+
+        foreach (RoleState s in m_states.Values)
+        {
+            m_statesByName[s.GetType().ToString()] = s;
+        }
+        m_curState = m_states[enRoleState.born];
+
     }
 
     //初始化，不保证模型已经创建，每次角色从对象池取出来都会调用(可以理解为Awake)
     public override bool OnInit()
     {
+        IsAir = false;
+        m_curState = m_states[enRoleState.born];
+
         return true;
     }
 
     //后置初始化，模型已经创建，每个模块都初始化过一次，每次角色从对象池取出来都会调用(可以理解为Start())
     public override void OnPostInit()
     {
+        m_limitMoveCounter = 0;
+        //手动进入出生状态，绕过GotoState
+        if (!IsModelEmpty)
+        {
+            m_curState = m_states[enRoleState.born];
+            m_curState.Enter(new RoleStateBornCxt(m_parent.RoleCxt.bornAniId));
+        }
+        //如果是空模型的话进入空状态
+        else
+        {
+            m_curState = m_states[enRoleState.empty];
+            m_curState.Enter(null);
+        }
     }
 
     //每帧更新
     public override void OnUpdate()
     {
+        m_curState.Update();
     }
 
 
     public override void OnDestroy()
     {
+        m_limitMoveCounter = 0;
+        m_silentCounter = 0;
+        m_curState.Leave();
+        foreach (RoleState s in m_states.Values)
+        {
+            s.OnDestroy();
+        }
+        m_curState = null;
     }
     #endregion
+
+
+    public bool GotoState(enRoleState type, object param = null, bool force = false, bool putIdTypeParam = false)
+    {
+        //如果准备要销毁或者死亡，就不要做切换了，会引起其他问题
+        if (RoleMgr.instance.IsNeedDestroy(m_parent) || (m_curState.Type == enRoleState.dead && RoleMgr.instance.IsNeedDead(m_parent)))
+            return false;
+
+        //如果在销毁中了就不要切换状态了
+        if (m_parent.IsDestroying)
+        {
+            Debuger.LogError("销毁中仍然要求切换角色状态:{0}", m_parent.Cfg.id);
+            return false;
+        }
+
+        if (TimeMgr.instance.IsPause && type != enRoleState.dead && m_curState.Type != enRoleState.born && type != enRoleState.free)
+        {
+            //if (m_curState.Type != enRoleState.born && m_curState.Type != enRoleState.dead)
+            //{
+            Debuger.LogError("逻辑暂停，却仍然要求切换状态,当前状态:{0},要切换的状态:{1}", m_curState.Type, type);
+            //}
+
+            return false;
+        }
+        if (m_curState.Type == enRoleState.dead)
+        {
+            Debuger.LogError("逻辑错误，暂时不支持死亡状态挑到别的状态:{0}", m_parent.Cfg.id);
+            return false;
+        }
+        if (m_isChanging)
+        {
+            Debuger.Log("Need DelayGoto " + type);
+            m_dalayGotoState = type;
+            m_dalayGotoParam = param;
+            m_delayForce = force;
+            return true;
+        }
+
+#if UNITY_EDITOR
+        //调试状态
+        string debugState = m_parent.RoleModel.m_debugState;//老状态|新状态，默认都可以填-1，那么就是全部调试，出生,空闲,移动,战斗,被击,死亡,动作序列,下落,换武器
+        enRoleState oldType = enRoleState.empty;
+        enRoleState newType = enRoleState.empty;
+        bool needDebug = !string.IsNullOrEmpty(debugState);
+
+        if (needDebug)
+        {
+            string[] ss = debugState.Split('|');
+            if (ss.Length <= 0 || !s_stateTypes.TryGetValue(ss[0], out oldType))
+                oldType = enRoleState.empty;
+
+            if (ss.Length <= 1 || !s_stateTypes.TryGetValue(ss[1], out newType))
+                newType = enRoleState.empty;
+
+            needDebug = (oldType == enRoleState.empty || oldType == m_curState.Type) && (newType == enRoleState.empty || newType == type);
+            if (needDebug)
+            {
+                RoleState state;
+                m_states.TryGetValue(type, out state);
+                bool ret = m_curState.Type == type || !(!force && !m_curState.IsForceLeave(state) && !m_curState.CanLeave(state));
+                Debuger.Log("{0}_{1}从{2}要进入{3} 强制:{4} 结果:{5}", m_parent.Cfg.id, m_parent.Id, m_curState.Type, type, force, ret);
+            }
+
+
+        }
+
+#endif 
+
+        m_isChanging = true;
+        try
+        {
+            RoleState state = m_states[type];
+
+            //如果新老状态一样，那么传递下参数就行了,否则切换状态
+            if (state.Type == m_curState.Type)
+            {
+                state.Do(param);
+                return true;
+            }
+
+
+
+            //检查能不能切换
+            if (!force && !m_curState.IsForceLeave(state) && (!m_curState.CanLeave(state) || !state.CanEnter()))
+            {
+
+                //如果传进来的参数是需要回收的，在这里回收下，因为对应的状态无法回收
+                if (putIdTypeParam)
+                    ((IdType)param).Put();
+                return false;
+            }
+
+
+
+            m_curState.Leave();
+            m_curState = state;
+            m_curState.Enter(param);
+        }
+        finally
+        {
+            m_isChanging = false;
+        }
+
+        //切换状态多次的延时处理
+        if (m_dalayGotoState != enRoleState.empty)
+        {
+            enRoleState s = m_dalayGotoState;
+            object p = m_dalayGotoParam;
+            bool f = m_delayForce;
+            m_dalayGotoState = enRoleState.empty;
+            m_dalayGotoParam = null;
+            m_delayForce = false;
+            GotoState(s, p, f);
+        }
+        return true;
+    }
+
+    public T GetState<T>() where T : RoleState
+    {
+        return m_statesByName.Get(typeof(T).ToString()) as T;
+    }
+
+    public RoleState GetState(enRoleState type)
+    {
+        return m_states.Get(type);
+    }
+
+    public bool CheckFall()
+    {
+        if (!IsAir)
+            return false;
+        if (IsAnis && m_stateAni.IsAvoidState(enRoleState.fall))
+            return m_stateAni.Goto(null);
+        else
+            return GotoState(enRoleState.fall);
+    }
+
+    //用于非持久状态退出时判断要不要切换到移动
+    public bool CheckMove()
+    {
+        if (!m_stateMove.NeedMove)
+            return false;
+        if (IsAnis && m_stateAni.IsAvoidState(enRoleState.move))
+            return m_stateAni.Goto(null);
+        else
+            return GotoState(enRoleState.move);
+
+    }
+
+    public bool CheckDead(bool check = true)
+    {
+        return DeadPart.CheckAndHandle(check);
+    }
+
+    public bool CheckFree(bool force = false)
+    {
+        if (IsAnis)
+            return m_stateAni.IsCur ? true : m_stateAni.Goto(null, force);
+        else
+            return m_stateFree.IsCur ? true : GotoState(enRoleState.free, null, force);
+    }
+
+    public void AddLimitMove()
+    {
+        ++m_limitMoveCounter;
+    }
+
+    public void SubLimitMove()
+    {
+
+        --m_limitMoveCounter;
+        if (m_limitMoveCounter < 0)
+        {
+            Debuger.LogError("不可位移计数出错:{0}", m_parent.Cfg.id);
+        }
+
+    }
+
+    public void AddSilent()
+    {
+        ++m_silentCounter;
+    }
+
+    public void SubSilent()
+    {
+
+        --m_silentCounter;
+        if (m_silentCounter < 0)
+        {
+            Debuger.LogError("沉默状态计数出错:{0}", m_parent.Cfg.id);
+        }
+
+    }
 }

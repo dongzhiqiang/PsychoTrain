@@ -39,6 +39,7 @@ public class Role : IdType
     EventNotifier m_notifier = null;
     //不希望广播id
     bool m_ingoreFire = false;
+    //出生参数
     RoleCxt m_roleCxt;
     int m_parentId = -1;
     Role m_parent;
@@ -109,6 +110,7 @@ public class Role : IdType
 
 
     //上层逻辑
+    public RoleCxt RoleCxt { get { return m_roleCxt; } }
 
 
     #endregion

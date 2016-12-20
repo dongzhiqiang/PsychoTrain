@@ -30,4 +30,33 @@ public class MSG_ROLE
 
     //模型被销毁
     public const int DESTROY_MODEL = 9;
+
+    //属性变化
+    public const int FRESH_BASE_PROP = 10;
+
+    //标记有变化
+    public const int FLAG_CHANGE = 11;
+
+    //切换武器
+    public const int WEAPON_CHANGE = 12;
+
+    //武器显示状态改变，比如换武器或者技能需要隐藏武器
+    public const int WEAPON_RENDER_CHANGE = 13;
+
+    //杀死了一个敌人
+    public const int KILL = 14;
+
+
+
+
+
+
+
+
+
+    //属性变化，当要监听某个属性改变的时候应该监听Prop_CHANGE+该属性的索引
+    public const int PROP_CHANGE = 1000;
+
+    //活动属性变化，当要监听某个属性改变的时候应该监听ACT_PROP_CHANGE+该属性的索引
+    public const int ACT_PROP_CHANGE = 2000;
 }

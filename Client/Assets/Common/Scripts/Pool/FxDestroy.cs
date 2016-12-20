@@ -18,7 +18,7 @@ public class FxDestroy : MonoBehaviour
         if (UnityEditor.Selection.activeGameObject != null)
         {
             FxDestroy fx = UnityEditor.Selection.activeGameObject.AddComponentIfNoExist<FxDestroy>();
-            fx.m_delay=1;
+            fx.m_delay = 1;
             EditorUtil.SetDirty(fx);
         }
     }
@@ -28,20 +28,25 @@ public class FxDestroy : MonoBehaviour
     #region Fields
     public const float Destroy_Change_Scene = -2;
 
-    public float m_delay =-1f;
+    public float m_delay = -1f;
 
     float m_beginTime;
-    float m_runTimeDelay=-1;
+    float m_runTimeDelay = -1;
     float m_runTimeBeginTime = -1;
     bool m_do = false;
     #endregion
 
 
     #region Properties
-    float RunTimeDelay { get{return m_runTimeDelay;}set{
-        m_runTimeDelay = value;
-        m_runTimeBeginTime = Util.time;
-    }}
+    float RunTimeDelay
+    {
+        get { return m_runTimeDelay; }
+        set
+        {
+            m_runTimeDelay = value;
+            m_runTimeBeginTime = Util.time;
+        }
+    }
     #endregion
 
     #region Static Methods
@@ -50,21 +55,21 @@ public class FxDestroy : MonoBehaviour
     {
         FxDestroy fd = go.GetComponent<FxDestroy>();
         if (fd == null) return false;
-        return fd.m_delay !=-1 || fd.RunTimeDelay!=-1;
+        return fd.m_delay != -1 || fd.RunTimeDelay != -1;
     }
     public static float GetRunTimeDelayIfExist(GameObject go)
     {
         FxDestroy fd = go.GetComponent<FxDestroy>();
-        if(fd == null)return -1;
+        if (fd == null) return -1;
         return fd.RunTimeDelay;
     }
-    public static void Add(GameObject go,float delay)
+    public static void Add(GameObject go, float delay)
     {
-        FxDestroy fd= go.AddComponentIfNoExist<FxDestroy>();
-        if (!fd.gameObject.activeSelf)return;
+        FxDestroy fd = go.AddComponentIfNoExist<FxDestroy>();
+        if (!fd.gameObject.activeSelf) return;
         fd.RunTimeDelay = delay;
     }
-    public static void DoDestroy(GameObject go,bool checkIngore =true)
+    public static void DoDestroy(GameObject go, bool checkIngore = true)
     {
         if (!Application.isPlaying)
         {
@@ -87,13 +92,13 @@ public class FxDestroy : MonoBehaviour
         }
 
         //GameObjectPoolObject提供了无视这次销毁操作的接口，用于某些特殊的特效做延迟销毁
-        if (checkIngore&&poolObject.m_onIngoreDestroy != null && poolObject.m_onIngoreDestroy())
+        if (checkIngore && poolObject.m_onIngoreDestroy != null && poolObject.m_onIngoreDestroy())
         {
             return;
         }
 
 #if !ART_DEBUG
-        if(Main.instance!=null)
+        if (Main.instance != null)
             GameObjectPool.GetPool(GameObjectPool.enPool.Fx).Put(go);
         else
             go.SetActive(false);
@@ -114,7 +119,7 @@ public class FxDestroy : MonoBehaviour
         List<FxDestroy> l = new List<FxDestroy>(s_runings);
         foreach (var d in l)
         {
-            if (d.m_do || (d.m_delay == -1 && d.m_runTimeDelay == -1) )
+            if (d.m_do || (d.m_delay == -1 && d.m_runTimeDelay == -1))
                 continue;
 
             DoDestroy(d.gameObject, false);
@@ -127,7 +132,7 @@ public class FxDestroy : MonoBehaviour
     #region Mono Frame
     void Start()
     {
-        
+
     }
 
     void OnEnable()
@@ -150,24 +155,24 @@ public class FxDestroy : MonoBehaviour
     {
         if (m_do)
             return;
-        if ((m_delay>=0 &&Util.time - m_beginTime >= m_delay)||
+        if ((m_delay >= 0 && Util.time - m_beginTime >= m_delay) ||
             (m_runTimeDelay >= 0 && Util.time - m_runTimeBeginTime >= m_runTimeDelay))
         {
             DoDestroy(this.gameObject);
             m_do = true;
         }
-            
+
     }
-    
+
 
     #endregion
 
 
     #region Private Methods
-        
-    #endregion
-    
 
-    
+    #endregion
+
+
+
 
 }

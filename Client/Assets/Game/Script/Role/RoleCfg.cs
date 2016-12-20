@@ -28,9 +28,16 @@ public class RoleCfg
 
     public enRoleType roleType = enRoleType.monster;
 
+    public List<string> flags = new List<string>();//标记
+    public string deadFx = "";//死亡特效，播放了死亡特效就不会播放死亡动作
+    public string skillFile;//技能文件
+
     public string icon; //头像图标
 
     public float power; //战斗力初始值
+
+    enRolePropType _rolePropType;
+    enGameLayer _colliderLayer;
 
     public static string[] PropTypeName = new string[] { "角色属性", "怪物属性" };
 
@@ -42,6 +49,9 @@ public class RoleCfg
     static HashSet<string> s_preLoads = new HashSet<string>();
     static PropertyTable tem = new PropertyTable();
     static PropertyTable empty = new PropertyTable();
+
+    public enRolePropType RolePropType { get { return _rolePropType; } }
+    public enGameLayer ColliderLayer { get { return _colliderLayer; } }
 
     public static string[] RoleIds
     {
