@@ -23,13 +23,13 @@ namespace Simple.BehaviorTree
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-            using(new AutoBeginHorizontal())
+            using (new AutoBeginHorizontal())
             {
                 createCfg.name = EditorGUILayout.TextField("特效", createCfg.name);
                 if (GUILayout.Button("打开"))
                 {
                     Transform source = null;
-                    if(Application.isPlaying && n!=null)
+                    if (Application.isPlaying && n != null)
                     {
                         Role owner = n.GetOwner<Role>();
                         if (owner != null && owner.State == Role.enState.alive)
@@ -50,12 +50,13 @@ namespace Simple.BehaviorTree
                     EventMgr.FireAll(MSG.MSG_FRAME, MSG_FRAME.FLYER_EDITOR, flyerCfg, onSel);
                 }
             }
-             
-                
+
+
 
         }
 #endif
-        public override void OnPreLoad() {
+        public override void OnPreLoad()
+        {
             //预加载
             createCfg.PreLoad();
             if (!string.IsNullOrEmpty(flyer))
@@ -68,22 +69,23 @@ namespace Simple.BehaviorTree
     public class PlayFlyer : Aciton
     {
         PlayFlyerCfg CfgEx { get { return (PlayFlyerCfg)m_cfg; } }
-        
-        
+
+
         //入栈。行为树遍历过程中，遍历到一个节点就会入栈它。可以用做是当前次遍历的OnInit
         protected override void OnPush()
         {
-            
+
         }
 
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             Role owner = GetOwner<Role>();
             if (owner == null || owner.State != Role.enState.alive)
                 return enNodeState.failure;
 
-            CfgEx.createCfg.Create(owner, null, owner.transform.position,enElement.none,
+            CfgEx.createCfg.Create(owner, null, owner.transform.position,
                 OnLoad, new object[] { owner, null, null });
 
             return enNodeState.success;
@@ -92,7 +94,7 @@ namespace Simple.BehaviorTree
         //出栈。自己执行完了以及自己的子树执行完成后出栈
         protected override void OnPop()
         {
-            
+
         }
 
         void OnLoad(GameObject go, object param)

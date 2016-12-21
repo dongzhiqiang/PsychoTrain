@@ -21,14 +21,14 @@ public class SceneMgr : Singleton<SceneMgr>
 
 
     public SceneState mCurState = SceneState.Loading;
-    
+
     public Dictionary<string, RefreshBase> refreshNpcDict = new Dictionary<string, RefreshBase>();
-    
+
     public Dictionary<string, GameObject> mDangbanDict = new Dictionary<string, GameObject>();
 
     Dictionary<string, Dictionary<string, RefreshBase>> refreshSaveData = new Dictionary<string, Dictionary<string, RefreshBase>>();
 
-    
+
     bool m_dirShow = false;
     bool m_arrowShow = false;
     bool m_isRefreshNpc = true;
@@ -69,15 +69,15 @@ public class SceneMgr : Singleton<SceneMgr>
             return;
 
         hero.PreLoad();
-        
+
 
         //预加载关卡中配置的出生死亡特效
         if (SceneData != null)
         {
-            foreach(SceneCfg.BornInfo born in SceneData.mBornList)
+            foreach (SceneCfg.BornInfo born in SceneData.mBornList)
                 BornCfg.PreLoad(born.mBornTypeId, born.mDeadTypeId, born.mGroundDeadTypeId);
         }
-        
+
         return;
     }
 
@@ -101,7 +101,7 @@ public class SceneMgr : Singleton<SceneMgr>
 
         if (refreshSaveData.TryGetValue(sceneFile, out refreshNpcDict))
         {
-            foreach(RefreshBase re in refreshNpcDict.Values)
+            foreach (RefreshBase re in refreshNpcDict.Values)
             {
                 re.UnPause();
                 re.OnLoadSave();
@@ -171,7 +171,7 @@ public class SceneMgr : Singleton<SceneMgr>
             LoadRefresh();
             //加载事件
             SceneEventMgr.instance.LoadEvent(CurSceneIdx);
-            
+
             LoadingProgress = 30;
             yield return Main.instance.StartCoroutine(LevelMgr.instance.CurLevel.OnLoad());
 
@@ -205,7 +205,7 @@ public class SceneMgr : Singleton<SceneMgr>
 
         //创建全局敌人
         //RoleMgr.instance.CreateGlobalEnemy(LevelMgr.instance.CurLevel.OnCreateGlobalEnemy());
-        
+
         //初始化场景相机镜头组
         if (CameraTriggerMgr.instance != null)
         {
@@ -223,7 +223,7 @@ public class SceneMgr : Singleton<SceneMgr>
 
             CameraTriggerMgr.instance.CurGroup = caTriggerGroup;
         }
-        
+
         mCurState = SceneState.LoadEnd;
 
     }
@@ -259,16 +259,16 @@ public class SceneMgr : Singleton<SceneMgr>
 
         string log = "";
         TimeCheck check = new TimeCheck();
-        
+
 
         TimeMgr.instance.AddPause();
-        
+
         //处理界面显示
         UIMgr.instance.CloseAll();
         UILoading uiLoding = UIMgr.instance.Open<UILoading>();
         uiLoding.tipsIdList = cfg.GetLoadingTipsId();
         uiLoding.SetBgImg(cfg.loadingBg);
-        uiLoding.SetProgress(0,10);
+        uiLoding.SetProgress(0, 10);
         yield return 0;
 
         //场景逻辑销毁
@@ -279,7 +279,7 @@ public class SceneMgr : Singleton<SceneMgr>
         // 角色销毁
         CombatMgr.instance.ClearFlyers();
         CombatMgr.instance.ClearEventGroup();
-        RoleMgr.instance.DestroyAllRole(false,false);
+        RoleMgr.instance.DestroyAllRole(false, false);
         yield return 3;
         RoleMgr.instance.ShowAllRole(false);//将没有销毁的角色隐藏
         yield return 3;
@@ -292,9 +292,9 @@ public class SceneMgr : Singleton<SceneMgr>
         yield return 3;//等待多几帧，因为对象池有可能要隔多帧才能完全回收对象
 
         //有过场预置体需要释放
-       // TimeCheck checkStep1 = new TimeCheck();
+        // TimeCheck checkStep1 = new TimeCheck();
         Resources.UnloadUnusedAssets();
-       // log += string.Format("UnloadUnusedAssets耗时:{0}秒\n", checkStep1.delay);
+        // log += string.Format("UnloadUnusedAssets耗时:{0}秒\n", checkStep1.delay);
         yield return 0;
 
         //TimeCheck checkStep2 = new TimeCheck();
@@ -306,7 +306,7 @@ public class SceneMgr : Singleton<SceneMgr>
         // 场景切换
         //TimeCheck checkStep3 = new TimeCheck();
         AsyncOperation op = SceneManager.LoadSceneAsync(cfg.sceneId[CurSceneIdx]);
-        if(op == null)
+        if (op == null)
         {
             Debuger.LogError("场景未成功加载，请点击菜单里Tool->打包->设置需要加载的场景");
         }
@@ -315,8 +315,8 @@ public class SceneMgr : Singleton<SceneMgr>
             uiLoding.m_progress = 10f + 60f * op.progress;
             yield return 0;
         }
-            
-       // log += string.Format("加载场景耗时:{0}秒\n", checkStep3.delay);
+
+        // log += string.Format("加载场景耗时:{0}秒\n", checkStep3.delay);
         BehaviorTreeMgr.instance.Unlock();//解除检错，防止有逻辑在切换关卡的过程中
         BehaviorTreeMgr.instance.PlayAll();
         yield return 0;
@@ -326,7 +326,7 @@ public class SceneMgr : Singleton<SceneMgr>
         Main.instance.StartCoroutine(CoLoad(cfg, CurSceneIdx));
         while (LoadingProgress < 100)
         {
-            uiLoding.m_progress = 60f+ 40f * (LoadingProgress/100);
+            uiLoding.m_progress = 60f + 40f * (LoadingProgress / 100);
             yield return 0;
         }
 
@@ -346,9 +346,9 @@ public class SceneMgr : Singleton<SceneMgr>
 
         log = string.Format("关卡内切换场景耗时:{0}秒", check.delay);//+log
         Debuger.Log(log);
-        
+
         uiLoding.Close();
-        
+
     }
 
     public SceneCfg.BornInfo GetNewBornInfo()
@@ -414,7 +414,7 @@ public class SceneMgr : Singleton<SceneMgr>
                 //go.transform.localScale = Vector3.one;
                 go.transform.rotation = Quaternion.Euler(areaCfg.dir);
                 LayerMgr.instance.SetLayer(go, enGameLayer.obstructCollider);
-                
+
 
                 BoxCollider collider = go.GetComponent<BoxCollider>();
                 if (collider == null)
@@ -467,14 +467,14 @@ public class SceneMgr : Singleton<SceneMgr>
             Vector3 heroPos = hero.transform.position;
             RoleMgr.instance.GetCloseTargets(hero, enSkillEventTargetType.enemy, ref m_autoFaceTem);
             int count = m_autoFaceTem.Count;
-          
+
             if (count >= 1)
             {
                 float dis = m_cameraRoundDis * m_cameraRoundDis;
                 float dx = heroPos.x;
                 float dz = heroPos.z;
                 int num = 1;
-                for (int i =0; i < count; i++)
+                for (int i = 0; i < count; i++)
                 {
                     if (SceneMgr.SceneDebug)
                     {
@@ -517,7 +517,7 @@ public class SceneMgr : Singleton<SceneMgr>
     {
         m_dirShow = false;
     }
-    
+
     public void SetFightCamera(float disRate, float roundDis)
     {
         m_cameraDisRate = disRate;
@@ -534,7 +534,7 @@ public class SceneMgr : Singleton<SceneMgr>
 
         mDangbanDict.Clear();
 
-        foreach(Dictionary<string, RefreshBase> reDic in refreshSaveData.Values)
+        foreach (Dictionary<string, RefreshBase> reDic in refreshSaveData.Values)
             reDic.Clear();
 
         refreshSaveData.Clear();
@@ -543,7 +543,7 @@ public class SceneMgr : Singleton<SceneMgr>
 
         PrevSceneIdx = 0;
         CurSceneIdx = 0;
-        
+
         m_arrowShow = false;
         m_dirShow = false;
         IsRefreshNpc = true;
@@ -589,5 +589,5 @@ public class SceneMgr : Singleton<SceneMgr>
             GameObject.Destroy(roomGo);
         }
     }
-    
+
 }

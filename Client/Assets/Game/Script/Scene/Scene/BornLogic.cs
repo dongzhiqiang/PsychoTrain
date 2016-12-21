@@ -110,7 +110,7 @@ public class BornLogic
                 return;
 
             m_runTime = TimeMgr.instance.realTime - m_beginTime;
-            
+
             //非自己暂停的 直接退出出生状态
             if (m_statePause != PlayState.Play && TimeMgr.instance.IsPause)
             {
@@ -276,7 +276,7 @@ public class BornLogic
         {
             m_statePlayFx = PlayState.Play;
             if (!string.IsNullOrEmpty(m_bornCfg.fx.name))
-                m_fxOb = m_bornCfg.fx.Create(m_role, null, Vector3.zero,enElement.none);
+                m_fxOb = m_bornCfg.fx.Create(m_role, null, Vector3.zero, enElement.none);
             else
                 m_fxOb = null;
         }
@@ -321,15 +321,15 @@ public class BornLogic
             {
                 float horizonAngle = m_bornCfg.cameraHorizontalAngle == -1 ? 180 : 180 + m_bornCfg.cameraHorizontalAngle;
                 m_cameraHandle = CameraMgr.instance.Still(
-                    m_role.transform.position, 
-                    m_role.transform.forward, 
-                    m_bornCfg.cameraOffset, 
-                    m_bornCfg.cameraMoveTime, 
-                    m_bornCfg.cameraStayTime, 
+                    m_role.transform.position,
+                    m_role.transform.forward,
+                    m_bornCfg.cameraOffset,
+                    m_bornCfg.cameraMoveTime,
+                    m_bornCfg.cameraStayTime,
                     m_bornCfg.cameraFOV,
-                    horizonAngle, 
-                    m_bornCfg.cameraVerticalAngle, 
-                    -1, 
+                    horizonAngle,
+                    m_bornCfg.cameraVerticalAngle,
+                    -1,
                     m_bornCfg.cameraOverDuration);
                 //m_cameraHandle = CameraMgr.instance.Still(m_role.transform, m_bornCfg.cameraMoveTime, m_bornCfg.cameraStayTime, m_bornCfg.cameraFOV, m_bornCfg.cameraOverDuration);
             }

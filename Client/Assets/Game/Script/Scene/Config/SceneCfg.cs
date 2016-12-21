@@ -19,7 +19,7 @@ public class EDITORWIDTH
 public class SceneCfg
 {
 
-    public static string[] RefreshTypeName = new string[] { "同时刷出", "随机几个"};
+    public static string[] RefreshTypeName = new string[] { "同时刷出", "随机几个" };
 
 
     public static string[] CampName = new string[] { "主角", "敌方", "阵营1", "阵营2", "阵营3", "阵营4", "阵营5", "阵营6", "中立" };
@@ -45,7 +45,7 @@ public class SceneCfg
         RandomNum,  //随机个数刷出
     }
 
-    public static string[] DangbanName = new string[] { "fx_dangban_huo", "DangBan_Effect", "DangBanEffect_muzhalan", "DangBanEffect_pumingku", "DangBanEffect_diyu" , "DangBanEffect_Huang" };
+    public static string[] DangbanName = new string[] { "fx_dangban_huo", "DangBan_Effect", "DangBanEffect_muzhalan", "DangBanEffect_pumingku", "DangBanEffect_diyu", "DangBanEffect_Huang" };
     public enum DangbanType : int
     {
         None = -1,
@@ -72,7 +72,7 @@ public class SceneCfg
 
     public enum EventType : int
     {
-       
+
         //关卡事件
         StartLevel,     //开始关卡
         EnterTime,      //进入场景时长
@@ -208,8 +208,8 @@ public class SceneCfg
             boxBuffId = cfg.boxBuffId;
             hate.CopyFrom(cfg.hate);
 
-        pathfindingList.Clear();
-            for (int i = 0; i < cfg.pathfindingList.Count; i++ )
+            pathfindingList.Clear();
+            for (int i = 0; i < cfg.pathfindingList.Count; i++)
             {
                 pathfindingList.Add(new Vector3(cfg.pathfindingList[i].x, cfg.pathfindingList[i].y, cfg.pathfindingList[i].z));
             }
@@ -320,7 +320,7 @@ public class SceneCfg
         public Vector3 size = Vector3.one;
         public AreaType areaType;
         public SceneCfg.DangbanType dangbanType = SceneCfg.DangbanType.None;
-        public void Init(string areaFlag, Vector3 pos, Vector3 dir, Vector3 size, SceneCfg.DangbanType dangbanType, AreaType areaType = AreaType.Normal, bool bActivate=true)
+        public void Init(string areaFlag, Vector3 pos, Vector3 dir, Vector3 size, SceneCfg.DangbanType dangbanType, AreaType areaType = AreaType.Normal, bool bActivate = true)
         {
             this.areaFlag = areaFlag;
             this.pos = pos;
@@ -331,7 +331,7 @@ public class SceneCfg
             this.bActivate = bActivate;
         }
     }
-    
+
     public class CheckCfg
     {
         public TriggerType triggerType = TriggerType.AllReach;
@@ -368,18 +368,19 @@ public class SceneCfg
         public List<CameraItem> cameraList = new List<CameraItem>();
     }
 
-    public class PossCfg {
+    public class PossCfg
+    {
         public string name = "";
         public List<Vector3> ps = new List<Vector3>();
-        
+
         public int GetClosestPosIdx(Vector3 pos)
         {
             int find = -1;
             float min = float.MaxValue;
-            for (int i=0;i< ps.Count;++i)
+            for (int i = 0; i < ps.Count; ++i)
             {
                 float sq = Util.XZSqrMagnitude(pos, ps[i]);
-                if(find == -1|| sq< min)
+                if (find == -1 || sq < min)
                 {
                     find = i;
                     min = sq;
@@ -440,7 +441,7 @@ public class SceneCfg
             {
                 path = fileName;
             }
-            
+
             Util.SaveJsonFile(path, this);
         }
 
@@ -449,7 +450,7 @@ public class SceneCfg
 
         }
 
-        public void GetBornPosAndEuler(SceneCfg.BornInfo bornInfo,out Vector3 pos,out Vector3 euler)
+        public void GetBornPosAndEuler(SceneCfg.BornInfo bornInfo, out Vector3 pos, out Vector3 euler)
         {
             pos = Vector3.zero;
             euler = Vector3.zero;
@@ -475,12 +476,12 @@ public class SceneCfg
             }
 
             pos = caTriggerGroup.m_bornPos;
-            
+
         }
 
         public PossCfg GetPossCfgByNames(string n)
         {
-            if(possIdx == null)
+            if (possIdx == null)
             {
                 possIdx = new Dictionary<string, PossCfg>();
                 foreach (var p in mPoss)

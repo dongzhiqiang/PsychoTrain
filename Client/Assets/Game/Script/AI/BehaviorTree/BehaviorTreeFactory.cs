@@ -18,9 +18,9 @@ namespace Simple.BehaviorTree
         public string icon;
         public string desc;
         public bool checkShort;//检不检查短路，一般是持续性的行为需要检查
-        
 
-        public NodeType(string name, bool checkShort, Type cfgType, Func<Node> createFun, string icon, string menuPath,string desc)
+
+        public NodeType(string name, bool checkShort, Type cfgType, Func<Node> createFun, string icon, string menuPath, string desc)
         {
             this.name = name;
             this.menuPath = menuPath;
@@ -59,7 +59,7 @@ namespace Simple.BehaviorTree
         static void AddCommonType()
         {
             //组合
-            s_types.Add(new NodeType("序列",false, typeof(SequenceCfg), IdTypePool<Sequence>.Get, "Composite/sequence", "Composite/序列", "按顺序执行子节点，当有子节点返回失败则终止马上返回失败，执行完所有子节点则返回成功"));
+            s_types.Add(new NodeType("序列", false, typeof(SequenceCfg), IdTypePool<Sequence>.Get, "Composite/sequence", "Composite/序列", "按顺序执行子节点，当有子节点返回失败则终止马上返回失败，执行完所有子节点则返回成功"));
             s_types.Add(new NodeType("选择", false, typeof(SelectorCfg), IdTypePool<Selector>.Get, "Composite/selector", "Composite/选择", "按顺序执行子节点，当有子节点返回成功则终止马上返回成功，执行完所有子节点则返回失败"));
             s_types.Add(new NodeType("平行", false, typeof(ParallelCfg), IdTypePool<Parallel>.Get, "Composite/parallel", "Composite/平行", "所有子节点同时运行(相当于多个子行为树)"));
             //修饰
@@ -83,7 +83,7 @@ namespace Simple.BehaviorTree
             //组合
 
             //修饰
-            
+
 
             //条件
             s_types.Add(new NodeType("比较(浮点数)", false, typeof(CompareFloatCfg), IdTypePool<CompareFloat>.Get, "conditional", "Conditional/Math/浮点数/比较", "比较两个数,如果结果为真返回成功，如果不想结果输出可以设置结果为常量，不影响返回"));
@@ -100,14 +100,14 @@ namespace Simple.BehaviorTree
             s_types.Add(new NodeType("乘(浮点数)", false, typeof(MulFloatCfg), IdTypePool<MulFloat>.Get, "action", "Action/Math/浮点数/乘", "a*b = 结果"));
             s_types.Add(new NodeType("除(浮点数)", false, typeof(DivFloatCfg), IdTypePool<DivFloat>.Get, "action", "Action/Math/浮点数/除", "a/b = 结果"));
             s_types.Add(new NodeType("随机(浮点数)", false, typeof(RandomFloatCfg), IdTypePool<RandomFloat>.Get, "action", "Action/Math/浮点数/随机", "随机出一个数，在[最小值,最大值]之间"));
-            
+
             s_types.Add(new NodeType("赋值(整数)", false, typeof(SetIntCfg), IdTypePool<SetInt>.Get, "action", "Action/Math/整数/赋值", "把值赋值给变量"));
             s_types.Add(new NodeType("加(整数)", false, typeof(AddIntCfg), IdTypePool<AddInt>.Get, "action", "Action/Math/整数/加", "a+b = 结果"));
             s_types.Add(new NodeType("减(整数)", false, typeof(SubIntCfg), IdTypePool<SubInt>.Get, "action", "Action/Math/整数/减", "a-b = 结果"));
             s_types.Add(new NodeType("乘(整数)", false, typeof(MulIntCfg), IdTypePool<MulInt>.Get, "action", "Action/Math/整数/乘", "a*b = 结果"));
             s_types.Add(new NodeType("除(整数)", false, typeof(DivIntCfg), IdTypePool<DivInt>.Get, "action", "Action/Math/整数/除", "a/b = 结果"));
             s_types.Add(new NodeType("随机(整数)", false, typeof(RandomIntCfg), IdTypePool<RandomInt>.Get, "action", "Action/Math/整数/随机", "随机出一个数，在[最小值,最大值]之间"));
-            
+
             s_types.Add(new NodeType("赋值(布尔)", false, typeof(SetBoolCfg), IdTypePool<SetBool>.Get, "action", "Action/Math/布尔/赋值", "把值赋值给变量"));
             s_types.Add(new NodeType("随机(布尔)", false, typeof(RandomBoolCfg), IdTypePool<RandomBool>.Get, "action", "Action/Math/布尔/随机", "随机出一个布尔值"));
             s_types.Add(new NodeType("取反(布尔)", false, typeof(NegationBoolCfg), IdTypePool<NegationBool>.Get, "action", "Action/Math/布尔/取反", "取反"));
@@ -116,7 +116,7 @@ namespace Simple.BehaviorTree
             s_types.Add(new NodeType("加(字符串)", false, typeof(AddStringCfg), IdTypePool<AddString>.Get, "action", "Action/Math/字符串/加", "a+b = 结果"));
         }
 
-        
+
         static void AddRoleType()
         {
             //组合
@@ -167,9 +167,9 @@ namespace Simple.BehaviorTree
             return type.createFun();
         }
 
-     
 
-       
+
+
 
     }
 }

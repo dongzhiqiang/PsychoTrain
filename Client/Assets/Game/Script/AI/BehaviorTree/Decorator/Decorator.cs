@@ -17,9 +17,9 @@ namespace Simple.BehaviorTree
         //允许拥有的子节点数量
         public override int MaxChildren { get { return 1; } }
     }
-    public class Decorator: ParentNode
+    public class Decorator : ParentNode
     {
-        
+
 
 
 

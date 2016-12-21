@@ -15,18 +15,19 @@ using UnityEditor;
 
 namespace Simple.BehaviorTree
 {
-   
+
 
     //原始的值类型，int、float这些
-    public class ValueGameObject : ValueBase<GameObject> 
+    public class ValueGameObject : ValueBase<GameObject>
     {
-        public string path="";
+        public string path = "";
         bool cache = false;
         GameObject v;
 
         public override GameObject Val
         {
-            get {
+            get
+            {
                 if (!cache)
                 {
 
@@ -50,12 +51,12 @@ namespace Simple.BehaviorTree
             this.type = enValueType.GameObject;
         }
 
-       
+
 
 #if UNITY_EDITOR
         public override void OnDrawShare(ValueMgr mgr)
         {
-           
+
             //值
             GameObject go = (GameObject)EditorGUILayout.ObjectField(Val, typeof(GameObject), true);
             if (go != null && go != Val)
@@ -82,7 +83,7 @@ namespace Simple.BehaviorTree
                 } while (false);
             }
 
-            
+
 
         }
 
@@ -106,7 +107,7 @@ namespace Simple.BehaviorTree
             else
                 DrawShareValueName(nodeCfg);
 
-            if (n!=null&& region != enValueRegion.constant)
+            if (n != null && region != enValueRegion.constant)
             {
                 do
                 {
@@ -123,19 +124,19 @@ namespace Simple.BehaviorTree
                     EditorGUILayout.LabelField("找不到", GUILayout.Width(90));
                 } while (false);
             }
-            
 
-            
+
+
         }
 
 #endif
     }
 
-    
+
     //原始的值类型，int、float这些
     public class ShareValueGameObject : ShareValueBase<GameObject>
     {
-        public GameObject share ;
+        public GameObject share;
 
         public override GameObject ShareVal
         {

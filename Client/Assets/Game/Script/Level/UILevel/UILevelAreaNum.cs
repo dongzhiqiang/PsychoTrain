@@ -32,7 +32,7 @@ public class UILevelAreaNum : UILevelArea
 
     #region Properties
     public override enLevelArea Type { get { return enLevelArea.num; } }
-    public override bool IsOpenOnStart { get{return true;} }
+    public override bool IsOpenOnStart { get { return true; } }
     #endregion
 
     #region Frame
@@ -50,7 +50,7 @@ public class UILevelAreaNum : UILevelArea
 
     protected override void OnUpdateArea()
     {
-       
+
     }
 
     //关闭
@@ -61,7 +61,7 @@ public class UILevelAreaNum : UILevelArea
 
     protected override void OnRoleBorn()
     {
-        
+
     }
 
     #endregion

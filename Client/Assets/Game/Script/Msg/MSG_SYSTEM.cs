@@ -4,7 +4,8 @@ using System.Collections;
 /// <summary>
 /// 系统消息
 /// </summary>
-public class MSG_SYSTEM {
+public class MSG_SYSTEM
+{
 
     //系统激活
     public const int ACTIVE = 1;

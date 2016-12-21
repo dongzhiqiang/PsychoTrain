@@ -12,12 +12,12 @@ using UnityEngine.UI;
 
 namespace Simple.BehaviorTree
 {
-   
+
     public interface IBehaviorTree
     {
         BehaviorTreeCfg Cfg { get; }
         bool IsPlaying { get; }
-        
+
         //播放，如果已经在播放中了会报错
         void Play(string file, string behavior);
 

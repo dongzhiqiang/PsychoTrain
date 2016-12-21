@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 public class UILevelAreaSetting : UILevelArea
 {
-    
+
     #region Fields
     public StateHandle m_btnBack;
     //public StateHandle m_toggleFov;
@@ -23,12 +23,12 @@ public class UILevelAreaSetting : UILevelArea
     public TextEx m_guajiText;
     public ImageEx m_lock;
     int m_observer4;
-    
+
     #endregion
 
     #region Properties
     public override enLevelArea Type { get { return enLevelArea.setting; } }
-    public override bool IsOpenOnStart { get{return true;} }
+    public override bool IsOpenOnStart { get { return true; } }
     #endregion
 
     #region Frame
@@ -50,7 +50,7 @@ public class UILevelAreaSetting : UILevelArea
         {
             //挂机按钮有可能被关闭，重新打开一个
             SetGuaJiButtonVisible(true);
-        }        
+        }
     }
 
     protected override void OnUpdateArea()
@@ -61,7 +61,7 @@ public class UILevelAreaSetting : UILevelArea
             OnClickGuaji();
         }
     }
-   
+
     //关闭
     protected override void OnCloseArea()
     {
@@ -70,7 +70,7 @@ public class UILevelAreaSetting : UILevelArea
 
     protected override void OnRoleBorn()
     {
-        if (Role == null|| Role.AIPart==null)
+        if (Role == null || Role.AIPart == null)
             return;
 
         m_guajiText.text = "自动战斗";
@@ -101,7 +101,7 @@ public class UILevelAreaSetting : UILevelArea
         UpdateGuaJiState();
     }
 
-    
+
 
     void OnClickPause()
     {

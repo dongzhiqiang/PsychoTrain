@@ -372,7 +372,7 @@ public class LevelMgr : Singleton<LevelMgr>
         //出生点出生方向
         hero.TranPart.SetPos(PosUtil.CaleByTerrains(cxt.pos));
         hero.TranPart.SetDir(cxt.euler);
-        
+
         hero.StatePart.GotoState(enRoleState.born, new RoleStateBornCxt(cxt.bornAniId, true));
 
 

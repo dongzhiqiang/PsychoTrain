@@ -15,7 +15,7 @@ using System.Text.RegularExpressions;
 public class LvValue
 {
     //有可能解析出来是个数，也可能是一个配置，比如30%，30，{up:kratos}，{up:kratos}%
-    public static bool TryParse(string s, out  bool isPercent,out float val,out bool isMinus, out SkillLvValueCfg lvValueCfg)
+    public static bool TryParse(string s, out bool isPercent, out float val, out bool isMinus, out SkillLvValueCfg lvValueCfg)
     {
         lvValueCfg = null;
         isPercent = false;
@@ -31,9 +31,9 @@ public class LvValue
         isPercent = s[endIdx] == '%';
         if (isPercent)
             endIdx = endIdx - 1;
-        
+
         //值
-        if(s[endIdx] != '}')
+        if (s[endIdx] != '}')
         {
             if (float.TryParse(s.Substring(startIdx, endIdx - startIdx + 1), out val))
             {
@@ -46,29 +46,29 @@ public class LvValue
             else
                 return false;
         }
-        
+
 
         //检查正负号
-        if(s[startIdx] == '-')
+        if (s[startIdx] == '-')
         {
             isMinus = true;
             startIdx += 1;
         }
-        
-        if (s[startIdx] != '{' )
+
+        if (s[startIdx] != '{')
             return false;
 
         //等级值
         startIdx += 1;
         endIdx -= 1;
-        s = s.Substring(startIdx, endIdx- startIdx+1);
+        s = s.Substring(startIdx, endIdx - startIdx + 1);
         lvValueCfg = SkillLvValueCfg.Get(s);
 
         return lvValueCfg != null;
     }
 
     //解析文本描述
-    public static string ParseText(string str,int lv)
+    public static string ParseText(string str, int lv)
     {
         s_temLv = lv;
         return s_regex.Replace(str, MatchEvaluator);
@@ -79,7 +79,7 @@ public class LvValue
         float val;
         bool isMinus;
         SkillLvValueCfg cfg;
-        if (!TryParse(match.ToString(), out isPercent, out val,out isMinus, out cfg))
+        if (!TryParse(match.ToString(), out isPercent, out val, out isMinus, out cfg))
             return "(error)";
 
         if (cfg == null)
@@ -106,13 +106,13 @@ public class LvValue
     public SkillLvValueCfg cfg;
     public bool error;
     public bool isMinus;//是不是负数
-    
+
 
     public bool NeedLv { get { return cfg != null; } }
-    
+
     public LvValue(string s)
     {
-        
+
         if (!TryParse(s, out isPercent, out value, out isMinus, out cfg))
         {
             isPercent = false;
@@ -127,20 +127,20 @@ public class LvValue
     {
         if (cfg != null)
         {
-            Debuger.LogError("逻辑错误，有配置的情况下获取了值:{0}",cfg.id);
+            Debuger.LogError("逻辑错误，有配置的情况下获取了值:{0}", cfg.id);
         }
 
         return value;
     }
 
 
-    public float GetByLv(int lv )
+    public float GetByLv(int lv)
     {
         if (cfg == null)
             return value;
 
-        SkillLvRateCfg r = SkillLvRateCfg.Get(cfg.prefix,lv);
-        if(r == null)
+        SkillLvRateCfg r = SkillLvRateCfg.Get(cfg.prefix, lv);
+        if (r == null)
         {
             return 0;
         }
@@ -149,20 +149,20 @@ public class LvValue
             v = -v;
         return isPercent ? v / 100f : v;
     }
-    
+
 }
 
-public class SkillLvValueCfg 
+public class SkillLvValueCfg
 {
     static StringBuilder s_parse = new StringBuilder();
 
     public string id;
-    public float value=1;
-    public float rate =1;
+    public float value = 1;
+    public float rate = 1;
     public int dot = 0;
-    
+
     public string prefix = null;
-    
+
 
     public static Dictionary<int, string> s_dotFormats = new Dictionary<int, string>();
     public static Dictionary<string, SkillLvValueCfg> s_cfgs = new Dictionary<string, SkillLvValueCfg>();
@@ -176,13 +176,13 @@ public class SkillLvValueCfg
         foreach (SkillLvValueCfg c in s_cfgs.Values)
         {
             int idx = c.id.IndexOf(":");
-            c.prefix =c.id.Substring(0, idx == -1 ? c.id.Length : idx);
-            if(!s_dotFormats.ContainsKey(c.dot))
+            c.prefix = c.id.Substring(0, idx == -1 ? c.id.Length : idx);
+            if (!s_dotFormats.ContainsKey(c.dot))
             {
                 //##########.####
                 string[] ss = new string[c.dot + 1];
                 ss[0] = "#########0.";
-                for (int i = 0;i< c.dot;++i)
+                for (int i = 0; i < c.dot; ++i)
                     ss[i + 1] = "#";
 
                 s_dotFormats[c.dot] = string.Join("", ss);
@@ -200,5 +200,5 @@ public class SkillLvValueCfg
         }
         return cfg;
     }
-    
+
 }

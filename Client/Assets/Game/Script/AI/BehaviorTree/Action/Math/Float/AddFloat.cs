@@ -17,9 +17,9 @@ namespace Simple.BehaviorTree
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-            v1.Draw("值1",this,n);
-            v2.Draw("值2",this,n);
-            ret.Draw("结果",this,n);
+            v1.Draw("值1", this, n);
+            v2.Draw("值2", this, n);
+            ret.Draw("结果", this, n);
         }
 #endif
 

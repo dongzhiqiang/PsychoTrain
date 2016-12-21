@@ -14,18 +14,18 @@ using UnityEditor;
 //浮空
 public class HitFloatSkillEventCfg : SkillEventCfg
 {
-    
+
     public float speed = 6;//浮空初速度,上升阶段的初始速度
     public float acceleratedUp = 0;//上升加速度,上升阶段的加速度
     public float acceleratedDown = 0;//下落加速度,下落阶段的加速度
     public float groundDuration = 0.5f;//倒地时间
-    public float reverseSpeed =4;//反转速度
+    public float reverseSpeed = 4;//反转速度
     public float speedDown = -8;//浮空初速度,上升阶段的初始速度
     public float hitDuration = 0.3f;//被击僵直时间
 
     public override enSkillEventType Type { get { return enSkillEventType.hitFloat; } }
 #if UNITY_EDITOR
-    public override bool DrawHeader(ref Rect r,  SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
+    public override bool DrawHeader(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
     {
         switch (col)
         {
@@ -36,7 +36,7 @@ public class HitFloatSkillEventCfg : SkillEventCfg
             case 4: if (h(ref r, "下落加速", COL_WIDTH * 3)) onTip("下落加速度,下落阶段的加速度"); return false;
             case 5: if (h(ref r, "倒地时间", COL_WIDTH * 3)) onTip("倒地时间"); return false;
             case 6: if (h(ref r, "被击僵直", COL_WIDTH * 3)) onTip("被击僵直时间。有的角色不能浮空，这个时候会把浮空事件转换为被击事件"); return false;
-            default:return true;
+            default: return true;
         }
     }
     public override bool DrawGrid(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int row, int col, int totalRow, ref bool change, Transform tran)
@@ -72,7 +72,7 @@ public class HitFloatSkillEventCfg : SkillEventCfg
                     r.width = COL_WIDTH * 3;
                     acceleratedDown = EditorGUI.FloatField(r, GUIContent.none, acceleratedDown);
                     r.x += r.width;
-                }; return false; 
+                }; return false;
             case 5:
                 {
                     r.width = COL_WIDTH * 3;
@@ -113,6 +113,6 @@ public class HitFloatSkillEventCfg : SkillEventCfg
             cxt.cfg = hitSkillEvent;
             return target.StatePart.GotoState(enRoleState.beHit, cxt, false, true);
         }
-       
+
     }
 }

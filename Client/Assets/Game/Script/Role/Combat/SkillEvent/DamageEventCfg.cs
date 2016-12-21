@@ -15,9 +15,9 @@ using UnityEditor;
 public class DamageEventCfg : SkillEventCfg
 {
     public float rate = 1f;//伤害系数
-    public string hitFx ="";//打击特效
+    public string hitFx = "";//打击特效
     public bool hitFxAdjust = true;//打击特效位置调整
-    public float shield= 10;//扣的气力值
+    public float shield = 10;//扣的气力值
     public bool playElemEventGroup = true;//播放元素事件组，主角攻击的时候有几率触发元素事件组，见role表的元素属性表，如果不勾选，就不触发
 
     public override enSkillEventType Type { get { return enSkillEventType.damage; } }
@@ -26,7 +26,8 @@ public class DamageEventCfg : SkillEventCfg
     {
         switch (col)
         {
-            case 0: if (h(ref r, "伤害系数", COL_WIDTH * 3)) onTip(
+            case 0:
+                if (h(ref r, "伤害系数", COL_WIDTH * 3)) onTip(
 @"注意:攻.开头的表示为攻击方属性，受.开头的表示为受击方属性
 
 受.免伤率=受.防御/（受.防御+5000+100*受.等级），取值范围0-0.9，大于0.9时，取值0.9
@@ -61,8 +62,8 @@ public class DamageEventCfg : SkillEventCfg
             case 1:
                 {
                     r.width = COL_WIDTH * 3;
-                    
-                    int idx = string.IsNullOrEmpty(hitFx)? RoleFxCfg.HitFxNames.Length-1: System.Array.IndexOf(RoleFxCfg.HitFxNames, hitFx);
+
+                    int idx = string.IsNullOrEmpty(hitFx) ? RoleFxCfg.HitFxNames.Length - 1 : System.Array.IndexOf(RoleFxCfg.HitFxNames, hitFx);
                     int newIdx = EditorGUI.Popup(r, idx, RoleFxCfg.HitFxNames);
                     if (newIdx != idx && newIdx != -1)
                     {
@@ -71,7 +72,7 @@ public class DamageEventCfg : SkillEventCfg
                         else
                             hitFx = RoleFxCfg.HitFxNames[newIdx];
                     }
-                        
+
                     r.x += r.width;
                 }; return false;
             case 2:
@@ -91,7 +92,7 @@ public class DamageEventCfg : SkillEventCfg
                     r.width = COL_WIDTH * 3;
 
                     //elem = (enElement)EditorGUI.Popup(r, (int)elem, ElementCfg.Element_Names);
-                    
+
                     r.x += r.width;
                 }; return false;
             case 5:
@@ -101,20 +102,21 @@ public class DamageEventCfg : SkillEventCfg
                     r.x += r.width;
                 }; return false;
 
-                
+
             default: return true;
         }
     }
 #endif
 
-    public override void PreLoad() { 
-        if(!string.IsNullOrEmpty(hitFx))
+    public override void PreLoad()
+    {
+        if (!string.IsNullOrEmpty(hitFx))
             RoleFxCfg.ProLoad(hitFx);
     }
 
     public override bool OnHandle(Role source, Role target, SkillEventFrame eventFrame)
     {
-        
+
 
         //扣气力值=攻击方技能气绝值/(1+气力系数*(1+Min(10%*n,50%)))
         if (shield > 0)
@@ -124,16 +126,16 @@ public class DamageEventCfg : SkillEventCfg
             float v = shield / (1 + target.Cfg.shieldRate * (1 + counterRate));
             CombatMgr.instance.AddShield(target, (int)-v);
         }
-        
+
 
         //计算出碰撞的点，在target上
         Vector3 hitPos = GetHitPos(hitFxAdjust, source, target, eventFrame);
 
         //判断需不需要生命偷取(一次群伤中只偷取第一个的生命)
         //这里分两种情况(多帧且对象次不为-1算单次群伤那么算总作用次数的第一次，多帧且对象次为-1算多次群伤那么算当前帧触发的第一次)
-        bool cutTargetHp=false;
+        bool cutTargetHp = false;
         if (eventFrame.Cfg.frameType == enSkillEventFrameType.once || eventFrame.Cfg.countTargetLimit != -1)
-            cutTargetHp = eventFrame.TargetCount==0;
+            cutTargetHp = eventFrame.TargetCount == 0;
         else
             cutTargetHp = eventFrame.FrameTriggerCount == 0;
 
@@ -143,15 +145,15 @@ public class DamageEventCfg : SkillEventCfg
         if (parentSkill != null)
         {
             SystemSkillCfg skillCfg = parentSkill.SystemSkillCfg;
-            if(skillCfg != null)
+            if (skillCfg != null)
             {
-                lvRate =parentSkill.GetLvValue(skillCfg.damageRate);
+                lvRate = parentSkill.GetLvValue(skillCfg.damageRate);
 
             }
         }
         else
         {
-        //    Debuger.Log("伤害事件不能计算出技能等级系数:{0},只有技能直接或者间接关联的状态才能找到技能等级系数，状态找不到", eventFrame.EventGroup.Name);
+            //    Debuger.Log("伤害事件不能计算出技能等级系数:{0},只有技能直接或者间接关联的状态才能找到技能等级系数，状态找不到", eventFrame.EventGroup.Name);
         }
 #if PROP_DEBUG
         Debuger.Log("伤害事件的技能伤害系数:{0}",lvRate);
@@ -161,10 +163,10 @@ public class DamageEventCfg : SkillEventCfg
         int srcId = source.Id;
         int targetId = target.Id;
         enElement elementType;
-        string elemEventGroup=null;
+        string elemEventGroup = null;
         if (elem == enElement.inherit)
         {
-            if(source.CombatPart.IsElementOpen)
+            if (source.CombatPart.IsElementOpen)
             {
                 ElementCfg elementCfg = ElementCfg.GetRoleElementCfg(source);
                 if (elementCfg != null)
@@ -178,7 +180,7 @@ public class DamageEventCfg : SkillEventCfg
             }
             else
                 elementType = enElement.none;
-            
+
         }
         else
             elementType = elem;
@@ -190,13 +192,13 @@ public class DamageEventCfg : SkillEventCfg
 
 
         //元素属性附带事件组
-        if(!string.IsNullOrEmpty(elemEventGroup))
-            CombatMgr.instance.PlayEventGroup(source, elemEventGroup, hitPos,target, eventFrame.Skill);
+        if (!string.IsNullOrEmpty(elemEventGroup))
+            CombatMgr.instance.PlayEventGroup(source, elemEventGroup, hitPos, target, eventFrame.Skill);
 
 
         return ret;
     }
 
-    
-        
+
+
 }

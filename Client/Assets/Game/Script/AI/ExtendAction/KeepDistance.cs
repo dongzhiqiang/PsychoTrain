@@ -12,12 +12,12 @@ namespace Simple.BehaviorTree
     public class KeepDistanceCfg : NodeCfg
     {
         public ValueRole target = new ValueRole(enValueRole.cloesetEnemy);
-        public float dis1= 4;
+        public float dis1 = 4;
         public float dis2 = 7;
         public float angle1 = 0;
         public float angle2 = 0;
         public bool keepIfTargetMove = true;
-        
+
 
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
@@ -40,7 +40,7 @@ namespace Simple.BehaviorTree
             }
 
             using (new AutoEditorTipButton("如果不勾选，那么只计算一次终点，否则目标移动的时候会实时计算"))
-                keepIfTargetMove = EditorGUILayout.Toggle("实时计算",keepIfTargetMove);
+                keepIfTargetMove = EditorGUILayout.Toggle("实时计算", keepIfTargetMove);
         }
 #endif
 
@@ -70,20 +70,22 @@ namespace Simple.BehaviorTree
         public Vector3 TargetPos { get { return m_targetPos; } }
 
         //入栈。行为树遍历过程中，遍历到一个节点就会入栈它。可以用做是当前次遍历的OnInit
-        protected override void OnPush() {
+        protected override void OnPush()
+        {
             m_lastMoveTime = 0;
             m_lastExecuteTime = 0;
             m_stuckCounter = 0;
         }
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             Role owner = GetOwner<Role>();
             if (owner == null || owner.State != Role.enState.alive)
                 return enNodeState.failure;
 
             Role target = GetValue(CfgEx.target);
-            if (target == null )
+            if (target == null)
                 return enNodeState.failure;
 
             var movePart = owner.MovePart;
@@ -123,14 +125,14 @@ namespace Simple.BehaviorTree
 
                 //计算出旋转
                 m_rotate = Quaternion.FromToRotation(forward, link);
-                
+
             }
             else
             {
                 Vector3 curPos = owner.transform.position;
                 float d = Vector3.Distance(curPos, m_lastPos);//实际移动
                 float d2 = speed * (TimeMgr.instance.logicTime - m_lastExecuteTime);//计算出来的移动
-                if (d <(d2 / 10) )
+                if (d < (d2 / 10))
                     ++m_stuckCounter;
             }
 
@@ -140,25 +142,25 @@ namespace Simple.BehaviorTree
             //移动，否则检查是不是移动完了
             bool targetIsMoving = target.MovePart.IsMoveing;
             bool needKeep = targetIsMoving || (m_lastIsMoving && !targetIsMoving);//注意哪怕目标停下来了也得多判断一次.以达到正确的位置，而不是修正后的
-            if (m_lastMoveTime == 0 ||(CfgEx.keepIfTargetMove && needKeep && (TimeMgr.instance.logicTime- m_lastMoveTime)>= m_duration))
+            if (m_lastMoveTime == 0 || (CfgEx.keepIfTargetMove && needKeep && (TimeMgr.instance.logicTime - m_lastMoveTime) >= m_duration))
             {
                 m_lastIsMoving = targetIsMoving;
                 m_lastMoveTime = TimeMgr.instance.logicTime;
                 m_targetPos = target.transform.position + m_rotate * (forward * m_dis);
                 float d = Util.XZMagnitude(m_lastPos, m_targetPos);
-                
+
                 if (speed == 0)
                 {
                     Debuger.LogError("角色速度为0，移动会卡住：{0}", owner.Cfg.id);
                     speed = 0.5f;
                 }
-                m_duration = d/speed;
+                m_duration = d / speed;
 
                 //为了保持持续移动，这里要再修正下，要下次判断时间要在寻路停止前，如果这个时间太短，那么要反向延长寻路距离，以保证移动持续
-                if (CfgEx.keepIfTargetMove&& targetIsMoving)
+                if (CfgEx.keepIfTargetMove && targetIsMoving)
                 {
                     m_duration = Mathf.Min(m_duration - KeepMovePreCheckDuration, KeepMoveMaxDuration);
-                    if(  m_duration < KeepMoveAdjustDuration)
+                    if (m_duration < KeepMoveAdjustDuration)
                     {
                         m_duration = KeepMoveAdjustDuration;
                         float needDistance = (m_duration + KeepMovePreCheckDuration) * speed;
@@ -168,14 +170,14 @@ namespace Simple.BehaviorTree
                     }
                 }
 
-                
+
                 if (!movePart.MovePos(m_targetPos))
                     return enNodeState.failure;
             }
-            else if(!movePart.IsMoveing)
-                    return enNodeState.success;
+            else if (!movePart.IsMoveing)
+                return enNodeState.success;
             //如果移动过久可能是卡住了，这里主动退出下
-            else if (m_stuckCounter>= Stuck_Stop_Limit)
+            else if (m_stuckCounter >= Stuck_Stop_Limit)
                 return enNodeState.success;
 
 
@@ -184,7 +186,8 @@ namespace Simple.BehaviorTree
         }
 
         //出栈。自己执行完了以及自己的子树执行完成后出栈
-        protected override void OnPop() {
+        protected override void OnPop()
+        {
             Role owner = GetOwner<Role>();
             if (owner == null || owner.State != Role.enState.alive)
                 return;
@@ -193,24 +196,25 @@ namespace Simple.BehaviorTree
 
             //自动朝向
             Role target = GetValue(CfgEx.target);
-            if(target != null && (curSt == enRoleState.move || curSt == enRoleState.free))
+            if (target != null && (curSt == enRoleState.move || curSt == enRoleState.free))
             {
                 owner.TranPart.SetDir(target.transform.position - owner.transform.position);
             }
 
             //停止移动
             var movePart = owner.MovePart;
-            if(curSt == enRoleState.move)
+            if (curSt == enRoleState.move)
             {
                 owner.StatePart.CheckFree();
             }
-                
+
 
         }
 
 
 #if UNITY_EDITOR
-        public override void OnDrawGizmos() {
+        public override void OnDrawGizmos()
+        {
             Color old = Gizmos.color;
             Gizmos.color = this.State == enNodeState.running ? Color.red : Color.yellow;
             Gizmos.DrawSphere(this.TargetPos, 0.3f);

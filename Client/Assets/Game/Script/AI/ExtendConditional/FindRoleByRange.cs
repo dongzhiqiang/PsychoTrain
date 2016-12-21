@@ -37,7 +37,7 @@ namespace Simple.BehaviorTree
                 range.targetType = (enSkillEventTargetType)EditorGUILayout.Popup("对象", (int)range.targetType, SkillEventFrameCfg.TargetTypeName);
 
 
-            
+
             if (range.targetType != enSkillEventTargetType.selfAlway)
             {
                 if (!range.range.showRange)
@@ -74,9 +74,9 @@ namespace Simple.BehaviorTree
             ret.Draw("设置角色", this, n);
         }
 
-        public override void DrawGL(DrawGL draw,Node n, bool isSel)
+        public override void DrawGL(DrawGL draw, Node n, bool isSel)
         {
-            if (!isSel || n ==null)
+            if (!isSel || n == null)
                 return;
 
             Role owner = n.GetOwner<Role>();
@@ -85,7 +85,7 @@ namespace Simple.BehaviorTree
 
             Vector3 dir = owner.transform.forward;
             Vector3 pos = owner.TranPart.Pos;
-            CollideUtil.Draw(range.range, draw, pos, dir, new Color(1,0,0,0.5f),  0 );
+            CollideUtil.Draw(range.range, draw, pos, dir, new Color(1, 0, 0, 0.5f), 0);
         }
 #endif
 
@@ -95,16 +95,17 @@ namespace Simple.BehaviorTree
     public class FindRoleByRange : Conditional
     {
         FindRoleByRangeCfg CfgEx { get { return (FindRoleByRangeCfg)m_cfg; } }
-      
+
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             Role owner = GetOwner<Role>();
             if (owner == null || owner.State != Role.enState.alive)
                 return enNodeState.failure;
 
             var range = CfgEx.range;
-            if (range.targetType == enSkillEventTargetType.selfAlway||
+            if (range.targetType == enSkillEventTargetType.selfAlway ||
                 range.targetType == enSkillEventTargetType.target ||
                 range.targetType == enSkillEventTargetType.selfAlway ||
                 range.range.type == enRangeType.collider
@@ -114,16 +115,16 @@ namespace Simple.BehaviorTree
                 return enNodeState.failure;
             }
 
-            
+
             Vector3 dir = owner.transform.forward;
             Vector3 pos = owner.TranPart.Pos;
 
             //如果角色已经存在则不重新查找
             Role last = GetValue(CfgEx.ret);
             bool noReFind = GetValue(CfgEx.notRefindIfExist);
-            if (noReFind && last != null&& CollideUtil.Hit(pos, dir, last.TranPart.Pos, last.RoleModel.Radius, range.range))
+            if (noReFind && last != null && CollideUtil.Hit(pos, dir, last.TranPart.Pos, last.RoleModel.Radius, range.range))
                 return enNodeState.success;
-            
+
             //遍历进行碰撞检测
             foreach (Role r in RoleMgr.instance.Roles)
             {
@@ -150,8 +151,8 @@ namespace Simple.BehaviorTree
             return enNodeState.failure;
         }
 
-        
 
-        
+
+
     }
 }

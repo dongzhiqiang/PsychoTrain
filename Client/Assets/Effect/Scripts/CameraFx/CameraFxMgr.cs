@@ -25,25 +25,25 @@ public class CameraFxMgr : MonoBehaviour
             this.mgr = mgr;
         }
 
-        public override void OnLast(IShareThingHandle prev){}
+        public override void OnLast(IShareThingHandle prev) { }
         public override void OnOverlay() { }
         public override void OnEmpty() { }
     }
 
     #region Fields
-    Dictionary<string,ShareThing> m_fxs = new Dictionary<string,ShareThing>();//每一个同名的后期处理是一个共享事物，通过shareThing可以很好的防止特效叠加
+    Dictionary<string, ShareThing> m_fxs = new Dictionary<string, ShareThing>();//每一个同名的后期处理是一个共享事物，通过shareThing可以很好的防止特效叠加
     #endregion
 
 
     #region Properties
-    
+
     #endregion
 
 
     #region Mono Frame
     void Start()
     {
-        
+
     }
 
     // Update is called once per frame
@@ -72,13 +72,13 @@ public class CameraFxMgr : MonoBehaviour
             RenderTexture buffer2 = RenderTexture.GetTemporary(source.width, source.height, 0);
 
             bool oddEven = true;
-            bool first=true;
+            bool first = true;
             foreach (ShareThing st in m_fxs.Values)
             {
                 if (first)
                 {
                     st.Get<CameraHandle>().fx.OnUpdateCamera(source, destination);
-                    first =false;
+                    first = false;
                 }
                 else
                 {
@@ -103,20 +103,20 @@ public class CameraFxMgr : MonoBehaviour
             RenderTexture.ReleaseTemporary(buffer1);
             RenderTexture.ReleaseTemporary(buffer2);
         }
-        
+
     }
     #endregion
-   
+
 
 
     #region Private Methods
-    
+
     #endregion
 
-    public CameraHandle Add(string name,CameraFx fx)
+    public CameraHandle Add(string name, CameraFx fx)
     {
-        CameraHandle handle = new CameraHandle(name,fx, this);
-        ShareThing st = m_fxs.GetNewIfNo(name);     
+        CameraHandle handle = new CameraHandle(name, fx, this);
+        ShareThing st = m_fxs.GetNewIfNo(name);
         st.Add(handle);
 
         if (!this.enabled)
@@ -148,7 +148,8 @@ public class CameraFxMgr : MonoBehaviour
     }
     void Clear()
     {
-        foreach(ShareThing st in m_fxs.Values){
+        foreach (ShareThing st in m_fxs.Values)
+        {
             foreach (IShareThingHandle h in st.m_handles)
             {
                 h.m_shareThing = null;//注意一定先设为null，不然会造成死锁            

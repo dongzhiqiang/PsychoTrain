@@ -18,7 +18,7 @@ namespace Simple.BehaviorTree
         clearOnDisable,
         resetOnEnable
     }
-    public class BehaviorTree : MonoBehaviour,IBehaviorTree
+    public class BehaviorTree : MonoBehaviour, IBehaviorTree
     {
         public const int Short_Limit = 10;//如果行为树一次就执行完，且中间有耗时行为，那么算短路。短路超过这个次数提示下
         public delegate void OnChangeTree();
@@ -55,15 +55,15 @@ namespace Simple.BehaviorTree
         Node m_shortNode = null;
 
         public BehaviorTreeCfg Cfg { get { return m_cfg; } }
-        public string BehaviorName { get { return m_cfg != null ?m_cfg.BehaviorName : ""; } }
+        public string BehaviorName { get { return m_cfg != null ? m_cfg.BehaviorName : ""; } }
         public bool IsPlaying { get { return m_isPlaying; } }
         public bool IsTreeAcitve { get { return m_cfg != null; } }
         public Node Root { get { return m_root; } }
         public int RunCounter { get { return m_runCounter; } }
         public ValueMgr ValueMgr { get { return m_valueMgr; } }
 
-        
-        
+
+
         #region Mono Frame
         void OnEnable()
         {
@@ -100,27 +100,27 @@ namespace Simple.BehaviorTree
             //否决
             if (onCanUpdateTree != null && !onCanUpdateTree())
                 return;
-                
-            
-            
-            if (!m_runtimeUpdateCancel&& m_intervalSecond >0&& TimeMgr.instance.logicTime - m_lastUpdateTime > (1f/ m_intervalSecond))
+
+
+
+            if (!m_runtimeUpdateCancel && m_intervalSecond > 0 && TimeMgr.instance.logicTime - m_lastUpdateTime > (1f / m_intervalSecond))
             {
                 m_lastUpdateTime = TimeMgr.instance.logicTime;
                 CallUpdate();
-                
+
             }
         }
 #if UNITY_EDITOR
         void OnDrawGizmos()
         {
             var mgr = BehaviorTreeMgr.instance;
-            if (mgr == null|| (BehaviorTreeMgr.instance.m_debug1 != this && BehaviorTreeMgr.instance.m_debug2 != this))
+            if (mgr == null || (BehaviorTreeMgr.instance.m_debug1 != this && BehaviorTreeMgr.instance.m_debug2 != this))
                 return;
-            
+
             for (int i = m_stacks.Count - 1; i >= 0; --i)//从后往前出栈
             {
                 var s = m_stacks[i];
-                foreach(var id in s)
+                foreach (var id in s)
                 {
                     m_nodes[id].OnDrawGizmos();
                 }
@@ -131,9 +131,9 @@ namespace Simple.BehaviorTree
 
 
         #region 对外接口
-        public void SetOwner(object owner) 
+        public void SetOwner(object owner)
         {
-            if(owner ==null)
+            if (owner == null)
             {
                 Debuger.LogError("逻辑错误，不能用SetOwner设置一个空的持有者，请用ClearOwner()");
                 return;
@@ -150,40 +150,40 @@ namespace Simple.BehaviorTree
             m_ownerPoolId = 0;
         }
 
-        public T GetOwner<T>() where T:class
+        public T GetOwner<T>() where T : class
         {
             if (m_owner == null)
                 return null;
 
             //如果是池对象，判断下是不是被回收了
             var idType = m_owner as IdType;
-            if (idType != null&& idType.IsDestroy(idType.Id))
+            if (idType != null && idType.IsDestroy(idType.Id))
             {
-                Debuger.LogError("行为树，获取持有者时发现持有者已经放回对象池了，持有者:{0} 行为树:{1}", idType.GetType(), m_cfg!=null?m_cfg.BehaviorName:"");
+                Debuger.LogError("行为树，获取持有者时发现持有者已经放回对象池了，持有者:{0} 行为树:{1}", idType.GetType(), m_cfg != null ? m_cfg.BehaviorName : "");
                 return null;
             }
 
             T t = m_owner as T;
             if (t == null)
             {
-                Debuger.LogError("行为树，获取持有者时类型出错，持有者类型:{0} 要获取的类型:{1} 行为树:{2}", idType.GetType(),typeof(T), m_cfg != null ? m_cfg.BehaviorName : "");
+                Debuger.LogError("行为树，获取持有者时类型出错，持有者类型:{0} 要获取的类型:{1} 行为树:{2}", idType.GetType(), typeof(T), m_cfg != null ? m_cfg.BehaviorName : "");
                 return null;
             }
 
             return t;
         }
 
-        public void PlayAuto() { Play(m_playFile, m_playBehavior);}
+        public void PlayAuto() { Play(m_playFile, m_playBehavior); }
 
         public void Play(string behavior)
         {
-            if(string.IsNullOrEmpty(behavior))
+            if (string.IsNullOrEmpty(behavior))
             {
-                Play(null,m_resetType);
+                Play(null, m_resetType);
                 return;
             }
             string[] ps = behavior.Split(':');
-            if(ps.Length<2 || string.IsNullOrEmpty(ps[0]) ||string.IsNullOrEmpty(ps[1]))
+            if (ps.Length < 2 || string.IsNullOrEmpty(ps[0]) || string.IsNullOrEmpty(ps[1]))
             {
                 Debuger.LogError("找不到行为:{0}", behavior);
                 return;
@@ -205,17 +205,17 @@ namespace Simple.BehaviorTree
             if (cfg == null)
                 return;
 
-            Play(cfg,m_resetType);
+            Play(cfg, m_resetType);
         }
 
-        void Play(BehaviorTreeCfg cfg, enReset  resetType )
+        void Play(BehaviorTreeCfg cfg, enReset resetType)
         {
             m_resetType = resetType;
 
             if (!this.enabled)
                 return;
             //如果有真在播放的，清除掉或者重新播放
-            if (m_cfg != null )
+            if (m_cfg != null)
             {
                 if (m_cfg == cfg)
                 {
@@ -240,7 +240,7 @@ namespace Simple.BehaviorTree
         {
             if (!this.enabled)
                 return;
-            if (this.IsTreeAcitve &&!m_isPlaying )
+            if (this.IsTreeAcitve && !m_isPlaying)
                 InternalPlay(reset);
         }
 
@@ -251,12 +251,12 @@ namespace Simple.BehaviorTree
             if (m_isPlaying)
                 InternalPause();
         }
-        
+
         public void Stop()
         {
             if (!this.enabled)
                 return;
-            if (m_cfg!=null)
+            if (m_cfg != null)
                 InternalStop();
         }
 
@@ -277,8 +277,8 @@ namespace Simple.BehaviorTree
             BehaviorTreeCfg cfg = m_cfg;
             InternalStop();//清空东西,如果播放中，内部会暂停
             InternalCreate(cfg);//重新初始化
-            //if (needPlay)
-              //  InternalPlay();
+                                //if (needPlay)
+                                //  InternalPlay();
         }
 
         public ShareValueBase<T> GetValue<T>(string name)
@@ -374,12 +374,12 @@ namespace Simple.BehaviorTree
                 m_isFirstPlay = false;
 
             //重置下共享变量
-            if (needReset )
+            if (needReset)
             {
                 m_valueMgr.Reset();
                 m_runCounter = -1;
             }
-                
+
             //启用
             for (int i = 0, j = m_nodes.Count; i < j; ++i)
             {
@@ -387,12 +387,12 @@ namespace Simple.BehaviorTree
             }
 
             //创建主栈
-            if (m_stacks.Count > 0 || m_interruptStacks.Count>0)
+            if (m_stacks.Count > 0 || m_interruptStacks.Count > 0)
             {
                 Debuger.LogError("行为树逻辑出错，播放的时候发现栈没有清空:{0}:{1}", m_cfg.File.File, m_cfg.name);
                 ClearStack();
             }
-            
+
             m_stacks.Add(TypePool<Stack<int>>.Get());
             m_interruptStacks.Add(TypePool<LinkedList<Conditional>>.Get());
 
@@ -433,7 +433,7 @@ namespace Simple.BehaviorTree
             {
                 Stack<int> stack = m_stacks[i];
                 LinkedList<Conditional> interruptStack = m_interruptStacks[i];
-                
+
                 while (stack.Count != 0)
                 {
                     var n = m_nodes[stack.Pop()];
@@ -451,7 +451,7 @@ namespace Simple.BehaviorTree
                     curInterrupt.IsInterrupting = false;
                 }
 
-                
+
                 TypePool<Stack<int>>.Put(stack);
                 TypePool<LinkedList<Conditional>>.Put(interruptStack);
 
@@ -464,8 +464,8 @@ namespace Simple.BehaviorTree
         void Interrupt(Stack<int> stack, LinkedList<Conditional> interruptStack, Conditional c)
         {
             var cfg = c.ConditionalCfg;
-            
-            Node parentNode=null;
+
+            Node parentNode = null;
             while (stack.Count != 0)
             {
                 var n = m_nodes[stack.Pop()];
@@ -494,14 +494,14 @@ namespace Simple.BehaviorTree
             }
 
             //检错下
-            if(parentNode==null)
+            if (parentNode == null)
             {
                 Debuger.LogError("逻辑出错，中断的时候找不到要中断的父节点:{0} 中断节点id:{1}", m_cfg.BehaviorName, c.Cfg.id);
                 return;
             }
-                
+
             //重新入栈，不然就逻辑出错了，会执行到父节点的下一个节点，如果父节点之前不先出栈的话，父节点存在同样的问题
-            if (parentNode!= m_root && !cfg.resetTreeWhenInterrupt)
+            if (parentNode != m_root && !cfg.resetTreeWhenInterrupt)
             {
                 stack.Push(parentNode.Idx);
                 parentNode.Push();
@@ -509,12 +509,12 @@ namespace Simple.BehaviorTree
 
 
         }
-        
+
         //和InternalCreate对应
         void InternalStop()
         {
-           
-                
+
+
             if (m_cfg == null)
             {
                 Debuger.LogError("行为树逻辑错误，重复停止:{0}:{1}", m_cfg.File.File, m_cfg.name);
@@ -530,7 +530,7 @@ namespace Simple.BehaviorTree
             //没有暂停要主动暂停
             if (IsPlaying)
                 InternalPause();
-            
+
 
             //回收节点
             for (int i = m_nodes.Count - 1; i >= 0; --i)
@@ -549,7 +549,7 @@ namespace Simple.BehaviorTree
             m_shortCounter = 0;
             m_prevIsReRun = false;
             m_shortNode = null;
-            if (BehaviorTreeMgr.instance==null)
+            if (BehaviorTreeMgr.instance == null)
             {
 
             }
@@ -560,7 +560,7 @@ namespace Simple.BehaviorTree
                 onChangeTree();
         }
 
-        
+
         void InternalUpdate()
         {
             if (!m_isPlaying)
@@ -570,7 +570,7 @@ namespace Simple.BehaviorTree
             }
             if (m_cfg == null)//可能因为其他出错导致的，由于这里是不断update的，所以就不打印报错了
                 return;
-            
+
             m_isUpdating = true;
             for (int i = m_stacks.Count - 1; i >= 0; --i)//从后往前出栈
             {
@@ -611,11 +611,11 @@ namespace Simple.BehaviorTree
                     for (int j = 0, k = m_nodes.Count; j < k; ++j)
                         m_nodes[j].ReUpdate();
 
-                   
+
                 }
 
                 //检查短路, 暂时只支持第一个栈
-                if (i == 0 )
+                if (i == 0)
                 {
                     if (isReRun && m_prevIsReRun)
                     {
@@ -631,15 +631,15 @@ namespace Simple.BehaviorTree
                     m_prevIsReRun = isReRun;
                     m_shortNode = null;
                 }
-                
+
                 //没有就从头运行(当然前提是主树)，有就从当前运行
                 var s = enNodeState.inactive;
                 int idx = isReRun ? 0 : stack.Peek();
                 do
                 {
-                    s = RunNode(stack, interruptStack, idx,i);//只能往下递归，往上递归的实现还是得在这个循环里调用这个函数
+                    s = RunNode(stack, interruptStack, idx, i);//只能往下递归，往上递归的实现还是得在这个循环里调用这个函数
 
-                   
+
                     //完全执行完了
                     if (stack.Count == 0)
                         break;
@@ -665,7 +665,7 @@ namespace Simple.BehaviorTree
             m_isUpdating = false;
         }
         //入栈出栈的维护
-        enNodeState RunNode(Stack<int> stack, LinkedList<Conditional> interruptStack,  int idx,int stackIdx)
+        enNodeState RunNode(Stack<int> stack, LinkedList<Conditional> interruptStack, int idx, int stackIdx)
         {
             Node node = m_nodes[idx];
 
@@ -689,10 +689,10 @@ namespace Simple.BehaviorTree
                         break;
 
                     //如果禁用了，那么不执行下面的逻辑
-                    Node child= m_nodes[childIdx];
+                    Node child = m_nodes[childIdx];
                     if (child.Cfg.Ingore)
                         continue;
-                    
+
                     childState = RunNode(stack, interruptStack, childIdx, stackIdx);
                     if (childState == enNodeState.running || childState == enNodeState.inactive)
                         return childState;
@@ -704,8 +704,8 @@ namespace Simple.BehaviorTree
 #if UNITY_EDITOR
             //检错下，条件不能为runing状态
             if (node is Conditional && s == enNodeState.running)
-                Debuger.LogError("逻辑错误，条件节点不能为运行中状态：{0}",node.GetType());
-            else if(!node.CanRuning && s == enNodeState.running)
+                Debuger.LogError("逻辑错误，条件节点不能为运行中状态：{0}", node.GetType());
+            else if (!node.CanRuning && s == enNodeState.running)
                 Debuger.LogError("逻辑错误，不支持运行中状态：{0}", node.GetType());
 #endif
             //不在运行的话出栈
@@ -718,9 +718,9 @@ namespace Simple.BehaviorTree
                     return enNodeState.inactive;//让这一次的递归马上结束
                 }
 
-                if (stackIdx == 0 &&node.Cfg.NodeType.checkShort)
+                if (stackIdx == 0 && node.Cfg.NodeType.checkShort)
                 {
-                    if(m_shortNode==null || s == enNodeState.failure)
+                    if (m_shortNode == null || s == enNodeState.failure)
                         m_shortNode = node;
                 }
 
@@ -742,13 +742,13 @@ namespace Simple.BehaviorTree
 
                 //中断逻辑，中断节点的父节点出栈的时候取消监听,中断节点出栈的时候开始监听中断
                 var curInterrupt = interruptStack.Last;
-                while (curInterrupt!= null)
+                while (curInterrupt != null)
                 {
                     var v = curInterrupt.Value;
                     if (v != node && v.ParentIdx != node.Idx)
                         break;
                     v.IsInterrupting = false;
-                 
+
                     interruptStack.RemoveLast();
                     curInterrupt = interruptStack.Last;
                 }
@@ -758,13 +758,13 @@ namespace Simple.BehaviorTree
                     c.IsInterrupting = true;
                     interruptStack.AddLast(c);
                 }
-                    
+
 
             }
 
             return s;
         }
-        
+
         #endregion
         //新开一个栈给一个节点运行
         public int AddStack(int idx)
@@ -777,7 +777,7 @@ namespace Simple.BehaviorTree
             var node = m_nodes[idx];
             if (node.IsInStack)
             {
-                Debuger.LogError("逻辑错误，一个节点在栈上却要求入栈:{0} id:{1}", m_cfg.BehaviorName,idx);
+                Debuger.LogError("逻辑错误，一个节点在栈上却要求入栈:{0} id:{1}", m_cfg.BehaviorName, idx);
                 return -1;
             }
 

@@ -3,6 +3,16 @@ using System.Collections.Generic;
 using UnityEngine;
 using System;
 
+public enum enBloodType
+{
+    none,
+    small,
+    big,
+    building,
+    npc,
+
+}
+
 public enum enRoleType
 {
     min,
@@ -27,6 +37,7 @@ public class RoleCfg
     public string mod = "";
 
     public enRoleType roleType = enRoleType.monster;
+    public int addBuffType = 0;     //是否是回血回蓝的宝箱
 
     public List<string> flags = new List<string>();//标记
     public string deadFx = "";//死亡特效，播放了死亡特效就不会播放死亡动作
@@ -36,8 +47,18 @@ public class RoleCfg
 
     public float power; //战斗力初始值
 
+
+    public string bornType = "";    //默认出生方式
+    public string deadType = "";    //默认死亡方式
+    public string aiType = "";  //默认ai
+    public string titleBlood = string.Empty;//头顶血条类型
+    public int headBloodNum = 10;//右上角boss头像血条数量，角色身上有GlobalConst.FLAG_SHOW_BLOOD标记的时候才会显示右上角血条
+    public string colliderLayer = null;
+
+    enBloodType _titleBloodType;
     enRolePropType _rolePropType;
     enGameLayer _colliderLayer;
+    string _hitDefBloodIcon;
 
     public static string[] PropTypeName = new string[] { "角色属性", "怪物属性" };
 
@@ -50,8 +71,10 @@ public class RoleCfg
     static PropertyTable tem = new PropertyTable();
     static PropertyTable empty = new PropertyTable();
 
+    public enBloodType TitleBloodType { get { return _titleBloodType; } }
     public enRolePropType RolePropType { get { return _rolePropType; } }
     public enGameLayer ColliderLayer { get { return _colliderLayer; } }
+    public string HitDefBloodIcon { get { return _hitDefBloodIcon; } }
 
     public static string[] RoleIds
     {

@@ -15,9 +15,9 @@ using UnityEditor;
 
 namespace Simple.BehaviorTree
 {
-   
 
-    public class ParentNodeCfg: NodeCfg
+
+    public class ParentNodeCfg : NodeCfg
     {
         public List<NodeCfg> children = new List<NodeCfg>();
         public bool expandChild = true;

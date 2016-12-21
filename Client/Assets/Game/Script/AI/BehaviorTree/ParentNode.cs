@@ -7,14 +7,14 @@ using UnityEngine.UI;
 namespace Simple.BehaviorTree
 {
 
-    
 
-    public class ParentNode: Node
+
+    public class ParentNode : Node
     {
         #region 用于被继承的属性
         protected List<int> m_childrenIdx = new List<int>();
         protected int m_childCounter = 0;
-        public List<int> ChildrenIdx { get { return m_childrenIdx; }  }
+        public List<int> ChildrenIdx { get { return m_childrenIdx; } }
         public override bool CanRuning { get { return false; } }
         #endregion
 
@@ -26,7 +26,8 @@ namespace Simple.BehaviorTree
         }
 
         //获取下个要执行的子节点,没有返回-1
-        public int GetNextChildIdx() {
+        public int GetNextChildIdx()
+        {
             ++m_childCounter;
             return OnGetNextChildIdx(m_childCounter);
         }
@@ -37,10 +38,10 @@ namespace Simple.BehaviorTree
 
         public virtual int OnGetNextChildIdx(int counter)
         {
-            return m_childCounter >= ChildrenIdx.Count ?-1: ChildrenIdx[m_childCounter];
+            return m_childCounter >= ChildrenIdx.Count ? -1 : ChildrenIdx[m_childCounter];
         }
         //字节点执行完,告知父节点
-        public virtual void OnChildPop(int childIdx,enNodeState childState) { }
+        public virtual void OnChildPop(int childIdx, enNodeState childState) { }
         #endregion
         public override void OnClear()
         {

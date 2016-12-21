@@ -17,17 +17,17 @@ namespace Simple.BehaviorTree
 {
     public class TraceCfg : NodeCfg
     {
-        public ValueRole target = new ValueRole( enValueRegion.tree);
+        public ValueRole target = new ValueRole(enValueRegion.tree);
         public Value<float> dis = new Value<float>(0);
 
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-            target.Draw("目标",this,n);
-            dis.Draw("完成距离",this,n);
+            target.Draw("目标", this, n);
+            dis.Draw("完成距离", this, n);
         }
 #endif
-        
+
     }
 
 
@@ -36,20 +36,21 @@ namespace Simple.BehaviorTree
         TraceCfg CfgEx { get { return (TraceCfg)m_cfg; } }
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             Role owner = GetOwner<Role>();
             if (owner == null || owner.State != Role.enState.alive)
                 return enNodeState.failure;
 
             Role target = GetValue(CfgEx.target);
-            if (target == null )
+            if (target == null)
                 return enNodeState.failure;
 
             //如果已经达到完成距离了，那么退出这个行为
             MovePart movePart = owner.MovePart;
-            float disLimit = Mathf.Max(GetValue(CfgEx.dis),0.5f);
+            float disLimit = Mathf.Max(GetValue(CfgEx.dis), 0.5f);
             Vector3 targetPos = target.transform.position;
-            float disSq = owner.DistanceSq(target);  
+            float disSq = owner.DistanceSq(target);
             if (disSq < disLimit * disLimit)
             {
                 if (movePart.IsMoveing)
@@ -73,7 +74,7 @@ namespace Simple.BehaviorTree
                 return;
 
             var curSt = owner.StatePart.CurStateType;
-            
+
             //停止移动
             var movePart = owner.MovePart;
             if (curSt == enRoleState.move)

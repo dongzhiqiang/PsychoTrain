@@ -35,11 +35,12 @@ namespace Simple.BehaviorTree
         protected override void OnPush()
         {
             m_lastNodeState = enNodeState.success;
-            SetValue(CfgEx.counter, GetValue(CfgEx.counter)+1);
+            SetValue(CfgEx.counter, GetValue(CfgEx.counter) + 1);
         }
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             return m_lastNodeState;
         }
 
@@ -49,11 +50,12 @@ namespace Simple.BehaviorTree
             m_lastNodeState = childState;
         }
 
-        
+
 
         //出栈。自己执行完了以及自己的子树执行完成后出栈
-        protected override void OnPop() {
-            SetValue(CfgEx.counter, GetValue(CfgEx.counter) -1);
+        protected override void OnPop()
+        {
+            SetValue(CfgEx.counter, GetValue(CfgEx.counter) - 1);
         }
 
 

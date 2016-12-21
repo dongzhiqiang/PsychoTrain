@@ -20,7 +20,7 @@ public abstract class SkillEventCfg
     public delegate bool HeaderButton(ref Rect r, string content, int width);
 
     public bool ingore = false;
-    public int eventCountLimit =-1;//一个技能中这个事件执行的次数限制
+    public int eventCountLimit = -1;//一个技能中这个事件执行的次数限制
     public int eventCountFrameLimit = -1;//帧事件次数，一帧能同时作用的对象的次数
     public int id;
     public int priority = 0;//优先级，如果这个优先级大于目标所拥有的免疫事件优先级，那么免疫无效。(比如霸体 = 免疫被击+免疫击飞+免疫浮空，目标身上有优先级为0的霸体、但是这里的优先级为1，那么霸体无效)
@@ -47,7 +47,7 @@ public abstract class SkillEventCfg
                 if (!subGetUp.CanMove())
                     isGetUp = true;
             }
-                
+
             if (behitType == enBehit.ground)
             {
                 //倒地状态的后半段时间才免疫
@@ -88,7 +88,7 @@ public abstract class SkillEventCfg
         else
             return target.RoleModel.Center.position;
     }
-    
+
     public virtual void CopyFrom(SkillEventCfg cfg)
     {
         if (cfg == null) return;
@@ -98,7 +98,7 @@ public abstract class SkillEventCfg
     }
 
     public abstract bool OnHandle(Role source, Role target, SkillEventFrame eventFrame);
-    public virtual void PreLoad(){}
+    public virtual void PreLoad() { }
 
 #if UNITY_EDITOR
     public abstract bool DrawHeader(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h);
@@ -110,9 +110,9 @@ public abstract class SkillEventCfg
 
 public class EmptySkillEventCfg : SkillEventCfg
 {
-    public override enSkillEventType Type { get{return enSkillEventType.empty;} }
+    public override enSkillEventType Type { get { return enSkillEventType.empty; } }
 #if UNITY_EDITOR
-    public override bool DrawHeader(ref Rect r,  SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
+    public override bool DrawHeader(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
     {
         return true;
     }

@@ -23,30 +23,30 @@ public class GrabEventCfg : SkillEventCfg
 #if UNITY_EDITOR
     public override bool DrawHeader(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
     {
-        
+
         switch (col)
         {
             case 0: if (h(ref r, "抓取编辑器", COL_WIDTH * 4)) onTip("抓取编辑器，编辑被抓取者各个阶段的位置移动和动作"); return false;
-            
+
             default: return true;
         }
     }
     public override bool DrawGrid(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int row, int col, int totalRow, ref bool change, Transform tran)
     {
-    
+
         switch (col)
         {
             case 0:
                 {
                     r.width = COL_WIDTH * 4;
-                    if (GUI.Button(r,"打开"))
+                    if (GUI.Button(r, "打开"))
                     {
                         RoleModel model = tran == null ? null : tran.GetComponent<RoleModel>();
                         Role role = model == null ? null : model.Parent;
 
                         EventMgr.FireAll(MSG.MSG_FRAME, MSG_FRAME.GRAB_EDITOR, role, grabCxt);
                     }
-                   
+
                     r.x += r.width;
                 }; return false;
             default: return true;
@@ -65,7 +65,7 @@ public class GrabEventCfg : SkillEventCfg
         }
 
         this.grabCxt.CopyFrom(c.grabCxt);
-        
+
     }
     public override void PreLoad()
     {
@@ -83,8 +83,8 @@ public class GrabEventCfg : SkillEventCfg
         if (!target.IsShow)
             target.Show(true);
 
-        return target.StatePart.GotoState(enRoleState.beHit, cxt,false,true);
+        return target.StatePart.GotoState(enRoleState.beHit, cxt, false, true);
     }
 
-    
+
 }

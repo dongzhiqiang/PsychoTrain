@@ -24,9 +24,9 @@ public class UIMainCity : UIPanel
     #endregion
 
     #region Fields
-    static Dictionary<enSystem,Action> s_click = new Dictionary<enSystem,Action>();
+    static Dictionary<enSystem, Action> s_click = new Dictionary<enSystem, Action>();
     static Action s_onOpen;
-    GameObject[] roleGo = new GameObject[3];  
+    GameObject[] roleGo = new GameObject[3];
     bool m_isTopBefore = false;
     Role m_role;
     int m_observer;
@@ -41,21 +41,21 @@ public class UIMainCity : UIPanel
     #endregion
 
     #region Static Methods
-    public static void AddClick(enSystem sys,Action a)
+    public static void AddClick(enSystem sys, Action a)
     {
-        if(s_click.ContainsKey(sys))
+        if (s_click.ContainsKey(sys))
         {
-            Debuger.LogError("主城界面{0}系统按钮被重复监听，只能有一个监听者",sys);
+            Debuger.LogError("主城界面{0}系统按钮被重复监听，只能有一个监听者", sys);
             return;
         }
-        s_click[sys]=a;
+        s_click[sys] = a;
     }
     public static void AddOpen(Action a)
     {
-        if(s_onOpen== null)
+        if (s_onOpen == null)
             s_onOpen = a;
         else
-            s_onOpen+=a;
+            s_onOpen += a;
     }
     #endregion
 
@@ -64,10 +64,11 @@ public class UIMainCity : UIPanel
     public override void OnInitPanel()
     {
         //建立索引，并设置点击回调     
-        foreach(UIMainCityItem item in m_items){
-            if(m_itemsBySys.ContainsKey(item.sys))
+        foreach (UIMainCityItem item in m_items)
+        {
+            if (m_itemsBySys.ContainsKey(item.sys))
             {
-                Debuger.LogError("主城界面有重复的系统图标，是不是复制黏贴新图标后没有修改系统枚举？{0}",item.sys);
+                Debuger.LogError("主城界面有重复的系统图标，是不是复制黏贴新图标后没有修改系统枚举？{0}", item.sys);
                 continue;
             }
 
@@ -79,7 +80,7 @@ public class UIMainCity : UIPanel
                 item.tip.SetActive(false);
             }
         }
-        
+
     }
 
 
@@ -88,12 +89,12 @@ public class UIMainCity : UIPanel
     {
         m_isTopBefore = PanelBase.IsTop;
 
-        this.GetComponent<RectTransform>().sizeDelta =Vector2.zero;
-        
-        if (s_onOpen!=null)
+        this.GetComponent<RectTransform>().sizeDelta = Vector2.zero;
+
+        if (s_onOpen != null)
             s_onOpen();//打开主城界面的时候广播消息给外部
     }
-  
+
     //关闭，保证在初始化之后
     public override void OnClosePanel()
     {
@@ -134,14 +135,14 @@ public class UIMainCity : UIPanel
     #region Private Methods
     void OnClickItem(StateHandle s)
     {
-        UIMainCityItem item =s.Get<UIMainCityItem>();
-        if(item == null)
+        UIMainCityItem item = s.Get<UIMainCityItem>();
+        if (item == null)
         {
             Debuger.LogError("找不到UIMainCityItem");
             return;
         }
 
-        Action a =s_click.Get(item.sys);
+        Action a = s_click.Get(item.sys);
         if (a == null)
         {
             UIMessage.Show("该功能未实现，敬请期待!");

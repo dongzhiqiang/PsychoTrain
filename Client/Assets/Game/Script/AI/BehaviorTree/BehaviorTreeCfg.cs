@@ -15,33 +15,33 @@ using UnityEditor;
 
 namespace Simple.BehaviorTree
 {
-    
+
     public class BehaviorTreeCfg
     {
-        
-        public string name="";
+
+        public string name = "";
         public bool expand = false;
         public NodeCfg root;
         public ValueMgrCfg valueMgrCfg = new ValueMgrCfg();
 
         BehaviorTreeFileCfg fileCfg;
 
-        public BehaviorTreeFileCfg File { get { return fileCfg; }set { fileCfg = value; } }
+        public BehaviorTreeFileCfg File { get { return fileCfg; } set { fileCfg = value; } }
         public string BehaviorName { get { return string.Format("{0}:{1}", File.File, name); } }
 
         public void Reset()
         {
             valueMgrCfg.Reset();
-            ResetChild(root,null );
+            ResetChild(root, null);
         }
 
         void ResetChild(NodeCfg node, ParentNodeCfg parent)
         {
             node.Tree = this;
-            node.Parent=parent ;
+            node.Parent = parent;
             node.OnReset();
             ParentNodeCfg p = node as ParentNodeCfg;
-            if(p!=null)
+            if (p != null)
             {
                 for (int i = p.children.Count - 1; i >= 0; --i)
                 {
@@ -49,7 +49,7 @@ namespace Simple.BehaviorTree
                 }
             }
         }
-        
+
         public bool IsSame(string file, string name)
         {
             if (fileCfg.File != file)

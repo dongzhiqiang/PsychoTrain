@@ -34,7 +34,7 @@ namespace Simple.BehaviorTree
         interrupt,//被中断了
     }
 
-    public class Node:IdType
+    public class Node : IdType
     {
         protected NodeCfg m_cfg;
         protected BehaviorTree m_tree;
@@ -42,7 +42,7 @@ namespace Simple.BehaviorTree
         protected int m_parentIdx;
         protected int m_localIdx;//在父节点的第几个位置
         protected enNodeState m_state;//已经执行完的为成功或者失败状态，没执行的为未执行状态，在栈上的为运行中状态
-        protected bool m_inStack=false;
+        protected bool m_inStack = false;
 
         public NodeCfg Cfg { get { return m_cfg; } }
         public int Idx { get { return m_idx; } }
@@ -54,7 +54,7 @@ namespace Simple.BehaviorTree
 
 
         #region 用于被继承的属性
-        public virtual bool CanRuning{ get { return true; } }
+        public virtual bool CanRuning { get { return true; } }
 
         #endregion
 
@@ -66,10 +66,10 @@ namespace Simple.BehaviorTree
         protected virtual void OnResetState() { }
 
         //行为树被创建的时候
-        protected virtual void OnInitNode(){}
-        
+        protected virtual void OnInitNode() { }
+
         //行为树被销毁的时候
-        protected virtual void OnDestroyNode(){}
+        protected virtual void OnDestroyNode() { }
 
         //行为树被启用。一般和禁用有对应关系，游戏暂停恢复、行为树切换、创建等情况下会调用到
         protected virtual void OnEnable() { }
@@ -94,19 +94,19 @@ namespace Simple.BehaviorTree
 #endif
         #endregion
 
-        public T GetOwner<T>()where T:class
+        public T GetOwner<T>() where T : class
         {
             return m_tree.GetOwner<T>();
         }
 
-        public void InitNode(NodeCfg cfg, BehaviorTree tree,int idx,int parentIdx,int localIdx)
+        public void InitNode(NodeCfg cfg, BehaviorTree tree, int idx, int parentIdx, int localIdx)
         {
             this.m_cfg = cfg;
             this.m_tree = tree;
             this.m_idx = idx;
             this.m_parentIdx = parentIdx;
             this.m_localIdx = localIdx;
-            
+
             OnInitNode();
         }
 
@@ -156,9 +156,9 @@ namespace Simple.BehaviorTree
         public enNodeState Execute(enExecute executeType)
         {
             var s = OnExecute(executeType);
-            if (executeType == enExecute.normal &&s != enNodeState.running)
+            if (executeType == enExecute.normal && s != enNodeState.running)
                 m_state = s;
-            
+
             return s;
         }
 
@@ -175,11 +175,12 @@ namespace Simple.BehaviorTree
             OnReUpdate();
         }
 
-        public virtual void ResetState() {
+        public virtual void ResetState()
+        {
             OnResetState();
         }
-        
-        
+
+
         public ShareValueBase<T> GetShareValue<T>(ValueBase<T> v)
         {
             if (v.region == enValueRegion.constant || string.IsNullOrEmpty(v.name))
@@ -187,7 +188,7 @@ namespace Simple.BehaviorTree
                 Debuger.LogError("常量类型不能获取共享变量");
                 return null;
             }
-            else if(v.region == enValueRegion.tree)
+            else if (v.region == enValueRegion.tree)
                 return m_tree.GetValue<T>(v.name);
             else if (v.region == enValueRegion.global)
                 return BehaviorTreeMgr.instance.GetValue<T>(v.name);
@@ -275,9 +276,9 @@ namespace Simple.BehaviorTree
             }
         }
 
-        public void LogError(string format,params object[] ps)
+        public void LogError(string format, params object[] ps)
         {
-            string s = string.Format("行为树逻辑错误{0}:{1},节点:{2}", this.m_tree.Cfg.File.File,this.m_tree.Cfg.name, m_cfg.id);
+            string s = string.Format("行为树逻辑错误{0}:{1},节点:{2}", this.m_tree.Cfg.File.File, this.m_tree.Cfg.name, m_cfg.id);
             Debuger.LogError(s + format, ps);
         }
     }

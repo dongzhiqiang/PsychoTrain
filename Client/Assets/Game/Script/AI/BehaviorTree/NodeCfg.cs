@@ -22,24 +22,28 @@ namespace Simple.BehaviorTree
 
         public int id;
         public bool ingore = false;
-        public bool showNote =false;
+        public bool showNote = false;
         public bool resetTempValueIfEnable = true;//重置临时值，在行为树启用的时候
         public string note = "";
 
         //编辑器用参数
         public Vector2 localPos = Vector2.zero;
-        
+
         BehaviorTreeCfg tree;
         ParentNodeCfg parent;
         NodeType nodeType;
-        
+
         public BehaviorTreeCfg Tree { get { return tree; } set { tree = value; } }
-        public ParentNodeCfg Parent { get { return parent; }set { parent = value; } }
-        public NodeType NodeType { get {
+        public ParentNodeCfg Parent { get { return parent; } set { parent = value; } }
+        public NodeType NodeType
+        {
+            get
+            {
                 if (nodeType == null)
                     nodeType = BehaviorTreeFactory.s_cfgIdx[this.GetType()];
                 return nodeType;
-            } }
+            }
+        }
         public string Name { get { return NodeType.name; } }
         public int Depth
         {
@@ -77,7 +81,7 @@ namespace Simple.BehaviorTree
                 if (parent != null)
                     pos += parent.Pos;
 
-                
+
                 return pos;
             }
             set
@@ -88,7 +92,7 @@ namespace Simple.BehaviorTree
             }
 
         }
-        
+
         public void DoAll(Action<NodeCfg> a)
         {
             a(this);
@@ -127,9 +131,9 @@ namespace Simple.BehaviorTree
             Debuger.LogError(log + format, ps);
         }
 
-        public virtual void OnPreLoad(){}
+        public virtual void OnPreLoad() { }
 
-        public virtual void OnReset(){}
+        public virtual void OnReset() { }
 #if UNITY_EDITOR
         public virtual void DrawAreaInfo(Node n)
         {
@@ -137,7 +141,7 @@ namespace Simple.BehaviorTree
         }
 
 
-        public virtual void DrawGL(DrawGL draw,Node n,bool isSel)
+        public virtual void DrawGL(DrawGL draw, Node n, bool isSel)
         {
 
         }

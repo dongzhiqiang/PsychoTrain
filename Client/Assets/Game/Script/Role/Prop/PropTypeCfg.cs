@@ -92,6 +92,39 @@ public enum enPropFormat
     FloatRate = 1,//比率型的，读表的时候要除以10000
 }
 
+public class AddPropCxt
+{
+    public enProp prop;
+    public LvValue value;
+    public bool error = false;
+
+    public AddPropCxt(string s)
+    {
+        string[] pp = s.Split('|');
+        if (pp.Length < 2)
+        {
+            error = true;
+            return;
+        }
+
+
+        PropTypeCfg cfg = PropTypeCfg.GetByName(pp[0]);
+        if (cfg == null)
+        {
+            error = true;
+            return;
+        }
+        prop = (enProp)cfg.id;
+
+        value = new LvValue(pp[1]);
+        if (value.error)
+        {
+            error = true;
+            return;
+        }
+    }
+}
+
 public class PropTypeCfg
 {
     public int id;          //属性索引值，见enProp

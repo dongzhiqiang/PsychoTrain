@@ -87,7 +87,7 @@ public class UILevelSkillItem : MonoBehaviour
         this.upSkill = upSkill;
         this.pressSkill = pressSkill;
         this.downSkill = downSkill;
-        this.dragingDownSkill =dragingDownSkill;
+        this.dragingDownSkill = dragingDownSkill;
         this.parent = parent;
 
         btn.m_pressHoldTime = parent.m_downTimeLimit;
@@ -99,24 +99,25 @@ public class UILevelSkillItem : MonoBehaviour
 
     public void Open(bool reOpen)
     {
-        if(!reOpen)
+        if (!reOpen)
             m_runTimeSkill = null;
     }
 
-    public void FreshItem(){
-        if(parent == null)return;
+    public void FreshItem()
+    {
+        if (parent == null) return;
 
         Skill s = Skill;
-        if (s == null)s = DownSkill;
+        if (s == null) s = DownSkill;
 
 
-        s = s == null?null:s.ShowSkill;//连击中的技能要切换图标
+        s = s == null ? null : s.ShowSkill;//连击中的技能要切换图标
 
         if (icon != null)
-            icon.Set((s ==null ||s.SystemSkillCfg == null )? null : s.SystemSkillCfg.icon);
+            icon.Set((s == null || s.SystemSkillCfg == null) ? null : s.SystemSkillCfg.icon);
 
         enSkillState curState = s == null ? enSkillState.noSkill : s.State;
-        
+
 
         if (state.CurStateIdx != (int)curState)
             state.SetState((int)curState);
@@ -137,14 +138,14 @@ public class UILevelSkillItem : MonoBehaviour
 
         }
 
-        if(comboingFx != null)
+        if (comboingFx != null)
         {
             bool show = curState == enSkillState.postFrame || curState == enSkillState.buffFrame;
-            if(show!= comboingFx.activeSelf)
+            if (show != comboingFx.activeSelf)
                 comboingFx.SetActive(show);
         }
     }
-     void Update()
+    void Update()
     {
         FreshItem();
 
@@ -173,7 +174,7 @@ public class UILevelSkillItem : MonoBehaviour
 
     public void OnHoldPress(StateHandle stateHandle)
     {
-        Skill s =  PressSkill;
+        Skill s = PressSkill;
         if (s != null)
             parent.OnClickSkill(this, s);
     }
@@ -187,29 +188,29 @@ public class UILevelSkillItem : MonoBehaviour
     }
 
     public void OnPointUp(PointerEventData p)
-     {
-         Skill s = DownSkill;
-         if(s==null)return;
-         s.Parent.RSM.StateCombat.PressSkill = null;//向战斗系统取消按紧的技能
+    {
+        Skill s = DownSkill;
+        if (s == null) return;
+        s.Parent.RSM.StateCombat.PressSkill = null;//向战斗系统取消按紧的技能
     }
 
-     public void OnPointDown(PointerEventData p)
-     {
-         
-         Skill s = DownSkill;
-         if (s == null) return;
-         s.Parent.RSM.StateCombat.PressSkill = s;//向战斗系统记下按紧的技能
-         parent.OnClickSkill(this, s);  
-     }
+    public void OnPointDown(PointerEventData p)
+    {
+
+        Skill s = DownSkill;
+        if (s == null) return;
+        s.Parent.RSM.StateCombat.PressSkill = s;//向战斗系统记下按紧的技能
+        parent.OnClickSkill(this, s);
+    }
 
     public void OnUseSkill()
     {
-        if(playFx!=null)
+        if (playFx != null)
         {
             playFx.SetActive(false);
             playFx.SetActive(true);
         }
-            
+
     }
 
 

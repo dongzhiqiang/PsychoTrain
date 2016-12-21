@@ -46,6 +46,9 @@ public enum enPartCreate
 
 public class GlobalConst
 {
-    public const string Flag_Locing = "RoleMgrLocking";
-
+    public const string FLAG_SHOW_BLOOD = "showBloodBar";
+    public const string FLAG_REFLESH_WAVE = "refleshWave";
+    public const string FLAG_SHOW_FRIENDBLOOD = "showFriendBloodBar";
+    public const string FLAG_SHOW_TARGET = "showTarget";
+    public const string FLAG_ARENA_BLOOD = "arenaBlood";
 }

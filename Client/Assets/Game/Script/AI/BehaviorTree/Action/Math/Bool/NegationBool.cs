@@ -10,13 +10,13 @@ using UnityEditor;
 namespace Simple.BehaviorTree
 {
     public class NegationBoolCfg : NodeCfg
-    {   
+    {
         public Value<bool> ret = new Value<bool>(false, enValueRegion.tree);
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-            
-            ret.Draw("结果",this,n);
+
+            ret.Draw("结果", this, n);
         }
 #endif
 
@@ -30,8 +30,8 @@ namespace Simple.BehaviorTree
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
         protected override enNodeState OnExecute(enExecute executeType)
         {
-            
-            SetValue(CfgEx.ret, GetValue(CfgEx.ret)?false:true);
+
+            SetValue(CfgEx.ret, GetValue(CfgEx.ret) ? false : true);
             return enNodeState.success;
         }
     }

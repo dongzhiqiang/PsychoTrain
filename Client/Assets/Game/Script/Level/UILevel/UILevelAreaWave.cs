@@ -13,7 +13,7 @@ using System.Collections.Generic;
 
 public class UILevelAreaWave : UILevelArea
 {
-    
+
     #region Fields
     public TextEx m_wave;
     public StateHandle m_num;
@@ -30,8 +30,8 @@ public class UILevelAreaWave : UILevelArea
 
     #region Properties
     public override enLevelArea Type { get { return enLevelArea.wave; } }
-    public override bool IsOpenOnStart { get{return false;} }
-    public int CurWave { get { return m_curWave;  } }
+    public override bool IsOpenOnStart { get { return false; } }
+    public int CurWave { get { return m_curWave; } }
 
     #endregion
 
@@ -67,7 +67,7 @@ public class UILevelAreaWave : UILevelArea
 
     protected override void OnRoleBorn()
     {
-       
+
     }
 
 
@@ -115,12 +115,12 @@ public class UILevelAreaWave : UILevelArea
 
         m_maxWave = maxWave;
         m_curWave = wave;
-        if (wave  > 0)
+        if (wave > 0)
         {
             m_num.SetState(0);
             yield return new WaitForSeconds(startTime);
         }
-        
+
         m_wave.text = string.Format(wave + "/" + maxWave);
         yield return new WaitForSeconds(duration);
         m_num.SetState(1);

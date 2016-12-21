@@ -9,10 +9,10 @@ using UnityEditor;
 
 namespace Simple.BehaviorTree
 {
-    
+
     public class CompareStringCfg : ConditionalCfg
     {
-        
+
         public Value<string> v1 = new Value<string>("");
         public Value<string> v2 = new Value<string>("");
         public enBoolCompare comp = enBoolCompare.equal;
@@ -21,10 +21,10 @@ namespace Simple.BehaviorTree
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-            v1.Draw("值1",this,n);
-            v2.Draw("值2",this,n);
-            comp = (enBoolCompare)EditorGUILayout.Popup("比较类型",(int)comp, CompareBoolCfg.CompareTypeNames);
-            ret.Draw("结果",this,n);
+            v1.Draw("值1", this, n);
+            v2.Draw("值2", this, n);
+            comp = (enBoolCompare)EditorGUILayout.Popup("比较类型", (int)comp, CompareBoolCfg.CompareTypeNames);
+            ret.Draw("结果", this, n);
             using (new AutoEditorTipButton("如果不勾选，那么比较结果为真才返回成功，相当于当成行为用；勾选的话那么始终为真，相当于当成行为用了"))
                 alwaysSuccess = EditorGUILayout.Toggle("始终为真", alwaysSuccess);
         }
@@ -42,19 +42,19 @@ namespace Simple.BehaviorTree
         {
             var v1 = GetValue(CfgEx.v1);
             var v2 = GetValue(CfgEx.v2);
-            bool ret=false;
-            switch(CfgEx.comp)
+            bool ret = false;
+            switch (CfgEx.comp)
             {
-                case enBoolCompare.equal: ret= v1 == v2; break;
+                case enBoolCompare.equal: ret = v1 == v2; break;
                 case enBoolCompare.unEqual: ret = v1 != v2; break;
                 default:
                     {
                         Debuger.LogError("未知的类型:{0}", CfgEx.comp);
                         ret = false;
-                    };break;
+                    }; break;
             }
 
-            if(CfgEx.ret.region!= enValueRegion.constant)
+            if (CfgEx.ret.region != enValueRegion.constant)
                 SetValue(CfgEx.ret, ret);
             return CfgEx.alwaysSuccess || ret ? enNodeState.success : enNodeState.failure;
 

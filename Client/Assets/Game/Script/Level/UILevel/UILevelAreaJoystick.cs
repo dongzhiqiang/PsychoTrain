@@ -58,7 +58,7 @@ public class UILevelAreaJoystick : UILevelArea
         m_skills[0].Init(this, KeyCode.Keypad1, KeyCode.Joystick1Button0, enSkillType.none, enSkillType.none, (enSkillType)((int)enSkillType.skill1 + 0));
         m_skills[1].Init(this, KeyCode.Keypad2, KeyCode.Joystick1Button3, enSkillType.none, enSkillType.none, (enSkillType)((int)enSkillType.skill1 + 1));
         m_skills[2].Init(this, KeyCode.Keypad3, KeyCode.Joystick1Button4, enSkillType.none, enSkillType.none, (enSkillType)((int)enSkillType.skill1 + 2));
-        
+
 
         //摇杆
         m_joystick.m_onJoystickDown = OnJoystickDown;
@@ -152,7 +152,7 @@ public class UILevelAreaJoystick : UILevelArea
             m_combosState.SetState(0);
 
         //设置操作中
-        if (Role != null && Role.State == Role.enState.alive &&m_joystick.IsDraging)
+        if (Role != null && Role.State == Role.enState.alive && m_joystick.IsDraging)
             Role.AIPart.FreshOperation();
     }
 
@@ -250,7 +250,7 @@ public class UILevelAreaJoystick : UILevelArea
         //如果使用了对应槽位的技能，要播放个特效
         if (curSkill.ComboFirst == m_skills[0].DownSkill)
             m_skills[0].OnUseSkill();
-        else if(curSkill.ComboFirst == m_skills[1].DownSkill)
+        else if (curSkill.ComboFirst == m_skills[1].DownSkill)
             m_skills[1].OnUseSkill();
         else if (curSkill.ComboFirst == m_skills[2].DownSkill)
             m_skills[2].OnUseSkill();
@@ -261,7 +261,7 @@ public class UILevelAreaJoystick : UILevelArea
     {
         if (Role == null || Role.State != Role.enState.alive) return;
         if (s == null) return;
-        
+
         CombatPart.enPlaySkill ret = Role.CombatPart.PlayCombo(s);
 
         //如果cd中或者mp不足提示下

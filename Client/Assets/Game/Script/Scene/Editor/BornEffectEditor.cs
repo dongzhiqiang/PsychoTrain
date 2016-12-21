@@ -95,7 +95,7 @@ public class BornEffectEditor : EditorWindow
             }
         }
 
-   
+
     }
 
     void DrawBornCfg()
@@ -136,13 +136,14 @@ public class BornEffectEditor : EditorWindow
             if (GUILayout.Button("选择"))
             {
                 List<BornCfg> cfgList = new List<BornCfg>();
-                foreach(BornCfg bc in BornCfg.mBornCfg.mBornCfgList)
+                foreach (BornCfg bc in BornCfg.mBornCfg.mBornCfgList)
                 {
                     if (bc.type == cfg.type)
                         cfgList.Add(bc);
                 }
 
-                cfgList.Sort((x, y) => {
+                cfgList.Sort((x, y) =>
+                {
                     if (string.IsNullOrEmpty(x.typeName) || string.IsNullOrEmpty(y.typeName))
                         return 0;
                     int a = (short)(Convert.ToChar(x.typeName[0]));
@@ -171,8 +172,8 @@ public class BornEffectEditor : EditorWindow
 
         cfg.modelDelay = EditorGUILayout.FloatField("模型延迟", cfg.modelDelay);
         cfg.fxDelay = EditorGUILayout.FloatField("特效延迟", cfg.fxDelay);
-        
-        for (int i = 0; i < cfg.aniName.Length; i++ )
+
+        for (int i = 0; i < cfg.aniName.Length; i++)
             cfg.aniName[i] = EditorGUILayout.TextField("动作名", cfg.aniName[i]);
 
         cfg.aniDelay = EditorGUILayout.FloatField("动作延迟", cfg.aniDelay);
@@ -226,7 +227,7 @@ public class BornEffectEditor : EditorWindow
                             cfgList.Remove(cfgList[i]);
                             if (cfg.type == SceneCfg.BornDeadType.Born)
                                 m_BornCfg = new BornCfg(cfg.type);
-                            else if(cfg.type == SceneCfg.BornDeadType.Dead)
+                            else if (cfg.type == SceneCfg.BornDeadType.Dead)
                                 m_DeadCfg = new BornCfg(cfg.type);
                             else if (cfg.type == SceneCfg.BornDeadType.GroundDead)
                                 m_GroundDeadCfg = new BornCfg(cfg.type);
@@ -264,7 +265,7 @@ public class BornEffectEditor : EditorWindow
                     if (EditorUtility.DisplayDialog("保存配置", "已有重名配置，是否覆盖？", "确定", "取消"))
                     {
                         bornCfg = m_BornCfg;
-                        
+
                         File.WriteAllText(Application.dataPath + "/Config/Resources/scene/BornCfg.json", JsonMapper.ToJson(BornCfg.mBornCfg), System.Text.Encoding.UTF8);
                     }
                 }
@@ -282,7 +283,7 @@ public class BornEffectEditor : EditorWindow
                 EditorUtility.DisplayDialog("保存配置", "名字不能为空", "确定");
             }
         }
-        
+
     }
 
     void DrawInfo()

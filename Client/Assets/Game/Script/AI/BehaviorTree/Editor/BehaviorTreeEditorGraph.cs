@@ -41,14 +41,14 @@ namespace Simple.BehaviorTree
         public bool haveAcitveTree;//有运行中的树
 
 
-        public BehaviorTreeEditorGraph(BehaviorTreeEditor editor,BehaviorTreeFileCfg cfg, BehaviorTree tree)
+        public BehaviorTreeEditorGraph(BehaviorTreeEditor editor, BehaviorTreeFileCfg cfg, BehaviorTree tree)
         {
             this.cfg = cfg;
             this.tree = tree;
             this.editor = editor;
             Reset();
         }
-        
+
 
         void FileChange(bool needResetGraph = true)
         {
@@ -56,7 +56,7 @@ namespace Simple.BehaviorTree
             cfg.Reset();
 
             //通知编辑器重新创建graph
-            if(needResetGraph || tree != null)
+            if (needResetGraph || tree != null)
                 editor.OnTreeCfgChange();
         }
 
@@ -68,7 +68,7 @@ namespace Simple.BehaviorTree
             foreach (var t in cfg.trees)
             {
                 bool isMatch = (tree != null && tree.Cfg == t);
-                graphTrees.Add(new BehaviorTreeEditorGraphTree(t,this, isMatch ? tree:null));
+                graphTrees.Add(new BehaviorTreeEditorGraphTree(t, this, isMatch ? tree : null));
                 if (isMatch)
                     haveAcitveTree = true;
             }
@@ -81,7 +81,7 @@ namespace Simple.BehaviorTree
         #region 节点操作
         public NodeCfg AddNode(BehaviorTreeEditorGraphNode parentGraphNode, Type nodeType)
         {
-            if(parentGraphNode != null && !parentGraphNode.IsParentNode)
+            if (parentGraphNode != null && !parentGraphNode.IsParentNode)
             {
                 Debuger.LogError("不能添加子节点 不是父节点");
                 return null;
@@ -117,8 +117,8 @@ namespace Simple.BehaviorTree
                 parentNode.expandChild = true;
                 Vector2 pos = parentGraphNode.GetNewChildPos();
                 parentNode.children.Add(node);
-                node.Parent=parentNode;
-                BehaviorTreeEditorGraphNode.SetPos(node,pos, parentGraphNode);
+                node.Parent = parentNode;
+                BehaviorTreeEditorGraphNode.SetPos(node, pos, parentGraphNode);
             }
             FileChange();
             return node;
@@ -150,14 +150,14 @@ namespace Simple.BehaviorTree
                     //和子节点断开，子节点重新创建一棵树
                     if (p != null)
                     {
-                        for (int i =0;i<p.children.Count;++i)
+                        for (int i = 0; i < p.children.Count; ++i)
                         {
                             var child = p.children[i];
                             Vector3 pos = graphNode.children[i].Pos;
                             BehaviorTreeCfg t = cfg.AddTree();
                             t.root = child;
                             child.Parent = null;
-                            BehaviorTreeEditorGraphNode.SetPos(child,pos,null);
+                            BehaviorTreeEditorGraphNode.SetPos(child, pos, null);
                         }
                         p.children.Clear();
                     }
@@ -203,7 +203,7 @@ namespace Simple.BehaviorTree
             foreach (var child in children)
             {
                 //不能添加，那么创建新树
-                if ( !pNew.CanAddChild())
+                if (!pNew.CanAddChild())
                 {
                     Vector2 posChild = child.Pos;
                     BehaviorTreeCfg t = cfg.AddTree();
@@ -221,7 +221,7 @@ namespace Simple.BehaviorTree
             }
 
             //清空，从父节点删除,注意要放在子节点修改后，否则子节点位置会出错
-            int insertPos = -1; 
+            int insertPos = -1;
             if (parentNode != null)
             {
                 insertPos = parentNode.children.IndexOf(node);
@@ -231,7 +231,7 @@ namespace Simple.BehaviorTree
                 parentNode.children.Insert(insertPos, nodeNew);
                 nodeNew.Parent = parentNode;
             }
-            else if(node.Tree.root == node)
+            else if (node.Tree.root == node)
             {
                 node.Tree.root = nodeNew;
             }
@@ -240,15 +240,15 @@ namespace Simple.BehaviorTree
                 Debuger.LogError("逻辑错误");
                 return null;
             }
-                
+
             BehaviorTreeEditorGraphNode.SetPos(nodeNew, pos, graphParentNode);
             node.Clear();
-            
+
             FileChange();
             return nodeNew;
         }
 
-        public void LinkNode(BehaviorTreeEditorGraphNode parentGraphNode , BehaviorTreeEditorGraphNode childGraph)
+        public void LinkNode(BehaviorTreeEditorGraphNode parentGraphNode, BehaviorTreeEditorGraphNode childGraph)
         {
             ParentNodeCfg parent = parentGraphNode.CfgEx;
             var child = childGraph.cfg;
@@ -278,7 +278,7 @@ namespace Simple.BehaviorTree
                 return;
             }
 
-            
+
             //和父节点断开
             if (child.Parent != null)
                 child.Parent.children.Remove(child);
@@ -292,9 +292,9 @@ namespace Simple.BehaviorTree
             //加到新的父节点
             parent.expandChild = true;
             int insertIdx = parentGraphNode.GetIndexOfPos(pos.x);
-            parent.children.Insert(insertIdx,child);
+            parent.children.Insert(insertIdx, child);
             child.Parent = parent;
-            
+
             BehaviorTreeEditorGraphNode.SetPos(child, pos, parentGraphNode);
             FileChange();
         }
@@ -346,16 +346,16 @@ namespace Simple.BehaviorTree
             if (haveChange)
                 FileChange(false);
         }
-        
-       
 
-        static void RemoveHashNode(NodeCfg n,ref HashSet<int> removes,ref List<NodeCfg> roots)
+
+
+        static void RemoveHashNode(NodeCfg n, ref HashSet<int> removes, ref List<NodeCfg> roots)
         {
             //先递归到子节点
             ParentNodeCfg pn = n as ParentNodeCfg;
-            if(pn != null)
+            if (pn != null)
             {
-                for (int i = pn.children.Count-1;i>=0;--i)
+                for (int i = pn.children.Count - 1; i >= 0; --i)
                 {
                     RemoveHashNode(pn.children[i], ref removes, ref roots);
                 }
@@ -390,20 +390,20 @@ namespace Simple.BehaviorTree
         {
             l.Add(n);
             n.id = ++cfg.nodeCounter;
-           
-            
+
+
             ParentNodeCfg pn = n as ParentNodeCfg;
             if (pn != null)
             {
                 for (int i = pn.children.Count - 1; i >= 0; --i)
                 {
-                    SetNewNodeId(pn.children[i],ref l);
+                    SetNewNodeId(pn.children[i], ref l);
                 }
             }
         }
 
         //复制节点，并且复制其树变量
-        public void CopyNode(List<BehaviorTreeEditorGraphNode> graphNodes,ref HashSet<int> copyIdx,ref string copyFile)
+        public void CopyNode(List<BehaviorTreeEditorGraphNode> graphNodes, ref HashSet<int> copyIdx, ref string copyFile)
         {
             if (graphNodes.Count == 0)
                 return;
@@ -416,10 +416,10 @@ namespace Simple.BehaviorTree
             copyFile = LitJson.JsonMapper.ToJson(cfg, false);
         }
 
-       
 
 
-        public List<NodeCfg> PasteNode( HashSet<int> copyIdx, string copyFile, Vector2 graphPos)
+
+        public List<NodeCfg> PasteNode(HashSet<int> copyIdx, string copyFile, Vector2 graphPos)
         {
             List<NodeCfg> l = new List<NodeCfg>();
             if (copyIdx == null || copyIdx.Count == 0)
@@ -471,20 +471,20 @@ namespace Simple.BehaviorTree
 
         public BehaviorTreeEditorGraphNode FindNode(NodeCfg nodeCfg)
         {
-            return FindOne<BehaviorTreeEditorGraphNode>(InternalFindNode2, nodeCfg,false);
+            return FindOne<BehaviorTreeEditorGraphNode>(InternalFindNode2, nodeCfg, false);
         }
 
         BehaviorTreeEditorGraphNode InternalFindNode2(BehaviorTreeEditorGraphNode graphNode, object param)
         {
-            return (graphNode.cfg == (NodeCfg)param)? graphNode : null;
+            return (graphNode.cfg == (NodeCfg)param) ? graphNode : null;
         }
 
-        public T FindOne<T>(Func<BehaviorTreeEditorGraphNode, object, T> a,object param,bool childFirst =false)
+        public T FindOne<T>(Func<BehaviorTreeEditorGraphNode, object, T> a, object param, bool childFirst = false)
         {
-            
+
             foreach (var graphTree in graphTrees)
             {
-                var ret = FindOneChild(graphTree.root,a,param, childFirst);
+                var ret = FindOneChild(graphTree.root, a, param, childFirst);
                 if (ret != null)
                     return ret;
             }
@@ -493,14 +493,14 @@ namespace Simple.BehaviorTree
 
         T FindOneChild<T>(BehaviorTreeEditorGraphNode graphNode, Func<BehaviorTreeEditorGraphNode, object, T> a, object param, bool childFirst)
         {
-            if(!childFirst)
+            if (!childFirst)
             {
                 var ret = a(graphNode, param);
                 if (ret != null)
                     return ret;
             }
 
-            if(graphNode.IsParentNode && graphNode.CfgEx.expandChild)
+            if (graphNode.IsParentNode && graphNode.CfgEx.expandChild)
             {
                 for (int i = 0, j = graphNode.children.Count; i < j; ++i)
                 {
@@ -523,7 +523,7 @@ namespace Simple.BehaviorTree
         {
             foreach (var graphTree in graphTrees)
             {
-                FindAllChild<T>(graphTree.root, a, param,l);    
+                FindAllChild<T>(graphTree.root, a, param, l);
             }
         }
 
@@ -540,7 +540,7 @@ namespace Simple.BehaviorTree
             }
         }
 
-        public void FindAllBreak<T>(Func<BehaviorTreeEditorGraphNode, object, ICollection<T>,bool> a, object param, ICollection<T> l)
+        public void FindAllBreak<T>(Func<BehaviorTreeEditorGraphNode, object, ICollection<T>, bool> a, object param, ICollection<T> l)
         {
             foreach (var graphTree in graphTrees)
             {
@@ -567,19 +567,19 @@ namespace Simple.BehaviorTree
 
         public BehaviorTreeEditorGraphNode FindNode(Vector2 pos)
         {
-            return FindOne<BehaviorTreeEditorGraphNode>(InternalFindNode,pos,true);
+            return FindOne<BehaviorTreeEditorGraphNode>(InternalFindNode, pos, true);
         }
 
         BehaviorTreeEditorGraphNode InternalFindNode(BehaviorTreeEditorGraphNode graphNode, object param)
         {
             return graphNode.RectBk.Contains((Vector2)param) ? graphNode : null;
         }
-        
+
         HashSet<BehaviorTreeEditorGraphNode> temList = new HashSet<BehaviorTreeEditorGraphNode>();
         public HashSet<BehaviorTreeEditorGraphNode> FindNodes(Rect r)
         {
             temList.Clear();
-            FindAll<BehaviorTreeEditorGraphNode>(InternalFindNodes, r,temList);
+            FindAll<BehaviorTreeEditorGraphNode>(InternalFindNodes, r, temList);
             return temList;
         }
 
@@ -628,7 +628,7 @@ namespace Simple.BehaviorTree
                 return true;
             }
 
-            if(graphNode.IsParentNode && graphNode.CfgEx.expandChild)
+            if (graphNode.IsParentNode && graphNode.CfgEx.expandChild)
             {
                 if (graphNode.IsHitLinkChildren(pos))
                 {
@@ -646,7 +646,7 @@ namespace Simple.BehaviorTree
         {
             foreach (var n in selNodes)
             {
-                if (n.graphTree== tree)
+                if (n.graphTree == tree)
                     return true;
             }
             return false;
@@ -746,7 +746,7 @@ namespace Simple.BehaviorTree
                 var graphNode = FindNode(n);
                 graphNode.IsSel = true;
                 selNodes.Add(graphNode);
-                
+
             }
             isSelectingArea = false;
         }
@@ -834,7 +834,7 @@ namespace Simple.BehaviorTree
         }
         #endregion
 
-       
+
 
 
         public void Draw()
@@ -844,6 +844,6 @@ namespace Simple.BehaviorTree
                 graphTree.Draw();
             }
         }
-        
+
     }
 }

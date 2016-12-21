@@ -18,7 +18,7 @@ namespace Simple.BehaviorTree
         public Dictionary<string, ShareValueBase> m_values = new Dictionary<string, ShareValueBase>();
 
         ValueMgrCfg m_cfg;
-           
+
         public ShareValueBase<T> GetValue<T>(string name)
         {
             //先找下
@@ -28,7 +28,7 @@ namespace Simple.BehaviorTree
             //检错下
             if (obj != null && shareValue == null)
             {
-                Debuger.LogError("行为树变量类型异常，实际类型:{0},目标类型:{1}", obj == null? "空指针": obj.GetType().Name, typeof(ShareValueBase<T>));
+                Debuger.LogError("行为树变量类型异常，实际类型:{0},目标类型:{1}", obj == null ? "空指针" : obj.GetType().Name, typeof(ShareValueBase<T>));
                 return null;
             }
 #if UNITY_EDITOR
@@ -64,7 +64,7 @@ namespace Simple.BehaviorTree
 
         public void Reset()
         {
-            foreach(var v in m_values.Values)
+            foreach (var v in m_values.Values)
             {
                 v.Reset();
             }
@@ -83,5 +83,5 @@ namespace Simple.BehaviorTree
         }
     }
 
-    
+
 }

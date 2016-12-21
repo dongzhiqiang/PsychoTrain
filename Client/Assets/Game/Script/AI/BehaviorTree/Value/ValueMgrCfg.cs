@@ -44,25 +44,25 @@ namespace Simple.BehaviorTree
         Role,
         max
     }
-    
+
     public class ValueMgrCfg
     {
-        public static string[] ValueTypeName = new string[] { "整数", "浮点数",  "布尔", "字符串","Vector3","游戏对象","角色" };
+        public static string[] ValueTypeName = new string[] { "整数", "浮点数", "布尔", "字符串", "Vector3", "游戏对象", "角色" };
         public static Dictionary<enValueType, ValueType> s_typeIdx = new Dictionary<enValueType, ValueType>();
         public static Dictionary<Type, ValueType> s_valueIdx = new Dictionary<Type, ValueType>();
         public static Dictionary<Type, ValueType> s_shareValueIdx = new Dictionary<Type, ValueType>();
 
         public List<ValueBase> m_value = new List<ValueBase>();
-        
+
         Dictionary<string, ValueBase> m_nameIdx = new Dictionary<string, ValueBase>();
         Dictionary<enValueType, string[]> m_typeNames = new Dictionary<enValueType, string[]>();
-        
+
         string m_addName = "";
-        
+
         static ValueMgrCfg()
         {
             List<ValueType> l = new List<ValueType>();
-            l.Add(new ValueType(enValueType.Float, typeof(Value<float>),typeof(ShareValue<float>)));
+            l.Add(new ValueType(enValueType.Float, typeof(Value<float>), typeof(ShareValue<float>)));
             l.Add(new ValueType(enValueType.Int, typeof(Value<int>), typeof(ShareValue<int>)));
             l.Add(new ValueType(enValueType.Bool, typeof(Value<bool>), typeof(ShareValue<bool>)));
             l.Add(new ValueType(enValueType.String, typeof(Value<string>), typeof(ShareValue<string>)));
@@ -82,7 +82,7 @@ namespace Simple.BehaviorTree
         public static ValueBase CreateValue(enValueType type)
         {
             var valueType = s_typeIdx.Get(type);
-            if (valueType ==null)
+            if (valueType == null)
             {
                 Debuger.LogError("未知的类型，不能创建:{0}", type);
                 return null;
@@ -90,10 +90,10 @@ namespace Simple.BehaviorTree
 
             ValueBase v = (ValueBase)Activator.CreateInstance(valueType.value);
             v.type = valueType.type;
-           
+
             return v;
         }
-        
+
         public static ShareValueBase<T> CreateShareValue<T>(ValueBase<T> val)
         {
             var valueType = s_typeIdx.Get(val.type);
@@ -102,7 +102,7 @@ namespace Simple.BehaviorTree
                 Debuger.LogError("未知的类型，不能创建:{0}", val.type);
                 return null;
             }
-            
+
             ShareValueBase<T> v = Activator.CreateInstance(valueType.shareValue) as ShareValueBase<T>;
             if (v == null)
             {
@@ -110,9 +110,9 @@ namespace Simple.BehaviorTree
                 return null;
             }
             v.name = val.name;
-            v.InitVal = val; 
+            v.InitVal = val;
             v.Reset();
-           
+
             return v;
         }
 
@@ -120,8 +120,8 @@ namespace Simple.BehaviorTree
         public void Reset()
         {
             m_nameIdx.Clear();
-            Dictionary<enValueType, List<string>> tem= new Dictionary<enValueType, List<string>>();
-            
+            Dictionary<enValueType, List<string>> tem = new Dictionary<enValueType, List<string>>();
+
             for (int i = 0, j = m_value.Count; i < j; ++i)
             {
                 var v = m_value[i];
@@ -162,7 +162,7 @@ namespace Simple.BehaviorTree
             ValueBase v = CreateValue(type);
             if (v == null)
                 return null;
-            
+
             v.name = name;
             m_value.Add(v);
             Reset();
@@ -204,7 +204,7 @@ namespace Simple.BehaviorTree
                     GUILayout.Button("类型", EditorStyles.toolbarButton, GUILayout.Width(60));
                     GUILayout.Button("名字", EditorStyles.toolbarButton, GUILayout.Width(80));
                     GUILayout.Button("初始值", EditorStyles.toolbarButton);
-                    if(mgr!= null)
+                    if (mgr != null)
                     {
                         GUILayout.Button("运行值", EditorStyles.toolbarButton, GUILayout.Width(90));
                     }
@@ -237,17 +237,17 @@ namespace Simple.BehaviorTree
                         }
                         genericMenu.ShowAsContext();
                     }
-                    using (new AutoStyleMargin(EditorStyles.toolbarTextField,new RectOffset(0,0,0,0), new RectOffset(0, 0, 0, 0)))
+                    using (new AutoStyleMargin(EditorStyles.toolbarTextField, new RectOffset(0, 0, 0, 0), new RectOffset(0, 0, 0, 0)))
                     {
                         m_addName = EditorGUILayout.TextField(GUIContent.none, m_addName, EditorStyles.textField);
                     }
-                        
+
 
 
                 }
             }
 
-            return false;            
+            return false;
         }
 #endif
     }

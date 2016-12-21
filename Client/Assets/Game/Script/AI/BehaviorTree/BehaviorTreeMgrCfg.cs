@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 namespace Simple.BehaviorTree
 {
-    
+
 
     public class BehaviorTreeMgrCfg
     {
         public delegate void OnReset();
         //public delegate void onFileChange(BehaviorTreeFileCfg cfg);
 
-        
+
 
         static BehaviorTreeMgrCfg s_instance = null;
         public static BehaviorTreeMgrCfg instance
@@ -40,14 +40,14 @@ namespace Simple.BehaviorTree
 
         public ValueMgrCfg valueMgrCfg = new ValueMgrCfg();
         public List<string> files = new List<string>();
-        
+
 
         public event OnReset onReset;
         //public event onFileChange onFileChange;
 
         HashSet<string> fileIdx = new HashSet<string>();
-        Dictionary<string, BehaviorTreeFileCfg> fileCache= new Dictionary<string, BehaviorTreeFileCfg>();
-        
+        Dictionary<string, BehaviorTreeFileCfg> fileCache = new Dictionary<string, BehaviorTreeFileCfg>();
+
         void Save()
         {
             Util.SaveJsonFile("ai/behaviorTreeMgrCfg", this);
@@ -60,22 +60,22 @@ namespace Simple.BehaviorTree
             foreach (var file in files)
                 fileIdx.Add(file);
 
-            if(onReset!= null)
+            if (onReset != null)
                 onReset();
         }
-        
-        public void AddValue(enValueType type, string name){valueMgrCfg.Add(type, name);}
 
-        public void RemoveValue(string name){valueMgrCfg.Remove(name);}
+        public void AddValue(enValueType type, string name) { valueMgrCfg.Add(type, name); }
+
+        public void RemoveValue(string name) { valueMgrCfg.Remove(name); }
 
         public BehaviorTreeFileCfg AddFile(string file)
         {
-            if(string.IsNullOrEmpty(file))
+            if (string.IsNullOrEmpty(file))
             {
                 Debuger.LogError("行为树文件名不能为空");
                 return null;
             }
-            if(fileIdx.Contains(file))
+            if (fileIdx.Contains(file))
             {
                 Debuger.LogError("行为树文件已经存在不能新建");
                 return null;
@@ -102,7 +102,7 @@ namespace Simple.BehaviorTree
                 fileCache.Remove(fileCfg.File);
         }
 
-        public BehaviorTreeFileCfg GetFile(string file )
+        public BehaviorTreeFileCfg GetFile(string file)
         {
             if (string.IsNullOrEmpty(file))
             {
@@ -136,10 +136,10 @@ namespace Simple.BehaviorTree
             Util.SaveJsonFile("ai/" + fileCfg.File, fileCfg);
             Save();
         }
-        
+
         public static void PreLoad(string behavior)
         {
-            if (string.IsNullOrEmpty(behavior) || behavior=="-1")
+            if (string.IsNullOrEmpty(behavior) || behavior == "-1")
                 return;
 
             if (s_preLoads.Contains(behavior))

@@ -44,13 +44,13 @@ public class MoveEventCfg : SkillEventCfg
     public enMoveEventDirType dirType = enMoveEventDirType.forward;//方向类型
 
     public bool self = false;//是自己移动，还是target移动
-    public float distance =5;//前进距离
+    public float distance = 5;//前进距离
     public int frame = 5;//前进多少帧
     public bool avoid = false;//穿越小怪(但不能穿越大怪)，见战斗文档的碰撞层里的角色翻滚层设定
     public int touchOverFrame = -1;//在第几帧到移动完成之间检测是不是碰到敌人，碰到立即结束，如果填-1表明不用判断是不是碰到敌人
     public bool endIfSkillEnd = false;//技能结束则结束
     public string endSkill = "";//结束技能
-    
+
 
     public override enSkillEventType Type { get { return enSkillEventType.move; } }
 #if UNITY_EDITOR
@@ -145,49 +145,53 @@ public class MoveEventCfg : SkillEventCfg
         //空中免疫
         if (rsm.IsAir)
             return false;
-        
-        
-        if(frame < 0){
+
+
+        if (frame < 0)
+        {
             Debuger.LogError("移动事件参数出错，持续帧数不能填0");
         }
 
         //一些检错
-        if(source == target && (
+        if (source == target && (
             moveType == enMoveEventMoveType.look ||
             moveType == enMoveEventMoveType.back ||
             dirType == enMoveEventDirType.look ||
-            dirType == enMoveEventDirType.back )){
-            Debuger.LogError("移动事件参数出错，作用对象和释放者不能是同一个人:{0} {1} {2}",source.Cfg.id,moveType,dirType);
+            dirType == enMoveEventDirType.back))
+        {
+            Debuger.LogError("移动事件参数出错，作用对象和释放者不能是同一个人:{0} {1} {2}", source.Cfg.id, moveType, dirType);
             return false;
         }
         Role r = self ? source : target;
-        Role other = self ? target:source  ;
+        Role other = self ? target : source;
 
         //计算移动对应的一些参数
-        TranPartCxt.enMove cxtMoveType= TranPartCxt.enMove.dir;
-        Vector3 moveDir=  Vector3.zero;
-        Pos moveTarget=null;
-        
+        TranPartCxt.enMove cxtMoveType = TranPartCxt.enMove.dir;
+        Vector3 moveDir = Vector3.zero;
+        Pos moveTarget = null;
+
         if (moveType == enMoveEventMoveType.forward)
             moveDir = source.transform.forward;
         else if (moveType == enMoveEventMoveType.backward)
             moveDir = -source.transform.forward;
-        else if (moveType == enMoveEventMoveType.look){
-            cxtMoveType = self ? TranPartCxt.enMove.look: TranPartCxt.enMove.back;
+        else if (moveType == enMoveEventMoveType.look)
+        {
+            cxtMoveType = self ? TranPartCxt.enMove.look : TranPartCxt.enMove.back;
             moveDir = target.transform.position - source.transform.position;
             moveTarget = IdTypePool<PosTran>.Get();
-            ((PosTran)moveTarget).SetTran(self ?target.transform :source.transform);
+            ((PosTran)moveTarget).SetTran(self ? target.transform : source.transform);
         }
         else if (moveType == enMoveEventMoveType.back)
         {
             cxtMoveType = self ? TranPartCxt.enMove.back : TranPartCxt.enMove.look;
-            moveDir = source.transform.position -target.transform.position;
+            moveDir = source.transform.position - target.transform.position;
             moveTarget = IdTypePool<PosTran>.Get();
-            ((PosTran)moveTarget).SetTran(self ?target.transform:source.transform);
+            ((PosTran)moveTarget).SetTran(self ? target.transform : source.transform);
         }
-        else if(moveType == enMoveEventMoveType.joystick){
+        else if (moveType == enMoveEventMoveType.joystick)
+        {
             moveDir = source.MovePart.LastDir;
-            if(moveDir == Vector3.zero)
+            if (moveDir == Vector3.zero)
                 moveDir = source.transform.forward;
         }
         else if (moveType == enMoveEventMoveType.targetForward)
@@ -198,13 +202,13 @@ public class MoveEventCfg : SkillEventCfg
         {
             Vector3 pos = other.transform.position;
             Vector3 posSelf = r.transform.position;
-            Vector3 link = posSelf -pos;
+            Vector3 link = posSelf - pos;
             link.y = 0;
             float dis = link.magnitude;
             float perimeter = 2 * Mathf.PI * dis;
             if (dis == 0)
                 moveDir = -r.transform.right;
-            else if(distance > (perimeter / 4))
+            else if (distance > (perimeter / 4))
                 moveDir = (-link).HorizontalLeft();
             else
             {
@@ -242,7 +246,7 @@ public class MoveEventCfg : SkillEventCfg
         else if (moveType == enMoveEventMoveType.backEventGroupRoot)
         {
             cxtMoveType = self ? TranPartCxt.enMove.back : TranPartCxt.enMove.look;
-            moveDir = eventFrame.EventGroup.Root.position- target.transform.position;
+            moveDir = eventFrame.EventGroup.Root.position - target.transform.position;
             moveTarget = IdTypePool<PosTran>.Get();
             ((PosTran)moveTarget).SetTran(eventFrame.EventGroup.Root);
         }
@@ -251,14 +255,14 @@ public class MoveEventCfg : SkillEventCfg
             Debuger.LogError("移动事件，未知的移动类型:{0}", moveType);
             return false;
         }
-        moveDir.y =0;
-        if(Vector3.zero ==moveDir)
+        moveDir.y = 0;
+        if (Vector3.zero == moveDir)
         {
             if (moveTarget != null) moveTarget.Put();
             Debuger.Log("计算出来的移动方向为0:{0}", moveType);
             return false;
         }
-        
+
         //计算方向
         Pos dirTarget = null;
         TranPartCxt.enDir cxtDirType;
@@ -295,15 +299,15 @@ public class MoveEventCfg : SkillEventCfg
         }
 
         //只改方向的情况
-        if (frame == 0 )
+        if (frame == 0)
         {
-            if(dirTarget != null)dirTarget.Put();
+            if (dirTarget != null) dirTarget.Put();
             if (moveTarget != null) moveTarget.Put();
             return true;
         }
 
         //计算速度
-        float speed =distance/(frame*Util.One_Frame);
+        float speed = distance / (frame * Util.One_Frame);
 
         TranPartCxt cxt = r.TranPart.AddCxt();
         if (cxt == null)
@@ -314,12 +318,12 @@ public class MoveEventCfg : SkillEventCfg
         }
         cxt.moveType = cxtMoveType;
         cxt.SetMoveDir(moveDir);
-        cxt.moveTarget=moveTarget;
+        cxt.moveTarget = moveTarget;
         cxt.speed = speed;
         cxt.dirType = cxtDirType;
         cxt.dirTarget = dirTarget;
         cxt.dirModelSmooth = false;
-        cxt.duration =frame*Util.One_Frame;
+        cxt.duration = frame * Util.One_Frame;
 
         //可穿透
         if (avoid)
@@ -331,17 +335,17 @@ public class MoveEventCfg : SkillEventCfg
 
         //碰到结束
         cxt.touchOverFrame = touchOverFrame;
-        
+
         //结束技能
-        if(!string.IsNullOrEmpty(endSkill))
+        if (!string.IsNullOrEmpty(endSkill))
         {
-            Role endSkillTarget =RoleMgr.instance.IsEnemy(target, source)? target:null;
+            Role endSkillTarget = RoleMgr.instance.IsEnemy(target, source) ? target : null;
             if (endSkillTarget == null)
                 endSkillTarget = eventFrame.EventGroup.Target;
 
             cxt.SetEndSkill(endSkill, endSkillTarget);
         }
-            
+
 
         return true;
     }

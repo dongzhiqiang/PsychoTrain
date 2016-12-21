@@ -26,7 +26,7 @@ public class HitPropCfg
     public int id;
     public string name = "";
     public string desc = "";
-    public string icon="";
+    public string icon = "";
     public float noneDef = 0;
     public float strongDef = 0;
     public float normalDef = 0;
@@ -40,7 +40,7 @@ public class HitPropCfg
     public static void Init()
     {
         s_nameIdx.Clear();
-        s_cfgs = Csv.CsvUtil.Load< HitPropCfg>("role/hitProp");  
+        s_cfgs = Csv.CsvUtil.Load<HitPropCfg>("role/hitProp");
         foreach (HitPropCfg cfg in s_cfgs)
         {
             cfg.defs[(int)enHitDef.none] = cfg.noneDef;
@@ -58,18 +58,19 @@ public class HitPropCfg
             return null;
         return s_nameIdx.Get(name);
     }
-    
-    public float  GetRate(enHitDef hitProp)
+
+    public float GetRate(enHitDef hitProp)
     {
         return defs[(int)hitProp];
     }
 
-    public static List<enHitDef> GetDefs(string[] hitDefType) {
+    public static List<enHitDef> GetDefs(string[] hitDefType)
+    {
         List<enHitDef> l = new List<enHitDef>(s_cfgs.Count);
-        for (int i = 0;i< s_cfgs.Count;++i)
+        for (int i = 0; i < s_cfgs.Count; ++i)
         {
             var cfg = s_cfgs[i];
-            var defType = hitDefType != null && i <=hitDefType.Length  ? hitDefType[i] :null ;
+            var defType = hitDefType != null && i <= hitDefType.Length ? hitDefType[i] : null;
             if (string.IsNullOrEmpty(defType))
             {
                 l.Add(enHitDef.none);
@@ -88,5 +89,5 @@ public class HitPropCfg
 
         return l;
     }
-    
+
 }

@@ -13,17 +13,17 @@ using System.Collections.Generic;
 
 public class UILevelAreaMonster : UILevelArea
 {
-    
+
     #region Fields
     public ImageEx m_monsterImg;
     public TextEx m_monsterCount;
-    
+
     int m_obExit;
     #endregion
 
     #region Properties
     public override enLevelArea Type { get { return enLevelArea.monster; } }
-    public override bool IsOpenOnStart { get{return false;} }
+    public override bool IsOpenOnStart { get { return false; } }
 
     #endregion
 
@@ -57,7 +57,7 @@ public class UILevelAreaMonster : UILevelArea
 
     protected override void OnRoleBorn()
     {
-       
+
     }
 
 
@@ -85,5 +85,5 @@ public class UILevelAreaMonster : UILevelArea
 
     #endregion
 
-    
+
 }

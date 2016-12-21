@@ -12,7 +12,7 @@ public class LevelScene : LevelBase
     static int lastSecond = 20;
 
     public float startTime;
-    
+
     List<string> showWaveGroupIdList;
 
     string curWaveGroupFlag = "";
@@ -29,7 +29,7 @@ public class LevelScene : LevelBase
     {
         //打开摇杆和魂值、金币、物品栏
         UILevel uiLevel = UIMgr.instance.Open<UILevel>();
-        
+
         //打开通关条件
         //uiLevel.Open<UILevelAreaCondition>();
         uiLevel.Open<UILevelAreaGizmos>();
@@ -64,7 +64,7 @@ public class LevelScene : LevelBase
         //}
 
         //uiAreaWave = UIMgr.instance.Get<UILevel>().Get<UILevelAreaWave>();
-        
+
         startTime = TimeMgr.instance.logicTime;
         bShowLimitTime = false;
     }
@@ -74,7 +74,7 @@ public class LevelScene : LevelBase
 
         //打开摇杆和魂值、金币、物品栏
         UILevel uiLevel = UIMgr.instance.Open<UILevel>();
-        
+
         //打开通关条件
         //uiLevel.Open<UILevelAreaCondition>();
         uiLevel.Open<UILevelAreaGizmos>();
@@ -99,20 +99,6 @@ public class LevelScene : LevelBase
             LevelMgr.instance.GotoMaincity();
             return;
         }
-
-        LevelEndReqVo request = new LevelEndReqVo();
-        request.isWin = isWin;
-        request.roomId = Room.instance.roomCfg.id;
-        request.time = (int)(TimeMgr.instance.logicTime - startTime);      //通关时间
-        request.starsInfo = new Dictionary<string, int>();
-        //List<SceneTrigger> triList = SceneEventMgr.instance.conditionTriggerList;
-        //for (int i = 0; i < triList.Count; i++)
-        //{
-        //    RoomConditionCfg cfg = triList[i].GetConditionCfg();
-        //    request.starsInfo.Add(cfg.id + "", triList[i].bReach() ? 1 : 0);
-        //}
-
-        NetMgr.instance.LevelHandler.SendEnd(request);
         bShowLimitTime = false;
     }
 
@@ -121,20 +107,7 @@ public class LevelScene : LevelBase
     {
         if (role.IsHero)
             return;
-
-        ////立即销毁的 直接飞魂值
-        //if (isNow)
-        //{
-        //}
     }
-    ////角色死亡状态结束  //有些怪是直接爆开 没有死亡状态
-    //public override void OnRoleDeadEnd(Role role)
-    //{
-    //    if (!role.IsHero)
-    //    {
-    //        GiveReward(role);
-    //    }
-    //}
 
     public override void OnLeave()
     {
@@ -228,19 +201,6 @@ public class LevelScene : LevelBase
 
     }
 
-    //public int GetCurWaveNum()
-    //{
-    //    return prevGroupWaveNum + curWaveNum;
-    //}
-
-    //public void SetWaveNum()
-    //{
-    //    if (uiAreaWave.IsOpen)
-    //    {
-    //        uiAreaWave.SetWave(GetCurWaveNum(), maxWaveNum);
-    //    }
-    //}
-
     public void OnWin()
     {
         Room.instance.StartCoroutine(CoWin());
@@ -254,13 +214,6 @@ public class LevelScene : LevelBase
         Role hero = RoleMgr.instance.Hero;
         if (hero != null)
         {
-            //List<Role> pets = hero.PetsPart.GetMainPets();
-            //foreach (Role pet in pets)
-            //{
-            //    if (pet != null && pet.State == Role.enState.alive)
-            //        pet.RoleModel.Show(false);
-            //}
-
             hero.RoleModel.Foot.gameObject.SetActive(false);
         }
 
@@ -275,8 +228,6 @@ public class LevelScene : LevelBase
 
     IEnumerator CoLose()
     {
-        //yield return new WaitForSeconds(2f);
-        //UIMgr.instance.Open<UILevelFail>();
         yield return 0;
     }
 }

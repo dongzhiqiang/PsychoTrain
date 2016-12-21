@@ -13,7 +13,7 @@ using System.Collections.Generic;
 //有效轴
 public enum enValidAxis
 {
-    
+
     horizontal,//水平面
     vertical,//只计算高度
     max
@@ -49,8 +49,8 @@ public abstract class Pos : IdType
 public class PosPos : Pos
 {
     Vector3 m_pos;
-    
-    public override enType GetType() { return  enType.pos;}
+
+    public override enType GetType() { return enType.pos; }
 
     //是不是有效，有时候是无效的，比如敌人被杀死
     public override bool IsValid() { return true; }
@@ -65,7 +65,7 @@ public class PosTran : Pos
 {
     Transform m_tran;
 
-    
+
     public override enType GetType() { return enType.tran; }
 
     //是不是有效，有时候是无效的，比如敌人被杀死
@@ -78,18 +78,18 @@ public class PosTran : Pos
             Debuger.LogError("从空的transform获取位置");
             return Vector3.zero;
         }
-            
-        return m_tran.position; 
+
+        return m_tran.position;
     }
 
     public void SetTran(Transform t) { m_tran = t; }
 }
 
-public class PosFunc: Pos
+public class PosFunc : Pos
 {
     System.Func<Vector3> m_fun;
 
-    
+
     public override enType GetType() { return enType.func; }
 
     //是不是有效，有时候是无效的，
@@ -173,7 +173,7 @@ public class PosUtil
             }
         }
 
-        if(height != float.MinValue)
+        if (height != float.MinValue)
         {
             return new Vector3(pos.x, height, pos.z);
         }
@@ -185,8 +185,8 @@ public class PosUtil
     //计算出相机看到的地板
     public static Vector3 CaleByCamera(Camera ca)
     {
-        
-        RaycastHit[] rhs = Physics.RaycastAll(ca.transform.position, ca.transform.forward, 1000);   
+
+        RaycastHit[] rhs = Physics.RaycastAll(ca.transform.position, ca.transform.forward, 1000);
         for (int i = 0; i < rhs.Length; i++)
         {
             RaycastHit rh = rhs[i];

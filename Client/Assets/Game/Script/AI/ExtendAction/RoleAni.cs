@@ -39,7 +39,7 @@ namespace Simple.BehaviorTree
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-            
+
             using (new AutoEditorTipButton(
 @"动作序列上下文,免疫行为列表
 角色进入一个播放一系列动作的行为中，这个行为的将替代待机行为
@@ -54,11 +54,11 @@ namespace Simple.BehaviorTree
                 }
             }
             using (new AutoEditorTipButton("找不到动作的时候报错下"))
-                errorIfNoFindAni = EditorGUILayout.Toggle("找不到报错",errorIfNoFindAni);
+                errorIfNoFindAni = EditorGUILayout.Toggle("找不到报错", errorIfNoFindAni);
 
         }
 #endif
-        
+
     }
 
 
@@ -68,13 +68,15 @@ namespace Simple.BehaviorTree
 
         bool m_hasEnter = false;
         //入栈。行为树遍历过程中，遍历到一个节点就会入栈它。可以用做是当前次遍历的OnInit
-        protected override void OnPush() {
+        protected override void OnPush()
+        {
             m_hasEnter = false;
-            
+
         }
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             var cxt = CfgEx.Cxt;
             if (cxt == null)
                 return enNodeState.failure;
@@ -83,7 +85,7 @@ namespace Simple.BehaviorTree
             if (owner == null || owner.State != Role.enState.alive)
                 return enNodeState.failure;
 
-            if(!m_hasEnter)
+            if (!m_hasEnter)
             {
                 m_hasEnter = true;
 
@@ -92,7 +94,7 @@ namespace Simple.BehaviorTree
                 {
                     if (CfgEx.errorIfNoFindAni)
                     {
-                        LogError("找不到动作:{0}",CfgEx.param);
+                        LogError("找不到动作:{0}", CfgEx.param);
                     }
                     return enNodeState.failure;
                 }
@@ -106,17 +108,18 @@ namespace Simple.BehaviorTree
             //检查是不是结束
             else
             {
-                if(!owner.StatePart.StateAni.IsPlaying || owner.StatePart.StateAni.Cxt!=cxt)
+                if (!owner.StatePart.StateAni.IsPlaying || owner.StatePart.StateAni.Cxt != cxt)
                 {
                     return enNodeState.success;
                 }
-                
+
             }
             return enNodeState.running;
         }
 
         //出栈。自己执行完了以及自己的子树执行完成后出栈
-        protected override void OnPop() {
+        protected override void OnPop()
+        {
             var cxt = CfgEx.Cxt;
             if (cxt == null)
                 return;

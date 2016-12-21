@@ -101,7 +101,7 @@ public class JumpEventCfg : SkillEventCfg
 
     public override bool OnHandle(Role source, Role target, SkillEventFrame eventFrame)
     {
-        if(target!= source)
+        if (target != source)
         {
             Debuger.LogError("跳起事件的作用对象必须为释放者");
             return false;
@@ -111,14 +111,14 @@ public class JumpEventCfg : SkillEventCfg
         if (cxt == null)
             return false;
 
-        RoleStateFall fall =target.StatePart.StateFall;
-        fall.FirstHangDuration =firstHangDuration;
+        RoleStateFall fall = target.StatePart.StateFall;
+        fall.FirstHangDuration = firstHangDuration;
         fall.HangDuration = hangDuration;
-        fall.FallSpeed =fallSpeed;
+        fall.FallSpeed = fallSpeed;
         fall.FallAccelerate = fallAccelerate;
-        fall.CameraOverTime =cameraOverTime;
-        
-        
+        fall.CameraOverTime = cameraOverTime;
+
+
 
         //设置为空中状态
         target.StatePart.IsAir = true;
@@ -130,7 +130,7 @@ public class JumpEventCfg : SkillEventCfg
         cxt.duration = duration;
         cxt.minSpeed = 0;//不允许速度为负数，不然会有下坠感
 
-        
+
 
         return true;
     }

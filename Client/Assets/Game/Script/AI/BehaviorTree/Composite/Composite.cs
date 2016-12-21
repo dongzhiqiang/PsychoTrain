@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 namespace Simple.BehaviorTree
 {
-    public class CompositeCfg: ParentNodeCfg
+    public class CompositeCfg : ParentNodeCfg
     {
 
     }
 
-    public class Composite: ParentNode
+    public class Composite : ParentNode
     {
-        
+
 
 
     }

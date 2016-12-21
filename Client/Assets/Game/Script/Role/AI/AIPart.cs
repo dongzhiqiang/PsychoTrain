@@ -31,6 +31,9 @@ public class AIPart : RolePart
     public override enPart Type { get { return enPart.ai; } }
     public BehaviorTree BehaviorTree { get { return m_behaviorTree; } }
     public bool IsPlaying { get { return m_behaviorTree.IsPlaying; } }
+
+    //上次手动操作时间
+    public float LastOperation { get { return m_lastOperation; } }
     #endregion
 
     #region Frame    

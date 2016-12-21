@@ -6,14 +6,14 @@ using UnityEngine.UI;
 
 namespace Simple.BehaviorTree
 {
-    public class ActionCfg:NodeCfg
+    public class ActionCfg : NodeCfg
     {
 
     }
 
-    public class Aciton:Node
+    public class Aciton : Node
     {
-       
+
 
 
     }

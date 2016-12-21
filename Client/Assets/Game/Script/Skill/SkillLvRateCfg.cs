@@ -13,20 +13,20 @@ using System.Collections.Generic;
 
 
 
-public class SkillLvRateCfg 
+public class SkillLvRateCfg
 {
     public string id;
     public int lv;
     public float rate;
-    
+
 
 
     public static Dictionary<string, Dictionary<int, SkillLvRateCfg>> m_cfgs = new Dictionary<string, Dictionary<int, SkillLvRateCfg>>();
     public static void Init()
     {
         m_cfgs.Clear();
-        
-        List<SkillLvRateCfg> l = Csv.CsvUtil.Load< SkillLvRateCfg>("systemSkill/skillLvRate");
+
+        List<SkillLvRateCfg> l = Csv.CsvUtil.Load<SkillLvRateCfg>("systemSkill/skillLvRate");
         foreach (SkillLvRateCfg cfg in l)
         {
             m_cfgs.GetNewIfNo(cfg.id)[cfg.lv] = cfg;

@@ -45,15 +45,15 @@ namespace Simple.BehaviorTree
         Rect rTree;
         Rect rRightBottom;
         Rect rLeftBottom;
-        
+
         float yChildLine = 0;
-        
+
 
         public bool IsSel { get { return isSel; } set { isSel = value; } }
         public bool IsHover { get { return isHover; } set { isHover = value; } }
         public bool IsSelLink { get { return isLink; } set { isLink = value; } }//到父节点的链接是不是被选中中
         public bool IsParentNode { get { return cfg is ParentNodeCfg; } }
-        public ParentNodeCfg CfgEx{ get { return cfg as ParentNodeCfg; } }
+        public ParentNodeCfg CfgEx { get { return cfg as ParentNodeCfg; } }
 
         public Rect RectLinkParent { get { return rLinkParent; } }
         public Rect RectLinkChildren { get { return rLinkChildren; } }
@@ -89,11 +89,11 @@ namespace Simple.BehaviorTree
                     float wChild = 0;
                     foreach (var c in children)
                     {
-                        wChild += (wChild!=0?5:0)+c.RectBk.width;
-                        if(c.NeedExpand)
+                        wChild += (wChild != 0 ? 5 : 0) + c.RectBk.width;
+                        if (c.NeedExpand)
                             wTotalNeed += ((wTotalNeed != 0) ? 5 : 0) + c.WidthNeed;
                     }
-                    
+
                     return Mathf.Max(Mathf.Max(wChild, rBk.width), wTotalNeed);
                 }
             }
@@ -101,8 +101,9 @@ namespace Simple.BehaviorTree
 
         public bool NeedExpand
         {
-            get {
-                return children.Count > 0&&CfgEx.expandChild;
+            get
+            {
+                return children.Count > 0 && CfgEx.expandChild;
             }
         }
 
@@ -114,7 +115,7 @@ namespace Simple.BehaviorTree
             this.parent = parent;
         }
 
-        public static void SetPos(NodeCfg cfg, Vector2 posNew, BehaviorTreeEditorGraphNode  p)
+        public static void SetPos(NodeCfg cfg, Vector2 posNew, BehaviorTreeEditorGraphNode p)
         {
             posNew.x = Mathf.RoundToInt(posNew.x / cell) * cell;
             posNew.y = Mathf.RoundToInt(posNew.y / cell) * cell;
@@ -128,29 +129,29 @@ namespace Simple.BehaviorTree
         public void SetPos(Vector2 posNew, bool resetChild = false)
         {
             //对齐
-            SetPos(cfg, posNew,parent);
+            SetPos(cfg, posNew, parent);
 
             ResetRect(resetChild);
 
             if (IsParentNode)
             {
-                if(resetChild)
+                if (resetChild)
                     ResetLink();
                 else
                     parent.CheckChildLine();
             }
-                
+
             if (parent != null)
                 parent.CheckChildLine();
         }
-        
+
         public void ResetRect(bool resetChild)
         {
             float minWidth;
             float maxWidth;
             EditorUtil.MiddleLabel.CalcMinMaxWidth(new GUIContent(cfg.NodeType.name), out minWidth, out maxWidth);
             float width = Mathf.Clamp(maxWidth, 100, 200);
-            
+
 
             Vector2 pos = Pos;
             rBk = new Rect(pos.x - width / 2f, pos.y - bkHeight / 2f, width, bkHeight);
@@ -161,21 +162,21 @@ namespace Simple.BehaviorTree
             rExpand = new Rect(rLinkChildren.xMax - 18f, rLinkChildren.yMax - 20f, 18f, 20f);
             rIcon = new Rect(pos.x - 22, pos.y - 30, 44f, 44f);
             rName = new Rect(pos.x - width / 2, pos.y + 13, width, 20);
-            rRightBottom = new Rect(rBk.xMax -35f, rBk.yMax - 35, 35f, 35f);
-            rLeftBottom = new Rect(rBk.xMin +2, rBk.yMax - 27, 25f,25f);
+            rRightBottom = new Rect(rBk.xMax - 35f, rBk.yMax - 35, 35f, 35f);
+            rLeftBottom = new Rect(rBk.xMin + 2, rBk.yMax - 27, 25f, 25f);
 
             //注释
             rNote = new Rect(rBk.xMax - 20, rBk.yMin + 1, 17, 17);
-            rNoteArea= new Rect(rBk.xMax +3, rBk.yMin , 120, bkHeight-10);
+            rNoteArea = new Rect(rBk.xMax + 3, rBk.yMin, 120, bkHeight - 10);
 
             if (cfg.Parent == null)
             {
                 float minWidthTree;
                 float maxWidthTree;
                 EditorUtil.MiddleLabel.CalcMinMaxWidth(new GUIContent(cfg.Tree.name), out minWidthTree, out maxWidthTree);
-                rTree = new Rect(rBk.xMax, rBk.yMin, maxWidthTree+10, 30f);
+                rTree = new Rect(rBk.xMax, rBk.yMin, maxWidthTree + 10, 30f);
             }
-            
+
             if (resetChild && IsParentNode)
             {
                 for (int i = 0, j = children.Count; i < j; ++i)
@@ -219,10 +220,10 @@ namespace Simple.BehaviorTree
         {
             using (new AutoChangeColor(cfg.Ingore ? new Color(0.7f, 0.7f, 0.7f, 1) : Color.white))
             {
-                if(this.parent == null&& graphTree.tree != null)
+                if (this.parent == null && graphTree.tree != null)
                 {
                     Color c1 = GUIStyle.none.normal.textColor;
-                    GUIStyle.none.normal.textColor=Color.white;
+                    GUIStyle.none.normal.textColor = Color.white;
                     GUI.Label(rRootCountLabel, string.Format("{0}", graphTree.tree.RunCounter), GUIStyle.none);
                     GUIStyle.none.normal.textColor = c1;
                 }
@@ -256,18 +257,18 @@ namespace Simple.BehaviorTree
                 }
 
                 //底框
-                
+
                 GUI.Box(rBk, GUIContent.none, EditorUtil.TextureColorStyle(c, isSel));
 
                 //已运行状态显示
-                if(node != null)
+                if (node != null)
                 {
-                    if(node.State == enNodeState.success)
+                    if (node.State == enNodeState.success)
                         GUI.DrawTexture(rRightBottom, EditorUtil.LoadTexture2D("success"));
                     else if (node.State == enNodeState.failure)
                         GUI.DrawTexture(rRightBottom, EditorUtil.LoadTexture2D("failure"));
                 }
-                
+
                 //图标和名字
                 using (new AutoChangeColor(cfg.Ingore ? new Color(0.5f, 0.5f, 0.5f, 1f) : new Color(0.7f, 0.7f, 0.7f, 1f)))
                 {
@@ -279,7 +280,7 @@ namespace Simple.BehaviorTree
 
             //如果中断起效，那么显示下
             var conditonalCfg = cfg as ConditionalCfg;
-            if(conditonalCfg!=null&&conditonalCfg.interrupt != enInterrupt.none)
+            if (conditonalCfg != null && conditonalCfg.interrupt != enInterrupt.none)
             {
                 Conditional conditional = node as Conditional;
                 Color c = conditional != null && conditional.IsInterrupting ? new Color(0f, 0.698f, 0.4f, 1f) : new Color(0.5f, 0.5f, 0.5f, 1f);
@@ -291,21 +292,21 @@ namespace Simple.BehaviorTree
 
             if (cfg.Parent == null)
             {
-                GUI.Box(rTree, GUIContent.none, EditorUtil.AreaStyle(new Color(0.2f,0.2f,0.2f)));
+                GUI.Box(rTree, GUIContent.none, EditorUtil.AreaStyle(new Color(0.2f, 0.2f, 0.2f)));
                 GUI.Label(rTree, cfg.Tree.name, EditorUtil.MiddleLabel);
-                
+
             }
 
             //左上角禁用按钮
-            if (isHover|| cfg.ingore)
+            if (isHover || cfg.ingore)
                 cfg.ingore = GUI.Toggle(rIngore, cfg.ingore, "", EditorUtil.IngoreButton);
 
             //右上角注释显示按钮和注释区域
             if (!string.IsNullOrEmpty(cfg.note) || isHover || cfg.showNote)
                 cfg.showNote = GUI.Toggle(rNote, cfg.showNote, "", EditorUtil.TipButton);
 
-            if (EditorPrefs.GetBool("editorShowDebugInfo") )
-                GUI.Label(rBk, string.Format("    {0}   {1}", parent == null ? 0 : parent.children.IndexOf(this),cfg.id));
+            if (EditorPrefs.GetBool("editorShowDebugInfo"))
+                GUI.Label(rBk, string.Format("    {0}   {1}", parent == null ? 0 : parent.children.IndexOf(this), cfg.id));
 
         }
 
@@ -313,7 +314,7 @@ namespace Simple.BehaviorTree
         public void DrawGrapLink(bool sel)
         {
             bool running = node != null && node.State == enNodeState.running;
-            bool draw = sel && (IsSelLink || running) || (!sel && !IsSelLink&&!running);//选中或者运行中画在上面
+            bool draw = sel && (IsSelLink || running) || (!sel && !IsSelLink && !running);//选中或者运行中画在上面
             if (parent == null || !draw)
                 return;
             Vector2 parentPos = parent.RectLinkChildren.center;
@@ -336,7 +337,7 @@ namespace Simple.BehaviorTree
 
         public void DrawGraphNote()
         {
-           
+
             if (cfg.showNote)
             {
                 using (new AutoChangeBkColor(new Color(1f, 0.8f, 0.3f, 0.8f)))
@@ -344,7 +345,8 @@ namespace Simple.BehaviorTree
             }
         }
 
-        public void DrawAreaInfo(BehaviorTreeEditorGraphNode graphNode) {
+        public void DrawAreaInfo(BehaviorTreeEditorGraphNode graphNode)
+        {
             graphNode.cfg.DrawAreaInfo(graphNode.node);
         }
 
@@ -395,7 +397,7 @@ namespace Simple.BehaviorTree
         //检查子节点的ui顺序和数据顺序是不是一致，不是的话调整下
         public bool CheckChildPos(BehaviorTreeEditorGraphNode n)
         {
-            
+
             int idxOld = children.IndexOf(n);
             if (idxOld == -1)
             {
@@ -403,7 +405,7 @@ namespace Simple.BehaviorTree
                 return true;
             }
             children.SortEx((a, b) => a.Pos.x.CompareTo(b.Pos.x));
-            int idx= children.IndexOf(n);
+            int idx = children.IndexOf(n);
             if (idxOld == idx)
                 return false;
 
@@ -433,17 +435,17 @@ namespace Simple.BehaviorTree
         {
             if (children.Count == 0 || !CfgEx.expandChild)
                 return;
-            
+
             List<float> ws = new List<float>();
             float total = WidthNeed;
-            
+
             float childY = Pos.y + 110;
             float left = this.Pos.x - total / 2;
             float addSingle = 0;
-            for (int i = 0;i<children.Count;++i)
+            for (int i = 0; i < children.Count; ++i)
             {
                 var c = children[i];
-                if(c.NeedExpand)
+                if (c.NeedExpand)
                 {
                     left -= addSingle;
                     addSingle = 0;
@@ -451,11 +453,11 @@ namespace Simple.BehaviorTree
 
 
                 float w = c.WidthNeed;
-                c.SetPos(new Vector2(left +(i!= 0?5:0)+w/2, childY),true);
+                c.SetPos(new Vector2(left + (i != 0 ? 5 : 0) + w / 2, childY), true);
                 c.AlignNode();
-                left += (i!=0?5:0)+w;
+                left += (i != 0 ? 5 : 0) + w;
                 if (!c.NeedExpand)
-                    addSingle += (addSingle!=0?5:0)+ w;
+                    addSingle += (addSingle != 0 ? 5 : 0) + w;
             }
         }
     }

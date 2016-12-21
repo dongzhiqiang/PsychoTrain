@@ -42,6 +42,7 @@ public class Role : IdType
     //出生参数
     RoleCxt m_roleCxt;
     int m_parentId = -1;
+    int m_grabTargetId = -1;//抓取中的话，抓取目标，记在这里方便找
     Role m_parent;
 
     HashSet<int> m_unBindModelObs = new HashSet<int>();
@@ -265,7 +266,7 @@ public class Role : IdType
             RoleMgr.instance.DestroyRole(this);
             return;
         }
-        
+
         //出生点出生方向
         Transform t = go.transform;
         t.position = PosUtil.CaleByTerrains(m_roleCxt.pos);
@@ -460,6 +461,7 @@ public class Role : IdType
         m_isLoading = true;
         m_isDestroying = false;
         m_roleCxt = cxt;
+        m_grabTargetId = -1;
 
         //创建模型
         GameObject go = GameObjectPool.GetPool(GameObjectPool.enPool.Role).GetImmediately(m_cfg.mod);
@@ -501,12 +503,42 @@ public class Role : IdType
         if (m_notifier != null)
         {
             List<EventObserver> obs = new List<EventObserver>(m_notifier.observersById.Values);
-            foreach(var ob in obs)
+            foreach (var ob in obs)
             {
                 if (!m_unBindModelObs.Contains(ob.Id))
                     EventMgr.Remove(ob);
             }
         }
+    }
+
+    public void SetGrabTarget(Role r)
+    {
+        Role taraget = GetGrabTarget();
+        if (taraget != null)//只设置一个就可以了，设置进来第二个的时候忽略
+            return;
+
+        if (r.IsInPool || r.State != enState.alive)
+        {
+            Debuger.LogError("被抓取者设置到抓取者身上的时候发现被抓取者已经被销毁");
+            return;
+        }
+        m_grabTargetId = r.Id;
+    }
+
+    //获取抓取中的角色
+    public Role GetGrabTarget()
+    {
+        if (m_grabTargetId == -1)
+            return null;
+        Role r = RoleMgr.instance.GetRole(m_grabTargetId);
+        if (r == null || r.State != enState.alive || !(r.RSM.StateBehit.IsCur && r.RSM.StateBehit.CurStateType == enBehit.beGrab))
+        {
+
+            m_grabTargetId = -1;
+            return null;
+        }
+
+        return r;
     }
 
     //用于检查角色是不是已经不在alive状态
@@ -524,7 +556,7 @@ public class Role : IdType
     public void PreLoad()
     {
         RoleCfg.PreLoad(this.Cfg.id);
-        
+
         for (int i = 0; i < (int)enPart.max; ++i)
         {
             if (m_parts[i] != null)

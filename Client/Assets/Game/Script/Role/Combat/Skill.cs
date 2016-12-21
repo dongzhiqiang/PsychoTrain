@@ -29,7 +29,7 @@ public enum enSkillState
     cd,//cd中
     silent,//沉默状态中
 }
-public sealed class Skill: IdType//注意这个类的设计决定了它不适合继承
+public sealed class Skill : IdType//注意这个类的设计决定了它不适合继承
 {
     #region Fields
     Role m_parent;
@@ -37,46 +37,48 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
     SystemSkillCfg m_systemSkillCfg;
     Role m_target;
     int m_targetId;//一开始自动朝向或者技能传进来的目标
-    float m_lastPlayTime=-1;
-    float m_lastStopTime=-1;
+    float m_lastPlayTime = -1;
+    float m_lastStopTime = -1;
     int m_curFrame;
     int m_maxFrame;
     bool m_isPlaying = false;
     AniPart m_aniPart;
     CombatPart m_combatPart;
-    SkillEventGroup m_eventGroup= new SkillEventGroup();
+    SkillEventGroup m_eventGroup = new SkillEventGroup();
     AniFxGroup m_aniFxGroup;
     string m_comboSkill;
     string m_cancelSkill;
     bool m_needCalcCombos = true;
     List<Skill> m_combos = new List<Skill>();
     Skill m_comboFist;//连击组里的第一个技能
-    List<int> m_buffs=new List<int>();//和技能绑定的状态，技能结束状态销毁
+    List<int> m_buffs = new List<int>();//和技能绑定的状态，技能结束状态销毁
     //WeaponSkill m_weaponSkill;
     Skill m_internalParentSkill;//如果一个技能是内部技能，那么这个值指向所属的技能
     int m_lv;
-    int m_comboIdx=-1;
+    int m_comboIdx = -1;
     #endregion
 
 
     #region Properties
-    public Role Parent { get{return m_parent;}}
+    public Role Parent { get { return m_parent; } }
     public Role Target
     {
-        get { return m_targetId == -1 || m_target.IsDestroy(m_targetId) ||m_target.State!= Role.enState.alive ? null : m_target; } 
-        set{
-            if(value == null){
+        get { return m_targetId == -1 || m_target.IsDestroy(m_targetId) || m_target.State != Role.enState.alive ? null : m_target; }
+        set
+        {
+            if (value == null)
+            {
                 m_target = null;
                 m_targetId = -1;
-            } 
-            else if(value.State != Role.enState.alive)
+            }
+            else if (value.State != Role.enState.alive)
                 Debuger.LogError("{0} {1}技能目标设置进来不是alive的角色", m_parent.Cfg.id, m_cfg.skillId);
             else
             {
                 m_target = value;
                 m_targetId = value.Id;
             }
-                
+
         }
     }
     public SkillCfg Cfg { get { return m_cfg; } }
@@ -93,31 +95,40 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
     public Skill InternalParentSkill { get { return m_internalParentSkill; } }
 
     //技能是不是在播放中,注意如果当前技能已经结束，但是仍然有内部技能在播放中中，那么这个技能仍然算播放中
-    public bool IsPlaying {
-        get {
+    public bool IsPlaying
+    {
+        get
+        {
             if (!m_cfg.isInternal && m_combatPart.CurSkill == this)
-                return true ;
+                return true;
             return m_isPlaying;
-    } }
+        }
+    }
     public bool IsPlayOrCD { get { return IsPlaying ? true : CDNeed > 0; } }
     public bool IsPlayingSelf { get { return m_isPlaying; } }
     //最后一个技能是不是自己的内部技能
     public bool IsLastSkillOfThis
-    { get {
-            return !this.m_cfg.isInternal && m_combatPart.LastSkillSelf !=null&& m_combatPart.LastSkillSelf.InternalParentSkill == this;
-        } }
+    {
+        get
+        {
+            return !this.m_cfg.isInternal && m_combatPart.LastSkillSelf != null && m_combatPart.LastSkillSelf.InternalParentSkill == this;
+        }
+    }
 
     //总的cd时间，如果是内部技能，那么算所属技能的
-    public float CD {
-        get {
+    public float CD
+    {
+        get
+        {
             if (m_parent == RoleMgr.instance.Hero && DebugUI.instance.unCD)
                 return 0;
 
             if (m_cfg.isInternal && InternalParentSkill != null)
                 return InternalParentSkill.CD;
-            
+
             return m_cfg.cd;
-    } }
+        }
+    }
     public float CDNeed
     { //cd还剩多久
         get
@@ -125,31 +136,31 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             //如果内部技能是最后的技能，那么要和自己的cd比较下，看哪个长点
             float needInternal = 0;
             if (IsLastSkillOfThis)
-                needInternal =m_combatPart.LastSkillSelf.CDNeed;
+                needInternal = m_combatPart.LastSkillSelf.CDNeed;
 
 
             //内部技能和非内部技能有不同的判断
             float needSelf = 0;
             if (m_cfg.isInternal && this.InternalParentSkill != null)
             {
-                
+
                 if (m_lastStopTime != -1 && CD > 0)
                 {
                     SkillCfg cfg = this.InternalParentSkill.Cfg; ;
                     float waitFrame = cfg.comboWaitFrame <= 0 ? 0 : cfg.comboWaitFrame * Util.One_Frame;//等待帧过程cd保持最大值
                     needSelf = Mathf.Clamp(CD + waitFrame + m_lastStopTime - TimeMgr.instance.logicTime, 0, CD);
                 }
-                    
+
             }
             else
             {
-                
+
                 if (m_lastStopTime != -1 && CD > 0)
                 {
                     float waitFrame = m_cfg.comboWaitFrame <= 0 ? 0 : m_cfg.comboWaitFrame * Util.One_Frame;//等待帧过程cd保持最大值
                     needSelf = Mathf.Clamp(CD + m_lastStopTime - TimeMgr.instance.logicTime, 0, CD);
                 }
-                    
+
             }
 
             return Mathf.Max(needInternal, needSelf);
@@ -167,19 +178,19 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
     {
         get
         {
-            if(!m_isPlaying)
+            if (!m_isPlaying)
                 return 0;
 
             return m_curFrame;
-            
+
         }
     }
-   
+
     public int MaxFrame
     {
-        get { return m_maxFrame;}
+        get { return m_maxFrame; }
     }
-    
+
     public bool IsMpEnough
     {
         get
@@ -196,7 +207,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                 return this.m_parent.GetInt(enProp.mp) >= m_cfg.mp;
         }
     }
-    
+
     public enSkillState State
     {
         get
@@ -216,7 +227,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
 
             //没有连击技能(或者是连击的最后一下)
             int idx = this.ComboIdx;
-            if (idx ==-1)
+            if (idx == -1)
             {
                 if (IsPlayingSelf)
                     return enSkillState.playing;
@@ -224,12 +235,12 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                     return enSkillState.cd;
                 else
                     return enSkillState.normal;
-                    
+
             }
             //有连击技能
             else
             {
-                if(IsPlayingSelf)
+                if (IsPlayingSelf)
                 {
                     int preFrame = parentCfg != null ? 0 : m_cfg.comboPreFrame;//前帧都算父技能的
                     int postFrame = m_cfg.comboPostFrame;//后帧算自己的
@@ -262,7 +273,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                     return enSkillState.normal;
                 }
             }
-            
+
         }
     }
     public bool HasComboBuff { get { return IsPlaying && !string.IsNullOrEmpty(m_comboSkill); } }
@@ -276,15 +287,15 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             Skill comboFirst = ComboFirst;
             if (comboFirst == null) return false;
             if (!comboFirst.Cfg.showComboIcon) return false;
-            if (ComboFirst.Combos.Count <=1) return false;//如果以后一连击也要显示，那么这行去掉
-            
+            if (ComboFirst.Combos.Count <= 1) return false;//如果以后一连击也要显示，那么这行去掉
+
 
             //必须cd中或者不在释放状态下不能显示,注意这里连enSkillState.playing也要判断下可能是最后一个连击(没有连击技能)
             enSkillState st = this.State;
-            return st == enSkillState.playing ||st == enSkillState.postFrame || st == enSkillState.preFrame|| st == enSkillState.buffFrame;
+            return st == enSkillState.playing || st == enSkillState.postFrame || st == enSkillState.preFrame || st == enSkillState.buffFrame;
         }
     }
-    
+
     //能不能连击
     public bool CanComboNext
     {
@@ -293,15 +304,17 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             if (this.InternalParentSkill != null)
                 return this.InternalParentSkill.CanComboNext;
 
-            if (string.IsNullOrEmpty(Cfg.comboSkillId))return false;
+            if (string.IsNullOrEmpty(Cfg.comboSkillId)) return false;
             enSkillState nextSt = this.State;
             return nextSt == enSkillState.buffFrame || nextSt == enSkillState.postFrame;
         }
     }
-    
+
     //连击的第一个技能，如果
-    public Skill ComboFirst {
-        get {
+    public Skill ComboFirst
+    {
+        get
+        {
             if (this.InternalParentSkill != null)
                 return this.InternalParentSkill.ComboFirst;
             return m_comboFist;
@@ -310,23 +323,24 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
 
     public int ComboIdx
     {
-        get {
+        get
+        {
             if (this.InternalParentSkill != null)
                 return this.InternalParentSkill.ComboIdx;
 
-            
+
             if (string.IsNullOrEmpty(m_cfg.comboSkillId))
                 return -1;
-            
-            if (ComboFirst == null || m_comboIdx >= ( ComboFirst.Combos.Count - 1))
+
+            if (ComboFirst == null || m_comboIdx >= (ComboFirst.Combos.Count - 1))
                 return -1;
             return m_comboIdx;
         }
-        set { m_comboIdx=value; }
+        set { m_comboIdx = value; }
     }
 
     //连击列表，用于从连击的第一个技能和当前使用中的技能计算出可以用的连击技能
-    public List<Skill> Combos { get{return m_combos;}}
+    public List<Skill> Combos { get { return m_combos; } }
 
     //可以用的连击技能。如果没有可以用的将返回null
     public Skill ComboSkill
@@ -340,15 +354,15 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             enSkillState thisSt = this.State;
             Skill thisIfCanplay = thisSt == enSkillState.normal ? this : null;
 
-            if (m_combos.Count <=1)
+            if (m_combos.Count <= 1)
                 return thisIfCanplay;
 
             //找到可以连击的下一个技能
             Skill lastSkill = m_combatPart.LastSkill;
-            int idx = lastSkill == null?-1:m_combos.IndexOf(lastSkill);
-            if(idx == -1)//如果最后的技能不属于这个连击,返回第一个
+            int idx = lastSkill == null ? -1 : m_combos.IndexOf(lastSkill);
+            if (idx == -1)//如果最后的技能不属于这个连击,返回第一个
                 return thisIfCanplay;
-            
+
             //正在播放中的情况
             enSkillState lastSt = lastSkill.State;
             if (lastSt == enSkillState.playing || lastSt == enSkillState.preFrame)//playing表示是最后一个技能了
@@ -363,11 +377,11 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                 }
                 else
                 {
-                    Debuger.LogError("{2}逻辑错误，找不到下一个连击技能:{0} 当前第几个:{1}",lastSkill.Cfg.skillId, idx,Parent.Cfg.id);
+                    Debuger.LogError("{2}逻辑错误，找不到下一个连击技能:{0} 当前第几个:{1}", lastSkill.Cfg.skillId, idx, Parent.Cfg.id);
                     return null;
                 }
             }
-                
+
 
             return thisIfCanplay;
         }
@@ -381,8 +395,8 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             if (this.InternalParentSkill != null)
                 return this.InternalParentSkill.ShowSkill;
             CacheCombo();
-            if (m_combos.Count <=1)
-                return  this;
+            if (m_combos.Count <= 1)
+                return this;
 
             Skill lastSkill = m_combatPart.LastSkill;
             if (lastSkill == null || lastSkill == this)
@@ -393,16 +407,16 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
 
             //如果在播放中或者等待帧中，那么显示
             enSkillState st = lastSkill.State;
-            if (st == enSkillState.playing ||st == enSkillState.postFrame || st == enSkillState.preFrame|| st == enSkillState.buffFrame)
+            if (st == enSkillState.playing || st == enSkillState.postFrame || st == enSkillState.preFrame || st == enSkillState.buffFrame)
                 return lastSkill;
 
-            
+
             return this;
         }
     }
 
-   
-    
+
+
     #endregion
 
 
@@ -423,7 +437,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         int targetId = target != null ? target.Id : -1;
         m_lastStopTime = TimeMgr.instance.logicTime;
         m_isPlaying = false;
-        
+
         m_targetId = -1;
 
         //显示武器
@@ -478,7 +492,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             m_combatPart.RoleSkillCfg.NeedCalcCombo = false;
             m_needCalcCombos = false;
             Skill cur = this;
-            
+
             //技能等级对连击的限制
             int comboLimit = -1;
             //if(WeaponSkill != null)
@@ -495,9 +509,9 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                 cur.m_comboFist = this;
                 m_combos.Add(cur);
                 cur = string.IsNullOrEmpty(cur.Cfg.comboSkillId) || cur.Cfg.skillId == cur.Cfg.comboSkillId ? null : m_combatPart.GetSkill(cur.Cfg.comboSkillId);
-                
+
                 ++i;
-            } while (cur != null && (comboLimit==-1|| i< comboLimit));
+            } while (cur != null && (comboLimit == -1 || i < comboLimit));
         }
     }
 
@@ -535,21 +549,21 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
 
     public void Init(SkillCfg cfg, Role parent)
     {
-        m_cfg=cfg;
+        m_cfg = cfg;
         m_lastPlayTime = -1;
         m_lastStopTime = -1;
         m_isPlaying = false;
-        m_parent=parent;
+        m_parent = parent;
         m_aniPart = m_parent.AniPart;
         m_combatPart = m_parent.CombatPart;
         m_systemSkillCfg = SystemSkillCfg.Get(m_parent.Cfg.id, cfg.skillId);
-        m_eventGroup.Init(cfg.eventGroup,m_parent,this,m_parent.RoleModel.Model,this);
+        m_eventGroup.Init(cfg.eventGroup, m_parent, this, m_parent.RoleModel.Model, this);
         m_aniFxGroup = m_aniPart.Ani.GetGroup(m_cfg.aniName);
 
         AnimationState st = m_aniPart.GetSt(m_cfg.aniName);
-        if (st!=null&&m_cfg.duration == -1 )
+        if (st != null && m_cfg.duration == -1)
             m_maxFrame = (int)(st.length / Util.One_Frame);
-        else if (m_cfg.duration >=0)
+        else if (m_cfg.duration >= 0)
             m_maxFrame = (int)(m_cfg.duration / Util.One_Frame);
         else
             m_maxFrame = m_eventGroup.MaxFrame;
@@ -562,7 +576,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         {
             m_internalParentSkill = m_combatPart.GetSkill(cfg.parentSkillId);
             if (m_internalParentSkill == null)
-                Debuger.LogError("技能{0}在技能编辑器勾选为内部技能，但是却找不到父技能{1}", cfg.skillId,cfg.parentSkillId);
+                Debuger.LogError("技能{0}在技能编辑器勾选为内部技能，但是却找不到父技能{1}", cfg.skillId, cfg.parentSkillId);
         }
         else
             m_internalParentSkill = null;
@@ -573,7 +587,8 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
     public void Play()
     {
         //检错下
-        if(m_isPlaying){
+        if (m_isPlaying)
+        {
             Debuger.LogError("逻辑错误，技能正在播放中");
             return;
         }
@@ -584,16 +599,16 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         }
 
 
-        m_lastPlayTime =  TimeMgr.instance.logicTime;
+        m_lastPlayTime = TimeMgr.instance.logicTime;
         m_lastStopTime = -1;
-        m_isPlaying =true;
+        m_isPlaying = true;
         m_curFrame = 0;
         m_comboSkill = string.Empty;
         m_cancelSkill = string.Empty;
         m_buffs.Clear();
-        
+
         //扣mp
-        if (Cfg.mp > 0&&!DebugUI.instance.unMp)
+        if (Cfg.mp > 0 && !DebugUI.instance.unMp)
         {
             int mp = m_parent.GetInt(enProp.mp) - Cfg.mp;
             m_parent.SetInt(enProp.mp, mp >= 0 ? mp : 0);
@@ -605,7 +620,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         for (int i = 0; i < m_cfg.skillStates.Count; ++i)
         {
             buff = buffPart.AddBuff(m_cfg.skillStates[i]);
-            if(buff != null)
+            if (buff != null)
                 m_buffs.Add(buff.Id);
         }
 
@@ -624,7 +639,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             return;
 
         //事件组
-        m_eventGroup.Play(Target,Parent.transform.position);
+        m_eventGroup.Play(Target, Parent.transform.position);
     }
 
     public void Stop(enSkillStop stopType)
@@ -633,16 +648,16 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         OnStop(stopType);
     }
 
-    
+
     public void Update()
     {
         int poolId = this.Id;
         AnimationState st = m_aniPart.CurSt;
         //按照动作时间判断结束
-        if (st!=null&&m_cfg.duration == -1 && m_cfg.aniType == SkillCfg.enSkillAniType.ClampForever)
+        if (st != null && m_cfg.duration == -1 && m_cfg.aniType == SkillCfg.enSkillAniType.ClampForever)
         {
             //判断结束
-            if (st.normalizedTime>=1)//TimeMgr.instance.logicTime - m_lastPlayTime >= st.length)
+            if (st.normalizedTime >= 1)//TimeMgr.instance.logicTime - m_lastPlayTime >= st.length)
             {
                 m_curFrame = (int)(st.length / Util.One_Frame);
                 m_eventGroup.Update(m_curFrame, true);//注意这里的计算方式不一样，为了保证这个动作的最后一帧会加进来
@@ -656,23 +671,23 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                 m_eventGroup.Update(m_curFrame, false);
                 if (this.IsDestroy(poolId))//FIX: 上一行的处理可能导致这个对象被回收了，这个时候要马上返回，不能做任何修改
                     return;
-            }  
+            }
         }
         //按照普通时间判断结束
         else
         {
             //判断结束
             float duration = m_cfg.duration;
-            if (m_cfg.duration == -1 )
+            if (m_cfg.duration == -1)
             {
                 if (!m_cfg.continueIfPress)//先检错下,按紧的情况下不用报错
                     Debuger.LogError("循环方式不是单次的情况下，技能时间不能填-1.roleId:{0} skillId:{1}", m_parent.Cfg.id, m_cfg.skillId);
-                duration =st!= null?st.length: m_eventGroup.MaxFrame*Util.One_Frame;
+                duration = st != null ? st.length : m_eventGroup.MaxFrame * Util.One_Frame;
             }
 
             //检查按紧，如果技能允许按紧，那么不结束
-            bool isPress = m_cfg.continueIfPress && m_parent.StatePart.StateCombat.PressSkill==this;
-            float time = TimeMgr.instance.logicTime - m_lastPlayTime ;
+            bool isPress = m_cfg.continueIfPress && m_parent.StatePart.StateCombat.PressSkill == this;
+            float time = TimeMgr.instance.logicTime - m_lastPlayTime;
             m_curFrame = (int)(time / Util.One_Frame);
 
             if (!isPress && time >= duration)
@@ -688,89 +703,46 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
                 if (this.IsDestroy(poolId))//FIX: 上一行的处理可能导致这个对象被回收了，这个时候要马上返回，不能做任何修改
                     return;
             }
-                
-                
+
+
         }
-       
+
     }
 
-    
+
 
     //设置技能结束或者打击后帧播放这个技能
-    public void SetComboBuff(string s){
+    public void SetComboBuff(string s)
+    {
         if (m_internalParentSkill != null)
         {
-            Debuger.LogError("逻辑错误，给内部技能设置了连击技能:{0}",this.m_cfg.skillId);
+            Debuger.LogError("逻辑错误，给内部技能设置了连击技能:{0}", this.m_cfg.skillId);
             return;
         }
         m_comboSkill = s;
     }
 
-    public void SetCancelBuff(string s){m_cancelSkill = s;}
+    public void SetCancelBuff(string s) { m_cancelSkill = s; }
 
     public bool PlayComboBuff()
     {
         //检查下父技能的
         if (m_internalParentSkill != null)
-            return m_internalParentSkill.PlayComboBuff(); 
+            return m_internalParentSkill.PlayComboBuff();
 
         if (string.IsNullOrEmpty(m_comboSkill))
             return false;
 
-        if(string.IsNullOrEmpty(m_cfg.comboSkillId))
+        if (string.IsNullOrEmpty(m_cfg.comboSkillId))
         {
-            Debuger.LogError("{0}的连击技能为空，却设置了连击技能，设置进来的",m_cfg.skillId,m_comboSkill);
+            Debuger.LogError("{0}的连击技能为空，却设置了连击技能，设置进来的", m_cfg.skillId, m_comboSkill);
             return false;
         }
-        
+
         enSkillState st = this.State;
         if (st == enSkillState.postFrame)
         {
-            CombatPart.enPlaySkill ret = m_parent.CombatPart.Play(m_comboSkill,null, false, true);
-#if UNITY_EDITOR
-            //调试技能
-            string debugSkillId = m_parent.RoleModel.m_debugSkillId;//技能id|连击技能id|返回值类型，默认都可以填-1，那么就是全部调试
-            string debugComboId = "-1";
-            int resultType  = -1;
-
-            string[] ss = debugSkillId.Split('|');
-            debugSkillId = ss[0];
-            if (ss.Length >=2) 
-                debugComboId = ss[1];
-            if(ss.Length >=3) 
-                if (!int.TryParse(ss[2], out resultType)) resultType = -1;
-
-
-            bool needDebug = !string.IsNullOrEmpty(debugSkillId) ;
-            if (needDebug)
-            {
-                needDebug = debugComboId == "-1" || debugComboId == m_comboSkill;
-                if (needDebug)
-                {
-
-                    needDebug = resultType == -1 || resultType == (int)ret;
-                    if (needDebug)
-                        Debuger.Log("{3}.{0}_{1}使用连击技能:{2}", m_parent.Cfg.id, m_parent.Id, m_comboSkill, ret);
-                }
-            }
-            
-#endif
-            return true;
-        }
-        else
-            return false;
-    }
-
-    public bool PlayCancelBuff()
-    {
-        if (string.IsNullOrEmpty(m_cancelSkill))
-            return false;
-
-        
-        if ((m_cfg.cancelPostFrame > 0 && m_curFrame >= m_cfg.cancelPostFrame) ||
-            (m_cfg.cancelPostFrame == -1 && !m_isPlaying))
-        {
-            CombatPart.enPlaySkill ret = m_parent.CombatPart.Play(m_cancelSkill,null, false, true);
+            CombatPart.enPlaySkill ret = m_parent.CombatPart.Play(m_comboSkill, null, false, true);
 #if UNITY_EDITOR
             //调试技能
             string debugSkillId = m_parent.RoleModel.m_debugSkillId;//技能id|连击技能id|返回值类型，默认都可以填-1，那么就是全部调试
@@ -784,7 +756,51 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             if (ss.Length >= 3)
                 if (!int.TryParse(ss[2], out resultType)) resultType = -1;
 
-            bool needDebug = !string.IsNullOrEmpty(debugSkillId) ;
+
+            bool needDebug = !string.IsNullOrEmpty(debugSkillId);
+            if (needDebug)
+            {
+                needDebug = debugComboId == "-1" || debugComboId == m_comboSkill;
+                if (needDebug)
+                {
+
+                    needDebug = resultType == -1 || resultType == (int)ret;
+                    if (needDebug)
+                        Debuger.Log("{3}.{0}_{1}使用连击技能:{2}", m_parent.Cfg.id, m_parent.Id, m_comboSkill, ret);
+                }
+            }
+
+#endif
+            return true;
+        }
+        else
+            return false;
+    }
+
+    public bool PlayCancelBuff()
+    {
+        if (string.IsNullOrEmpty(m_cancelSkill))
+            return false;
+
+
+        if ((m_cfg.cancelPostFrame > 0 && m_curFrame >= m_cfg.cancelPostFrame) ||
+            (m_cfg.cancelPostFrame == -1 && !m_isPlaying))
+        {
+            CombatPart.enPlaySkill ret = m_parent.CombatPart.Play(m_cancelSkill, null, false, true);
+#if UNITY_EDITOR
+            //调试技能
+            string debugSkillId = m_parent.RoleModel.m_debugSkillId;//技能id|连击技能id|返回值类型，默认都可以填-1，那么就是全部调试
+            string debugComboId = "-1";
+            int resultType = -1;
+
+            string[] ss = debugSkillId.Split('|');
+            debugSkillId = ss[0];
+            if (ss.Length >= 2)
+                debugComboId = ss[1];
+            if (ss.Length >= 3)
+                if (!int.TryParse(ss[2], out resultType)) resultType = -1;
+
+            bool needDebug = !string.IsNullOrEmpty(debugSkillId);
             if (needDebug)
             {
                 needDebug = debugComboId == "-1" || debugComboId == m_cancelSkill;
@@ -814,14 +830,14 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         m_buffs.Add(id);
     }
 
-    
-    
+
+
 
     public float GetLvValue(LvValue v)
     {
         if (v == null)
             return 1;//可能配置没有填，那么当成1
-        if(v.error)
+        if (v.error)
         {
             Debuger.LogError("技能的值计算有问题，所属技能:{0}, 当前技能:{1}", SystemSkillCfg.parentSkillId, this.Cfg.skillId);
             return 0;
@@ -830,7 +846,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         if (!v.NeedLv)
             return v.Get();
 
-        if(m_lv ==-1)
+        if (m_lv == -1)
         {
             Debuger.LogError("当前技能找不到等级，所属技能:{0},当前技能:{1}", SystemSkillCfg.parentSkillId, this.Cfg.skillId);
             return 0;
@@ -839,5 +855,5 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         return v.GetByLv(m_lv);
 
     }
-    
+
 }

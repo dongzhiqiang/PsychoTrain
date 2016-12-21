@@ -18,10 +18,10 @@ public class HitSkillEventCfg : SkillEventCfg
     public float floatSpeed = 5;//被击初速度: 浮空中二次被击的初速度
     public float floatAccelerated = 0;//被击加速度: 浮空中二次被击的加速度
     public HitFloatSkillEventCfg groundFloat = new HitFloatSkillEventCfg();
-    
-    public override enSkillEventType Type { get{return enSkillEventType.hit;} }
+
+    public override enSkillEventType Type { get { return enSkillEventType.hit; } }
 #if UNITY_EDITOR
-    public override bool DrawHeader(ref Rect r,  SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
+    public override bool DrawHeader(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int col, System.Action<string> onTip, HeaderButton h)
     {
         switch (col)
         {
@@ -33,7 +33,7 @@ public class HitSkillEventCfg : SkillEventCfg
             case 5: if (h(ref r, "反转速度", COL_WIDTH * 3)) onTip("倒地时转浮空，如果上升过程中达到这个速度就下落"); return false;
             case 6: if (h(ref r, "下落初速", COL_WIDTH * 3)) onTip("倒地时转浮空，下落初速度"); return false;
             case 7: if (h(ref r, "下落加速", COL_WIDTH * 3)) onTip("倒地时转浮空，下落加速度,下落阶段的加速度"); return false;
-            default:return true;
+            default: return true;
         }
     }
     public override bool DrawGrid(ref Rect r, SkillEventFrameCfg frameCfg, SkillEventGroupCfg g, int row, int col, int totalRow, ref bool change, Transform tran)
@@ -67,19 +67,19 @@ public class HitSkillEventCfg : SkillEventCfg
             case 4:
                 {
                     r.width = COL_WIDTH * 3;
-                    groundFloat.acceleratedUp= EditorGUI.FloatField(r, GUIContent.none, groundFloat.acceleratedUp);
+                    groundFloat.acceleratedUp = EditorGUI.FloatField(r, GUIContent.none, groundFloat.acceleratedUp);
                     r.x += r.width;
                 }; return false;
             case 5:
                 {
                     r.width = COL_WIDTH * 3;
-                    groundFloat.reverseSpeed= EditorGUI.FloatField(r, GUIContent.none, groundFloat.reverseSpeed);
+                    groundFloat.reverseSpeed = EditorGUI.FloatField(r, GUIContent.none, groundFloat.reverseSpeed);
                     r.x += r.width;
                 }; return false;
             case 6:
                 {
                     r.width = COL_WIDTH * 3;
-                    groundFloat.speedDown= EditorGUI.FloatField(r, GUIContent.none, groundFloat.speedDown);
+                    groundFloat.speedDown = EditorGUI.FloatField(r, GUIContent.none, groundFloat.speedDown);
                     r.x += r.width;
                 }; return false;
             case 7:
@@ -94,15 +94,15 @@ public class HitSkillEventCfg : SkillEventCfg
 #endif
     public override bool OnHandle(Role source, Role target, SkillEventFrame eventFrame)
     {
-     
+
 
         //先获取武器的僵直系数
         WeaponCfg weapon = source.FightWeapon;
-        float weaponBehitRate = weapon==null?1:weapon.behitRate;
+        float weaponBehitRate = weapon == null ? 1 : weapon.behitRate;
 
         BehitCxt cxt = IdTypePool<BehitCxt>.Get();
         cxt.cfg = this;
         cxt.duration = this.duration * target.Cfg.behitRate * weaponBehitRate;
-        return target.StatePart.GotoState(enRoleState.beHit, cxt,false,true);
+        return target.StatePart.GotoState(enRoleState.beHit, cxt, false, true);
     }
 }

@@ -13,10 +13,10 @@ using System.Collections.Generic;
 
 public class UILevelAreaTime : UILevelArea
 {
-    
+
     #region Fields
     public TextEx m_time;
-   
+
     int m_EndTime;        //设置的限制时间
     bool m_pause;         //是否暂停标记
     float m_startTime;     //开始时间
@@ -29,13 +29,16 @@ public class UILevelAreaTime : UILevelArea
 
     #region Properties
     public override enLevelArea Type { get { return enLevelArea.time; } }
-    public override bool IsOpenOnStart { get{return false;} }
+    public override bool IsOpenOnStart { get { return false; } }
 
-    bool Pause { 
-        get { 
-            return m_pause; 
+    bool Pause
+    {
+        get
+        {
+            return m_pause;
         }
-        set {
+        set
+        {
             m_pause = value;
         }
     }
@@ -94,7 +97,7 @@ public class UILevelAreaTime : UILevelArea
             else
                 showTime = m_EndTime - m_overTime;
         }
-        
+
         m_time.text = StringUtil.SceIntToMinSceStr(showTime);
     }
 
@@ -104,12 +107,12 @@ public class UILevelAreaTime : UILevelArea
         OnPause(true);
         if (m_obExit != EventMgr.Invalid_Id) { EventMgr.Remove(m_obExit); m_obExit = EventMgr.Invalid_Id; }
         if (m_obPause != EventMgr.Invalid_Id) { EventMgr.Remove(m_obPause); m_obPause = EventMgr.Invalid_Id; }
-        
+
     }
 
     protected override void OnRoleBorn()
     {
-       
+
     }
 
     public void OnStart()
@@ -152,7 +155,7 @@ public class UILevelAreaTime : UILevelArea
     {
         if (!m_isEnd)
             OnPause((bool)param);
-        
+
     }
 
     void OnSceneExit()
@@ -162,5 +165,5 @@ public class UILevelAreaTime : UILevelArea
 
     #endregion
 
-    
+
 }

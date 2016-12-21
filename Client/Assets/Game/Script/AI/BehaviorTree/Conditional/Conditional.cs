@@ -19,14 +19,14 @@ namespace Simple.BehaviorTree
         failInterrtupt,
         customInterrupt,
     }
-    
+
     public class ConditionalCfg : NodeCfg
     {
-        public static string[] InterruptTypeNames = new string[] { "不中断","成功中断", "失败中断", "自定制中断" };
+        public static string[] InterruptTypeNames = new string[] { "不中断", "成功中断", "失败中断", "自定制中断" };
         public enInterrupt interrupt;
-        public bool resetTreeWhenInterrupt=false;
+        public bool resetTreeWhenInterrupt = false;
     }
-    public class Conditional:Node
+    public class Conditional : Node
     {
         #region Fields
         protected bool m_isInterrupting = false;//是不是中断判断中
@@ -56,11 +56,12 @@ namespace Simple.BehaviorTree
 
         #endregion
 
-        public override void ResetState() {
+        public override void ResetState()
+        {
             m_isInterrupting = false;
             base.ResetState();
         }
-        
+
 
         public bool CheckInterupt()
         {

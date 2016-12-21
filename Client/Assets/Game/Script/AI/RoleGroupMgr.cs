@@ -18,13 +18,14 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
     public const string Group_Attack_Min = "群体攻击[";
     public const string Group_Attack_Max = "群体攻击]";
 
-    public class MemberInfo:IdType
+    public class MemberInfo : IdType
     {
         public Role role;
         public float distanceSq;
         public Role target;
 
-        public override void OnClear() {
+        public override void OnClear()
+        {
             role = null;
             distanceSq = 0;
             target = null;
@@ -38,11 +39,11 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
     public float m_intervalSecond = 1;//一秒1次，注意不宜太短，不然攻击者可能还不知道自己是攻击者就attackCD了
 
 #if UNITY_EDITOR
-    public string log ="";
+    public string log = "";
 #endif
 
     HashSet<int> m_members = new HashSet<int>();//组成员，可能被分配成攻击者，或者包围者
-    Dictionary<int, int> m_attacks= new Dictionary<int, int>();//攻击者列表，key是攻击者，value是被攻击者
+    Dictionary<int, int> m_attacks = new Dictionary<int, int>();//攻击者列表，key是攻击者，value是被攻击者
     Dictionary<int, int> m_rounds = new Dictionary<int, int>();//包围者列表，key是包围者，value是被包围者
 
     float m_lastAttackCd = 0;
@@ -53,10 +54,10 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
     {
         if (TimeMgr.instance.IsPause)
         {
-            
+
             return;
         }
-            
+
 
         if (m_intervalSecond > 0 && TimeMgr.instance.logicTime - m_lastUpdateTime > (1f / m_intervalSecond))
         {
@@ -77,7 +78,7 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
 
     public void Add(Role r)
     {
-        if(r == null || r.State != Role.enState.alive)
+        if (r == null || r.State != Role.enState.alive)
         {
             Debuger.LogError("角色不是alive状态不能添加到群体目标管理");
             return;
@@ -85,7 +86,7 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
         m_members.Add(r.Id);
     }
 
-    
+
 
     public void Remove(Role r)
     {
@@ -108,8 +109,8 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
         if (!this.enabled)
             return;
 
-        
-       
+
+
         //初步收集数据
         foreach (var r in RoleMgr.instance.Roles)
         {
@@ -117,7 +118,7 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
 
             if (r.Cfg.roleType == enRoleType.box || r.Cfg.roleType == enRoleType.trap || camp == (int)enCamp.neutral)
                 continue;
-            
+
             //群体成员生成信息
             if (m_members.Contains(r.Id))
             {
@@ -132,10 +133,10 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
                 MemberInfo info = IdTypePool<MemberInfo>.Get();
                 info.role = r;
                 l.Add(info);
-            }    
+            }
             m_temRoles.Add(r);
         }
-        
+
         //用替换的方式刷新当前alive的群体成员
         var tem = m_members;
         m_members = m_temMembers;
@@ -143,7 +144,7 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
         m_temMembers.Clear();
 
         //找到每个群体成员的目标(距离最近的敌人)
-        for (int i = 0;i< m_temRoles.Count;++i)
+        for (int i = 0; i < m_temRoles.Count; ++i)
         {
             var r = m_temRoles[i];
             int camp = (int)r.GetCamp();
@@ -152,14 +153,14 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
                 var l = m_temCampMembers[j];
                 if (j == camp || l == null)
                     continue;
-                
-                for(int k = 0;k< l.Count;++k)
+
+                for (int k = 0; k < l.Count; ++k)
                 {
                     var info = l[k];
                     var disSq = r.DistanceSq(info.role);
                     if (info.target != null && info.distanceSq <= disSq)
                         continue;
-                    info.target =r;
+                    info.target = r;
                     info.distanceSq = disSq;
                 }
             }
@@ -167,11 +168,11 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
         m_temRoles.Clear();
 
         //如果不需要攻击，那么不需要找到攻击者，算法会简单一点
-        
+
         bool needAttack = TimeMgr.instance.logicTime - m_lastAttackTime > m_lastAttackCd;
-        if(!needAttack)
+        if (!needAttack)
         {
-            
+
             m_attacks.Clear();
             m_rounds.Clear();
             for (int i = 0; i < m_temCampMembers.Count; ++i)
@@ -182,8 +183,8 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
                 for (int j = 0; j < l.Count; ++j)
                 {
                     var info = l[j];
-                    if(info.target!=null)
-                        m_rounds.Add(info.role.Id,info.target.Id);
+                    if (info.target != null)
+                        m_rounds.Add(info.role.Id, info.target.Id);
                     l[j].Put();
                 }
 
@@ -226,7 +227,7 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
         //找到最近的攻击者，最终收集出攻击者列表和包围者列表
         m_attacks.Clear();
         m_rounds.Clear();
-        foreach(var pair in m_temTargets)
+        foreach (var pair in m_temTargets)
         {
             var target = pair.Key;
             var l = pair.Value;
@@ -272,7 +273,7 @@ public class RoleGroupMgr : SingletonMonoBehaviour<RoleGroupMgr>
     public Role GetAttackTarget(Role r)
     {
         int targetId;
-        if (!m_attacks.TryGetValue(r.Id,out targetId))
+        if (!m_attacks.TryGetValue(r.Id, out targetId))
             return null;
 
         return RoleMgr.instance.GetRole(targetId);

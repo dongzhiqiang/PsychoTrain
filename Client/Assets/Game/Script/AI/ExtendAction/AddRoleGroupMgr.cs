@@ -17,14 +17,14 @@ namespace Simple.BehaviorTree
 {
     public class AddRoleGroupMgrCfg : NodeCfg
     {
-        
+
 #if UNITY_EDITOR
         public override void DrawAreaInfo(Node n)
         {
-        
+
         }
 #endif
-        
+
     }
 
 
@@ -33,7 +33,8 @@ namespace Simple.BehaviorTree
         AddRoleGroupMgrCfg CfgEx { get { return (AddRoleGroupMgrCfg)m_cfg; } }
 
         //执行。遍历到这个节点的时候就会在OnPush()后执行，如果返回running的话就会一直执行，直到返回success或者fail，然后OnPop()
-        protected override enNodeState OnExecute(enExecute executeType) {
+        protected override enNodeState OnExecute(enExecute executeType)
+        {
             Role owner = GetOwner<Role>();
             if (owner == null || owner.State != Role.enState.alive)
                 return enNodeState.failure;

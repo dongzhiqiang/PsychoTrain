@@ -72,7 +72,7 @@ namespace Simple.BehaviorTree
             }
         }
 
-        
+
         public abstract void OnDrawShare(ValueMgr mgr);
         public abstract void OnDraw(string fieldName, NodeCfg nodeCfg, Node n);
 
@@ -140,7 +140,7 @@ namespace Simple.BehaviorTree
 
 
         //首次创建设置进来初始值
-        public Value(T v,enValueRegion region = enValueRegion.constant) : this()
+        public Value(T v, enValueRegion region = enValueRegion.constant) : this()
         {
             this.v = v;
             var valueType = ValueMgrCfg.s_valueIdx.Get(this.GetType());
@@ -178,7 +178,7 @@ namespace Simple.BehaviorTree
 
         }
 
-        
+
         public override void OnDraw(string fieldName, NodeCfg nodeCfg, Node n)
         {
 
@@ -188,7 +188,7 @@ namespace Simple.BehaviorTree
             else
                 DrawShareValueName(nodeCfg);
 
-            if (n != null&& region != enValueRegion.constant)
+            if (n != null && region != enValueRegion.constant)
             {
                 do
                 {
@@ -207,7 +207,7 @@ namespace Simple.BehaviorTree
         }
 
 #endif
-   }
+    }
 
     public abstract class ShareValueBase
     {
@@ -230,7 +230,7 @@ namespace Simple.BehaviorTree
 
     }
 
-        //原始的值类型，int、float这些
+    //原始的值类型，int、float这些
     public class ShareValue<T> : ShareValueBase<T>
     {
         public T share;
@@ -241,7 +241,7 @@ namespace Simple.BehaviorTree
             set { share = value; }
         }
 
-        
+
     }
-    
+
 }

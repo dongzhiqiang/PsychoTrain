@@ -12,7 +12,7 @@ using System.Collections.Generic;
 
 
 public enum enSkillType
-{   
+{
     none,//空
     atkUp,//普通攻击
     skill1,//技能1
@@ -27,22 +27,23 @@ public enum enSkillType
     treasure,//宝物技能(已经弃用)
     qte,//小qte
     qtePress,//qte按紧
-    
+
 }
 
-public enum enSkillPos  {
-    atk     = 0,    //普通攻击
-    skill1  = 1,    //技能1
-    skill2  = 2,    //技能2
-    skill3  = 3,    //技能3
-    max     = 4,
+public enum enSkillPos
+{
+    atk = 0,    //普通攻击
+    skill1 = 1,    //技能1
+    skill2 = 2,    //技能2
+    skill3 = 3,    //技能3
+    max = 4,
 };
 
-public class WeaponCfg 
+public class WeaponCfg
 {
-    
+
     public int id;
-    public string name="";//名字
+    public string name = "";//名字
     public string desc = "";//描述
     public string icon = null;//图标
     public string modRight = string.Empty;//右手武器模型(左右手都没有的话就是模型上的weapon_mesh)
@@ -69,11 +70,11 @@ public class WeaponCfg
 
 
     static Dictionary<int, WeaponCfg> s_cfgs;
-    
+
     public static void Init()
     {
         s_cfgs = Csv.CsvUtil.Load<int, WeaponCfg>("role/weapon", "id");
-        foreach(var cfg in s_cfgs.Values)
+        foreach (var cfg in s_cfgs.Values)
         {
             cfg._hitPropCfg = HitPropCfg.Get(cfg.hitProp);
         }
@@ -81,7 +82,7 @@ public class WeaponCfg
 
     public static WeaponCfg Get(int id)
     {
-        if(id == 0 || id == -1)
+        if (id == 0 || id == -1)
             return null;
         WeaponCfg cfg = s_cfgs.Get(id);
         if (cfg == null)
@@ -89,28 +90,29 @@ public class WeaponCfg
         return cfg;
     }
 
-    
+
     //预加载
     public static void PreLoad()
     {
-        foreach(WeaponCfg cfg in s_cfgs.Values){
-            if(!string.IsNullOrEmpty(cfg.modRight))
+        foreach (WeaponCfg cfg in s_cfgs.Values)
+        {
+            if (!string.IsNullOrEmpty(cfg.modRight))
                 GameObjectPool.GetPool(GameObjectPool.enPool.Fx).PreLoad(cfg.modRight);
             if (!string.IsNullOrEmpty(cfg.modLeft))
                 GameObjectPool.GetPool(GameObjectPool.enPool.Fx).PreLoad(cfg.modLeft);
             if (!string.IsNullOrEmpty(cfg.uiMod))
                 GameObjectPool.GetPool(GameObjectPool.enPool.Fx).PreLoad(cfg.uiMod);
 
-            
+
         }
     }
 
-   
-    public string GetSkillId(enSkillType skillType,bool air)
+
+    public string GetSkillId(enSkillType skillType, bool air)
     {
         switch (skillType)
         {
-            case enSkillType.slider:return sliderSkill;
+            case enSkillType.slider: return sliderSkill;
             case enSkillType.block: return blockSkill;
             case enSkillType.atkUp: return air ? airAtk : atkUpSkill;
             case enSkillType.atkPress: return atkPressSkill;

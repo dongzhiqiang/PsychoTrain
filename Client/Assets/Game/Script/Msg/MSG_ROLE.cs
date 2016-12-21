@@ -51,7 +51,7 @@ public class MSG_ROLE
 
     //ai变化
     public const int AI_CHANGE = 16;
-    
+
     //技能事件(被动)，执行前(在否决前执行)
     public const int TARGET_SKILL_EVENT_PRE = 17;
 
@@ -76,7 +76,8 @@ public class MSG_ROLE
     //加印记(被动)
     public const int TARGET_ADD_FLAG = 24;
 
-
+    //死亡效果播完
+    public const int DEAD_END = 25;
 
 
 

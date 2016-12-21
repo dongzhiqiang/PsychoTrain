@@ -68,7 +68,7 @@ public class RefreshPoint
 
     public Role CreateNpc(bool isHaveEffect = true)
     {
-        RoleBornCxt cxt = IdTypePool<RoleBornCxt>.Get();
+        RoleCxt cxt = IdTypePool<RoleCxt>.Get();
 
 
         //关卡里没有配置出生死亡则取表里默认的配置
@@ -89,11 +89,6 @@ public class RefreshPoint
             cxt.deadAniId = cfg.deadType;
         else
             cxt.deadAniId = mPointCfg.deadTypeId;
-
-        if (string.IsNullOrEmpty(mPointCfg.groundDeadTypeId))
-            cxt.groundDeadAniId = cfg.groundDeadType;
-        else
-            cxt.groundDeadAniId = mPointCfg.groundDeadTypeId;
 
         if (mPointCfg.ai == "-1")
             cxt.aiBehavior = cfg.aiType;
@@ -152,14 +147,7 @@ public class RefreshPoint
                 Role hero = RoleMgr.instance.Hero;
                 if (hero != null && hero.State == Role.enState.alive && mPointCfg.boxBuffId != 0)
                 {
-                    UILevelAreaReward uiReward = UIMgr.instance.Get<UILevel>().Get<UILevelAreaReward>();
-                    if (!uiReward.IsOpen)
-                        uiReward.OpenArea();
 
-                    if (mPointCfg.boxAddType == SceneCfg.BoxStateType.AddMp)
-                        uiReward.PlayBlueSoulFly(role, mPointCfg.boxAddNum, OnFlayEnd, mPointCfg.boxBuffId);
-                    else if (mPointCfg.boxAddType == SceneCfg.BoxStateType.AddHp)
-                        uiReward.PlayGreenSoulFly(role, mPointCfg.boxAddNum, OnFlayEnd, mPointCfg.boxBuffId);
                 }
             }
         }

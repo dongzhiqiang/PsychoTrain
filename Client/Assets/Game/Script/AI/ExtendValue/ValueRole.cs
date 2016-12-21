@@ -31,27 +31,28 @@ namespace Simple.BehaviorTree
     }
 
     //原始的值类型，int、float这些
-    public class ValueRole : ValueBase<Role> 
+    public class ValueRole : ValueBase<Role>
     {
-        public static string[] ValueRoleType = new string[] {"无", "自己","仇恨目标","主人","主角", "群体攻击目标", "群体包围目标","最近的敌人","仇恨值目标", "仇恨值目标(不自动)" };
-        
+        public static string[] ValueRoleType = new string[] { "无", "自己", "仇恨目标", "主人", "主角", "群体攻击目标", "群体包围目标", "最近的敌人", "仇恨值目标", "仇恨值目标(不自动)" };
+
         public enValueRole roleType = enValueRole.self;
-        
+
         public bool IsAlwaysNull { get { return this.region == enValueRegion.constant && roleType == enValueRole.none; } }
         public override Role Val
         {
-            get {
+            get
+            {
                 if (curNode == null)
                     return null;
 
                 switch (roleType)
                 {
-                    case enValueRole.none:return null;
-                    case enValueRole.self:return curNode.GetOwner<Role>();
+                    case enValueRole.none: return null;
+                    case enValueRole.self: return curNode.GetOwner<Role>();
                     case enValueRole.hate:
                         {
                             var r = curNode.GetOwner<Role>();
-                            if (r == null || r.State!= Role.enState.alive)
+                            if (r == null || r.State != Role.enState.alive)
                                 return null;
 
                             return r.HatePart.GetTargetLegacy();
@@ -70,7 +71,7 @@ namespace Simple.BehaviorTree
                     case enValueRole.hero:
                         {
                             Role r = RoleMgr.instance.Hero;
-                            return r!= null && r.State== Role.enState.alive?r:null;
+                            return r != null && r.State == Role.enState.alive ? r : null;
                         }
                     case enValueRole.groupAttack:
                         {
@@ -93,7 +94,7 @@ namespace Simple.BehaviorTree
                             var r = curNode.GetOwner<Role>();
                             if (r == null || r.State != Role.enState.alive)
                                 return null;
-                            
+
                             return RoleMgr.instance.GetClosestTarget(r, enSkillEventTargetType.enemy);
                         }
                     case enValueRole.hateNew:
@@ -118,21 +119,21 @@ namespace Simple.BehaviorTree
                             return null;
                         }
                 }
-                
-            }    
+
+            }
         }
 
         //之后从json序列化创建
         public ValueRole()
         {
-            
+
         }
 
 
         //首次创建设置进来初始值
         public ValueRole(enValueRegion region)
         {
-            
+
             this.type = enValueType.Role;
             this.region = region;
         }
@@ -179,20 +180,20 @@ namespace Simple.BehaviorTree
                 } while (false);
             }
 
-            
+
 
         }
 
         public override void OnDraw(string fieldName, NodeCfg nodeCfg, Node n)
         {
-            
+
             //变量的话要设置变量名，常量的话要设置值
             if (region == enValueRegion.constant)
                 roleType = (enValueRole)EditorGUILayout.Popup((int)roleType, ValueRoleType);
             else
                 DrawShareValueName(nodeCfg);
 
-            if (n!=null&& region != enValueRegion.constant)
+            if (n != null && region != enValueRegion.constant)
             {
                 do
                 {
@@ -205,14 +206,14 @@ namespace Simple.BehaviorTree
                             Role oldRole = share.ShareVal;
                             RoleModel oldModel = oldRole != null ? oldRole.RoleModel : null;
                             RoleModel model = (RoleModel)EditorGUILayout.ObjectField(oldModel, typeof(RoleModel), true, GUILayout.Width(90));
-                            if(model != oldModel)
+                            if (model != oldModel)
                             {
                                 if (model == null)
                                     share.ShareVal = null;
                                 else
                                     share.ShareVal = model.Parent;
                             }
-                            
+
                             break;
                         }
                     }
@@ -222,16 +223,17 @@ namespace Simple.BehaviorTree
         }
 #endif
     }
-    
-    public class ShareValueRole: ShareValueBase<Role>
+
+    public class ShareValueRole : ShareValueBase<Role>
     {
         Role r;
         int poolId;
 
         public override Role ShareVal
         {
-            get { return r!= null&& !r.IsUnAlive(poolId)?r:null; }
-            set {
+            get { return r != null && !r.IsUnAlive(poolId) ? r : null; }
+            set
+            {
                 r = value;
                 poolId = r != null ? r.Id : -1;
             }

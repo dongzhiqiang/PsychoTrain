@@ -15,6 +15,6 @@ public class UIMainCityItem : MonoBehaviour
     public enSystem sys;
     public Text txt;
     public GameObject tip;
-    
+
 
 }
