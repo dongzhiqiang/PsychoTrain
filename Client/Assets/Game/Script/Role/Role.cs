@@ -107,6 +107,7 @@ public class Role : IdType
     public CombatPart CombatPart { get { return GetPart(enPart.combat) as CombatPart; } }
 
     //控制层
+    public AIPart AIPart { get { return GetPart(enPart.ai) as AIPart; } }
 
 
     //上层逻辑

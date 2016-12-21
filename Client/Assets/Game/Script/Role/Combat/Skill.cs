@@ -202,7 +202,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
         get
         {
             //沉默状态
-            if (Parent.RSM.IsSilent)
+            if (Parent.StatePart.IsSilent)
                 return enSkillState.silent;
 
             //如果内部技能是最后的技能，那么算内部技能的
@@ -671,7 +671,7 @@ public sealed class Skill: IdType//注意这个类的设计决定了它不适合
             }
 
             //检查按紧，如果技能允许按紧，那么不结束
-            bool isPress = m_cfg.continueIfPress && m_parent.RSM.StateCombat.PressSkill==this;
+            bool isPress = m_cfg.continueIfPress && m_parent.StatePart.StateCombat.PressSkill==this;
             float time = TimeMgr.instance.logicTime - m_lastPlayTime ;
             m_curFrame = (int)(time / Util.One_Frame);
 

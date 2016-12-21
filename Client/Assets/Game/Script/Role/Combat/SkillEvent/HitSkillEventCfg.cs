@@ -103,6 +103,6 @@ public class HitSkillEventCfg : SkillEventCfg
         BehitCxt cxt = IdTypePool<BehitCxt>.Get();
         cxt.cfg = this;
         cxt.duration = this.duration * target.Cfg.behitRate * weaponBehitRate;
-        return target.RSM.GotoState(enRoleState.beHit, cxt,false,true);
+        return target.StatePart.GotoState(enRoleState.beHit, cxt,false,true);
     }
 }

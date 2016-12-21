@@ -68,7 +68,7 @@ public class RoleStateBorn : RoleState
                 if (m_cxt.rePlayAI)
                     AIPart.RePlay();
                 else
-                    AIPart.Play(Parent.RoleBornCxt.aiBehavior);
+                    AIPart.Play(Parent.RoleCxt.aiBehavior);
             }
         }
 
@@ -93,7 +93,7 @@ public class RoleStateBorn : RoleState
         if (m_bornCfg == null || (m_bornLogic != null && m_bornLogic.isEnd()))
         {
             m_canLeave = true;
-            m_rsm.CheckFree();
+            StatePart.CheckFree();
             this.Parent.Fire(MSG_ROLE.BORN_END, null);
 
         }

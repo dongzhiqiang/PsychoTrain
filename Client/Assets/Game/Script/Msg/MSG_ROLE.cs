@@ -46,8 +46,35 @@ public class MSG_ROLE
     //杀死了一个敌人
     public const int KILL = 14;
 
+    //出生效果播完
+    public const int BORN_END = 15;
 
+    //ai变化
+    public const int AI_CHANGE = 16;
+    
+    //技能事件(被动)，执行前(在否决前执行)
+    public const int TARGET_SKILL_EVENT_PRE = 17;
 
+    //伤害反弹否决
+    public const int DAMAGE_REFLECT_AVOID = 18;
+
+    //添加状态
+    public const int BUFF_ADD = 19;
+
+    //伤害计算中，增减攻击伤害
+    public const int ADD_DAMAGE = 20;
+
+    //伤害计算中，增减被击伤害
+    public const int ADD_DEF_DAMAGE = 21;
+
+    //技能事件
+    public const int SOURCE_SKILL_EVENT = 22;
+
+    //加印记
+    public const int SOURCE_ADD_FLAG = 23;
+
+    //加印记(被动)
+    public const int TARGET_ADD_FLAG = 24;
 
 
 

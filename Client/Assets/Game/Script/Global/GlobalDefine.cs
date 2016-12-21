@@ -2,6 +2,22 @@
 using System.Collections.Generic;
 using UnityEngine;
 
+
+//系统图标枚举,注意只能在最后加
+public enum enSystem
+{
+    min,
+    none,
+    other,
+    task,//任务
+    weapon,//武器
+    weapon1, //武器-2
+    weapon2, //武器-3
+    weapon3, //武器-4
+    setting,//系统设置
+    max,
+}
+
 public enum enPart
 {
     prop,

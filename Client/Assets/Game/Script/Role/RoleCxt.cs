@@ -16,6 +16,8 @@ public class RoleCxt : IdType
     public string bornAniId = "";
     public string deadAniId = "";
     public string aiBehavior = "";
+    public HateCfg hate = new HateCfg();
+
     public void Init(string guid, string name, string roleId, int level, enCamp camp, Vector3 pos, Vector3 euler, string bornAniId = "", string deadAniId = "", string groundDeadAniId = "", string aiBehavior = "", Action<Role> onCreate = null)
     {
         this.guid = guid;
@@ -57,6 +59,7 @@ public class RoleCxt : IdType
         bornAniId = "";
         deadAniId = "";
         aiBehavior = "";
+        hate.OnClear();
     }
 
 }

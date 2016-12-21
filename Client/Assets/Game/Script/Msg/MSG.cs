@@ -12,4 +12,7 @@ public class MSG
 
     //关卡相关
     public const int MSG_SCENE = 3;
+
+    //系统相关
+    public const int MSG_SYSTEM = 4;
 }

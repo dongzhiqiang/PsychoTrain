@@ -77,7 +77,7 @@ public class EventGroupEditor : MultiWindow
             Role target =m_grabRole.GetGrabTarget();
             if(target == null)return;
             TranPart tranPart = target.TranPart;
-            RoleSubBeGrab grabState = target.RSM.StateBehit.CurState as RoleSubBeGrab;
+            RoleSubBeGrab grabState = target.StatePart.StateBehit.CurState as RoleSubBeGrab;
             if(grabState == null)return;
             SkillEventGroup g = grabState.EventGroup;
             List<SkillEventFrame> frames = g == null ? null : g.Frames;

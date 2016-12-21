@@ -111,7 +111,7 @@ public class JumpEventCfg : SkillEventCfg
         if (cxt == null)
             return false;
 
-        RoleStateFall fall =target.RSM.StateFall;
+        RoleStateFall fall =target.StatePart.StateFall;
         fall.FirstHangDuration =firstHangDuration;
         fall.HangDuration = hangDuration;
         fall.FallSpeed =fallSpeed;
@@ -121,7 +121,7 @@ public class JumpEventCfg : SkillEventCfg
         
 
         //设置为空中状态
-        target.RSM.IsAir = true;
+        target.StatePart.IsAir = true;
 
         cxt.moveType = TranPartCxt.enMove.dir;
         cxt.SetMoveDir(Vector3.up, enValidAxis.vertical);

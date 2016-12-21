@@ -39,7 +39,7 @@ public abstract class RoleState
     public BuffPart BuffPart { get { return m_statePart.BuffPart; } }
     public HatePart HatePart { get { return m_statePart.HatePart; } }
 
-    //3 战斗层(移动、战斗、死亡等，和RSM有对应关系，本质上是为了更好地控制RSM)
+    //3 战斗层(移动、战斗、死亡等，和StatePart有对应关系，本质上是为了更好地控制StatePart)
     public DeadPart DeadPart { get { return m_statePart.DeadPart; } }
     public MovePart MovePart { get { return m_statePart.MovePart; } }
     public CombatPart CombatPart { get { return m_statePart.CombatPart; } }

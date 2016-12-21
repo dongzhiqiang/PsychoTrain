@@ -44,17 +44,17 @@ public class DeadPart : RolePart
         if (!Check())
             return false;
 
-        RoleStateBehit behit = RSM.StateBehit;
+        RoleStateBehit behit = StatePart.StateBehit;
         //被击浮空中的话，等倒地结束做死亡动作
         if (checkState && behit.IsCur && behit.CurStateType != enBehit.behit && behit.CurStateType != enBehit.ground)
             return false;
 
         //如果是在空中，进入浮空状态
-        RoleStateFall fall = RSM.StateFall;
-        if (checkState && RSM.IsAir)
+        RoleStateFall fall = StatePart.StateFall;
+        if (checkState && StatePart.IsAir)
         {
             //进入浮空下落状态
-            RSM.GotoState(enRoleState.beHit, null);
+            StatePart.GotoState(enRoleState.beHit, null);
             return false;
         }
 

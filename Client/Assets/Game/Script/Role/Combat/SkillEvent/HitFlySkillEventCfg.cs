@@ -100,7 +100,7 @@ public class HitFlySkillEventCfg : SkillEventCfg
 
             BeFlyCxt cxt = IdTypePool<BeFlyCxt>.Get();
             cxt.cfg = this;
-            return target.RSM.GotoState(enRoleState.beHit, cxt, false, true);
+            return target.StatePart.GotoState(enRoleState.beHit, cxt, false, true);
         }
         else
         {
@@ -110,7 +110,7 @@ public class HitFlySkillEventCfg : SkillEventCfg
 
             BehitCxt cxt = IdTypePool<BehitCxt>.Get();
             cxt.cfg = hitSkillEvent;
-            return target.RSM.GotoState(enRoleState.beHit, cxt, false, true);
-        }   
+            return target.StatePart.GotoState(enRoleState.beHit, cxt, false, true);
+        }
     }
 }

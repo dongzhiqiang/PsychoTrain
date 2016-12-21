@@ -141,7 +141,7 @@ public class MoveEventCfg : SkillEventCfg
 
     public override bool OnHandle(Role source, Role target, SkillEventFrame eventFrame)
     {
-        RoleStateMachine rsm = target.RSM;
+        StatePart rsm = target.StatePart;
         //空中免疫
         if (rsm.IsAir)
             return false;

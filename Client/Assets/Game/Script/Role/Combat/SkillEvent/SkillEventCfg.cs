@@ -33,7 +33,7 @@ public abstract class SkillEventCfg
     {
         //一些通用的判断，放这里
         //状态的一些免疫
-        RoleStateMachine rsm = target.RSM;
+        StatePart rsm = target.StatePart;
         bool isGetUp = false;
         bool isGround = false;
         bool isGrab = false;
