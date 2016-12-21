@@ -9,6 +9,7 @@ public enum enGameLayer
     monsterCollider,    //小怪碰撞
     bossCollider,       //大怪碰撞
     heroCollider,       //主角碰撞
+    heroAvoidCollider,  //主角翻滚碰撞
     deadCollider,       //死亡碰撞
     flyerTrigger,       //飞出物
     levelTrigger,       //关卡区域触发

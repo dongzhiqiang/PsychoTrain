@@ -31,6 +31,7 @@ public abstract class RolePart
     public CombatPart CombatPart { get { return m_parent.CombatPart; } }
 
     //控制层
+    public AIPart AIPart { get { return m_parent.AIPart; } }
 
 
     //上层逻辑

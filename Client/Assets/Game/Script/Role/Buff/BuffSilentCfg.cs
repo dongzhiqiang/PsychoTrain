@@ -40,7 +40,7 @@ public class BuffSilent : Buff
             return;
         }
         
-        m_parent.RSM.AddSilent();
+        m_parent.StatePart.AddSilent();
     }
     
     //结束
@@ -48,7 +48,7 @@ public class BuffSilent : Buff
     {
         if (!isClear)
         {
-            m_parent.RSM.SubSilent();
+            m_parent.StatePart.SubSilent();
         }
     }
 }

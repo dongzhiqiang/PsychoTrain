@@ -189,7 +189,7 @@ public class CombatMgr : SingletonMonoBehaviour<CombatMgr>
 
         //战力修正计算
         damage *= powerFactor;
-        elemDamage *= powerFactor;
+        //elemDamage *= powerFactor;
 
         //日志
         /* string log = string.Format("攻击者:{0} 被攻击者:{1}", source.Cfg.id, target.Cfg.id);
@@ -346,69 +346,69 @@ public class CombatMgr : SingletonMonoBehaviour<CombatMgr>
         target.SetInt(enProp.mp, mpNew);
     }
 
-    //增减气力值
-    public void AddShield(Role target, int add)
-    {
-        int v = target.GetInt(enProp.shield);
-        int vNew = (int)Mathf.Clamp(v + add, 0, target.GetFloat(enProp.shieldMax));
-        target.SetInt(enProp.shield, vNew);
+    ////增减气力值
+    //public void AddShield(Role target, int add)
+    //{
+    //    int v = target.GetInt(enProp.shield);
+    //    int vNew = (int)Mathf.Clamp(v + add, 0, target.GetFloat(enProp.shieldMax));
+    //    target.SetInt(enProp.shield, vNew);
 
-        //判断进入气绝状态,实现上就是删除气力状态,然后它就会执行结束状态，也就是气力状态
-        if (add < 0 && vNew == 0)
-        {
-            RemoveShield(target);
-        }
-    }
+    //    //判断进入气绝状态,实现上就是删除气力状态,然后它就会执行结束状态，也就是气力状态
+    //    if (add < 0 && vNew == 0)
+    //    {
+    //        RemoveShield(target);
+    //    }
+    //}
 
 
-    void RemoveShield(Role target)
-    {
-        int shieldBuffId = target.RuntimeShieldBuff;
-        if (shieldBuffId <= 0 || !target.RSM.IsShield)//气力状态下才有气力状态可以删除，这里先判断下提升下效率
-            return;
-        BuffCfg shieldBuffCfg = BuffCfg.Get(shieldBuffId);
-        if (shieldBuffCfg == null)
-        {
-            Debuger.LogError("{0}找不到气力状态配置：{1}", target.Cfg.id, shieldBuffId);
-            return;
-        }
+    //void RemoveShield(Role target)
+    //{
+    //    int shieldBuffId = target.RuntimeShieldBuff;
+    //    if (shieldBuffId <= 0 || !target.StatePart.IsShield)//气力状态下才有气力状态可以删除，这里先判断下提升下效率
+    //        return;
+    //    BuffCfg shieldBuffCfg = BuffCfg.Get(shieldBuffId);
+    //    if (shieldBuffCfg == null)
+    //    {
+    //        Debuger.LogError("{0}找不到气力状态配置：{1}", target.Cfg.id, shieldBuffId);
+    //        return;
+    //    }
 
-        BuffPart buffPart = target.BuffPart;
-        int count = buffPart.RemoveBuffByBuffId(shieldBuffId);
-        if (count != 1)
-        {
-            Debuger.LogError("{0}气绝状态维护出错，删除了{1}个气力状态", target.Cfg.id, count);
-            return;
-        }
+    //    BuffPart buffPart = target.BuffPart;
+    //    int count = buffPart.RemoveBuffByBuffId(shieldBuffId);
+    //    if (count != 1)
+    //    {
+    //        Debuger.LogError("{0}气绝状态维护出错，删除了{1}个气力状态", target.Cfg.id, count);
+    //        return;
+    //    }
 
-        //计算下恢复时间，气绝状态持续时间=通用气绝时间/(1+气力时间系数*(1+Min(10%*n,50%))
-        int unshieldCounter = target.GetFlag("unshieldCounter");
-        float counterRate = Mathf.Min(unshieldCounter * ConfigValue.shieldRateAdd, ConfigValue.shieldRateLimit);
-        float duration = ConfigValue.unshieldDuation / (1 + target.Cfg.shieldTimeRate * (1 + counterRate));
+    //    //计算下恢复时间，气绝状态持续时间=通用气绝时间/(1+气力时间系数*(1+Min(10%*n,50%))
+    //    int unshieldCounter = target.GetFlag("unshieldCounter");
+    //    float counterRate = Mathf.Min(unshieldCounter * ConfigValue.shieldRateAdd, ConfigValue.shieldRateLimit);
+    //    float duration = ConfigValue.unshieldDuation / (1 + target.Cfg.shieldTimeRate * (1 + counterRate));
 
-        //记录下进入气绝状态的次数
-        target.AddFlag("unshieldCounter");
+    //    //记录下进入气绝状态的次数
+    //    target.AddFlag("unshieldCounter");
 
-        //找到气绝状态
-        int unshieldBuffId = shieldBuffCfg.endBuffId == null || shieldBuffCfg.endBuffId.Length == 0 ? 0 : shieldBuffCfg.endBuffId[0];
-        if (unshieldBuffId <= 0)
-        {
-            Debuger.LogError("{0}气绝状态(气力状态的结束状态)id无效：{1}", target.Cfg.id, unshieldBuffId);
-            return;
-        }
-        Buff unshieldBuff = buffPart.GetBuffByBuffId(unshieldBuffId);
-        if (unshieldBuff == null)
-        {
-            Debuger.LogError("{0}找不到气绝状态(气力状态的结束状态)：{1}", target.Cfg.id, unshieldBuffId);
-            return;
-        }
-        unshieldBuff.Time = duration;
+    //    //找到气绝状态
+    //    int unshieldBuffId = shieldBuffCfg.endBuffId == null || shieldBuffCfg.endBuffId.Length == 0 ? 0 : shieldBuffCfg.endBuffId[0];
+    //    if (unshieldBuffId <= 0)
+    //    {
+    //        Debuger.LogError("{0}气绝状态(气力状态的结束状态)id无效：{1}", target.Cfg.id, unshieldBuffId);
+    //        return;
+    //    }
+    //    Buff unshieldBuff = buffPart.GetBuffByBuffId(unshieldBuffId);
+    //    if (unshieldBuff == null)
+    //    {
+    //        Debuger.LogError("{0}找不到气绝状态(气力状态的结束状态)：{1}", target.Cfg.id, unshieldBuffId);
+    //        return;
+    //    }
+    //    unshieldBuff.Time = duration;
 
-        //增加一个恢复满气力的状态，在气绝状态结束的时候
-        Buff shieldRegainBuff = buffPart.AddBuff(100);
-        shieldRegainBuff.Time = duration;
+    //    //增加一个恢复满气力的状态，在气绝状态结束的时候
+    //    Buff shieldRegainBuff = buffPart.AddBuff(100);
+    //    shieldRegainBuff.Time = duration;
 
-    }
+    //}
 
     public void AddFlyer(Flyer f)
     {
@@ -559,9 +559,9 @@ public class CombatMgr : SingletonMonoBehaviour<CombatMgr>
         //人物强制切换到待机
         foreach (Role r in RoleMgr.instance.Roles)
         {
-            if (r.State == Role.enState.alive && r.RSM.CurStateType != enRoleState.born && r.RSM.CurStateType != enRoleState.dead)
+            if (r.State == Role.enState.alive && r.StatePart.CurStateType != enRoleState.born && r.StatePart.CurStateType != enRoleState.dead)
             {
-                r.RSM.CheckFree(true);
+                r.StatePart.CheckFree(true);
                 r.TranPart.ResetHight();
             }
         }

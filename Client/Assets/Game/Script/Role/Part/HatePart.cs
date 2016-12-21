@@ -1,7 +1,15 @@
-﻿using System.Collections;
+﻿#region Header
+/**
+ * 名称：仇恨部件
+ * 描述：
+ **/
+#endregion
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
-
+#if UNITY_EDITOR
+using UnityEditor;
+#endif
 
 public class RefGroupHateCfg
 {
@@ -165,7 +173,7 @@ public class HatePart : RolePart
         m_lastHateTargetId = -1;
 
         //将角色表里的仇恨配置设置到角色上下文
-        var hateCxt = Parent.RoleBornCxt.hate;
+        var hateCxt = Parent.RoleCxt.hate;
         var roleCfg = Parent.Cfg;
         hateCxt.behateIfBegin += roleCfg.behateIfBegin;
         hateCxt.hateIfHit += roleCfg.hateIfHit;
@@ -241,7 +249,7 @@ public class HatePart : RolePart
         }
 
 
-        List<RefGroupHateCfg> refGroupHates = Parent.RoleBornCxt.hate.hateIfRefGroup;
+        List<RefGroupHateCfg> refGroupHates = Parent.RoleCxt.hate.hateIfRefGroup;
         var flags = r.PropPart.FightFlags;
         for (int i = 0; i < refGroupHates.Count; ++i)
         {
@@ -270,7 +278,7 @@ public class HatePart : RolePart
             return;
         }
 
-        var h = Parent.RoleBornCxt.hate.behateIfBegin;
+        var h = Parent.RoleCxt.hate.behateIfBegin;
         if (h > 0)
         {
             r.HatePart.AddHate(this.Parent, h);
@@ -296,7 +304,7 @@ public class HatePart : RolePart
         m_lastBeHitTime = Time.time;
         m_lastHitTime = -1;
 
-        int hate = Parent.RoleBornCxt.hate.hateIfBeHit;
+        int hate = Parent.RoleCxt.hate.hateIfBeHit;
         if (hate != 0)
             AddHate(role, hate);
     }
@@ -309,7 +317,7 @@ public class HatePart : RolePart
         m_lastBeHitTime = -1;
         m_lastHitTime = Time.time;
 
-        int hate = Parent.RoleBornCxt.hate.hateIfHit;
+        int hate = Parent.RoleCxt.hate.hateIfHit;
         if (hate != 0)
             AddHate(role, hate);
     }

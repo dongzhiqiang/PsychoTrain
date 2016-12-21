@@ -81,10 +81,9 @@ public class CreateRoleEventCfg : SkillEventCfg
         RoleCfg cfg = RoleCfg.Get(roleId);
         if (cfg == null)
             return false;
-        RoleBornCxt cxt = IdTypePool<RoleBornCxt>.Get();
+        RoleCxt cxt = IdTypePool<RoleCxt>.Get();
         cxt.bornAniId = cfg.bornType;
         cxt.deadAniId = cfg.deadType;
-        cxt.groundDeadAniId = cfg.groundDeadType;
         cxt.aiBehavior = cfg.aiType;
         cxt.guid = Util.GenerateGUID();
         cxt.roleId = cfg.id;

@@ -90,7 +90,7 @@ public class Main : MonoBehaviour {
         //uiLoding.SetProgress(85);
         yield return 0;
         LevelMgr.instance.Init();
-        NetMgr.instance.Init();
+        //NetMgr.instance.Init();
         SoundMgr.instance.Init();
         //TeachMgr.instance.Init();
 
@@ -103,12 +103,12 @@ public class Main : MonoBehaviour {
         if (!isSingle)
         {
             //进入登录态
-            PlayerStateMachine.Instance.GotoState(enPlayerState.login);
+            //PlayerStateMachine.Instance.GotoState(enPlayerState.login);
         }
         else
         {
 #region 单机测试
-            FullRoleInfoVo roleVo    = new FullRoleInfoVo();
+            //FullRoleInfoVo roleVo    = new FullRoleInfoVo();
 
             var props = new Dictionary<string, Property>();
             props["guid"] = new Property(Util.GenerateGUID());
@@ -116,23 +116,23 @@ public class Main : MonoBehaviour {
             props["name"] = new Property("单机测试");
             props["level"] = new Property(35);
             props["stamina"] = new Property(0);
-            roleVo.props = props;
+            //roleVo.props = props;
 
-            var equips = new List<EquipVo>();
-            equips.Add(new EquipVo(11000, 1, 1));
-            equips.Add(new EquipVo(11100, 1, 1));
-            equips.Add(new EquipVo(11200, 1, 1));
-            equips.Add(new EquipVo(11300, 1, 1));
-            equips.Add(new EquipVo(12000, 1, 1));
-            equips.Add(new EquipVo(13000, 1, 1));
-            equips.Add(new EquipVo(14000, 1, 1));
-            equips.Add(new EquipVo(15000, 1, 1));
-            equips.Add(new EquipVo(16000, 1, 1));
-            equips.Add(new EquipVo(17000, 1, 1));
-            roleVo.equips = equips;
+            //var equips = new List<EquipVo>();
+            //equips.Add(new EquipVo(11000, 1, 1));
+            //equips.Add(new EquipVo(11100, 1, 1));
+            //equips.Add(new EquipVo(11200, 1, 1));
+            //equips.Add(new EquipVo(11300, 1, 1));
+            //equips.Add(new EquipVo(12000, 1, 1));
+            //equips.Add(new EquipVo(13000, 1, 1));
+            //equips.Add(new EquipVo(14000, 1, 1));
+            //equips.Add(new EquipVo(15000, 1, 1));
+            //equips.Add(new EquipVo(16000, 1, 1));
+            //equips.Add(new EquipVo(17000, 1, 1));
+            //roleVo.equips = equips;
             
             //创建英雄
-            RoleMgr.instance.CreateHero(roleVo);
+            RoleMgr.instance.CreateHero();
 
             //进入主城
             LevelMgr.instance.GotoMaincity();
@@ -149,7 +149,7 @@ public class Main : MonoBehaviour {
 
     void OnApplicationQuit()
     {
-        NetMgr.instance.Dispose();
+        //NetMgr.instance.Dispose();
         LogUtil.Close();
     }
 

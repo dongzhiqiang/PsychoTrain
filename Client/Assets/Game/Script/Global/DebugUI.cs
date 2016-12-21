@@ -763,6 +763,9 @@ public class DebugUI : SingletonMonoBehaviour<DebugUI>
             {
                 foreach (Role r in rs)
                 {
+                    if (r.Cfg.roleType == enRoleType.trap || r == RoleMgr.instance.GlobalEnemy)
+                        continue;
+
                     if (r.State == Role.enState.alive && RoleMgr.instance.IsEnemy(r, hero))
                         r.DeadPart.Handle(true);
                 }

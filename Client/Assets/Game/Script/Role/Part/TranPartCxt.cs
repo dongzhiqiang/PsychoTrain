@@ -58,6 +58,11 @@ public class TranPartCxt : IdType
     //碰到结束
     public int touchOverFrame = -1; //在第几帧到移动完成之间检测是不是碰到敌人，碰到立即结束，如果填-1表明不用判断是不是碰到敌人
 
+    //结束技能
+    public string endSkill = null;
+    public Role skillTarget = null;
+    public int skillTargetId = 0;
+
     public float beginTime = 0;//这个值外部不用填，从TranPart获取的时候会初始化
     public int count = 0;//这个值外部不用填,计算过多少次
 
@@ -68,7 +73,14 @@ public class TranPartCxt : IdType
             return touchOverFrame == -1 ? false : TimeMgr.instance.logicTime >= (beginTime + touchOverFrame * Util.One_Frame);
         }
     }
-    
+    public Role EndSkillTarget
+    {
+        get
+        {
+            return skillTarget == null || skillTarget.IsUnAlive(skillTargetId) ? null : skillTarget;
+        }
+    }
+
     public void SetMoveDir(Vector3 moveDir, enValidAxis moveValidAxis = enValidAxis.horizontal)
     {
         this.moveValidAxis = moveValidAxis;
@@ -87,6 +99,13 @@ public class TranPartCxt : IdType
         colliderRoleId = r.Id;
         colliderLayer = gameLayer;
         r.RenderPart.SetLayer(gameLayer);
+    }
+
+    public void SetEndSkill(string endSkill, Role skillTarget)
+    {
+        this.endSkill = endSkill;
+        this.skillTarget = skillTarget;
+        this.skillTargetId = skillTarget == null ? 0 : skillTarget.Id;
     }
 
     public override void OnClear()

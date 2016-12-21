@@ -124,9 +124,9 @@ public class CombatPart : RolePart
 
 
         //动作设置当前元素属性
-        AniFxMgr aniFxMgr = AniPart.Ani;
-        if (aniFxMgr != null)
-            aniFxMgr.RuntimeElement = (enAniFxElement)elem;
+        //AniFxMgr aniFxMgr = AniPart.Ani;
+        //if (aniFxMgr != null)
+        //    aniFxMgr.RuntimeElement = (enAniFxElement)elem;
         return true;
     }
 

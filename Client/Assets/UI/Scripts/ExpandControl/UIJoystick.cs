@@ -63,11 +63,6 @@ public class UIJoystick : MonoBehaviour
         m_centerFirstPos = m_center.anchoredPosition;
         m_joystick.AddPointDown((PointerEventData data) =>
         {
-#if !ART_DEBUG
-            //如果引导把中心块隐藏了，就不响应了
-            if (TeachMgr.instance.PlayNow && !m_center.gameObject.activeInHierarchy)
-                return;
-#endif
             var cam = data.pressEventCamera;
             if (cam == null)
                 cam = data.pointerPress && data.pointerPress.layer == UI_HIGHT_LAYER ? UIMgr.instance.UICameraHight : UIMgr.instance.UICamera;
@@ -78,11 +73,6 @@ public class UIJoystick : MonoBehaviour
         });
         m_joystick.AddDrag((PointerEventData data) =>
         {
-#if !ART_DEBUG
-            //如果引导把中心块隐藏了，就不响应了
-            if (TeachMgr.instance.PlayNow && !m_center.gameObject.activeInHierarchy)
-                return;
-#endif
             var cam = data.pressEventCamera;
             if (cam == null)
                 cam = data.pointerDrag && data.pointerDrag.layer == UI_HIGHT_LAYER ? UIMgr.instance.UICameraHight : UIMgr.instance.UICamera;

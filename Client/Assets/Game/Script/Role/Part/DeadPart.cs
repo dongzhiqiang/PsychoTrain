@@ -1,4 +1,10 @@
-﻿using System.Collections;
+﻿#region Header
+/**
+ * 名称：死亡部件
+ * 描述：控制角色死亡(可以带延迟)
+ **/
+#endregion
+using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
 

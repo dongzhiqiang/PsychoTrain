@@ -348,4 +348,14 @@ public class AniPart : RolePart
         }
         m_ani.AddPause(duration);
     }
+
+    public void ResetPause()
+    {
+        if (m_ani == null)
+        {
+            Debuger.LogError("模型为空");
+            return;
+        }
+        m_ani.ResetPause();
+    }
 }

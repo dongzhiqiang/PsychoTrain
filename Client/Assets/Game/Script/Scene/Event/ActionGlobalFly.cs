@@ -27,8 +27,7 @@ public class ActionGlobalFly : SceneAction
             return;
         }
         mActionCfg.createCfg.Create(globalEnemy, null, globalEnemy.transform.position,
-            enElement.none
-            , OnLoad, new object[] { globalEnemy, null, null });
+            OnLoad, new object[] { globalEnemy, null, null });
 
     }
 

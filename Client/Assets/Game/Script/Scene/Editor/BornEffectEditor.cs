@@ -345,7 +345,7 @@ public class BornEffectEditor : EditorWindow
 
             m_BornCfg.aniNameStr = serializeAni(m_BornCfg.aniName);
 
-            RoleBornCxt cxt = IdTypePool<RoleBornCxt>.Get();
+            RoleCxt cxt = IdTypePool<RoleCxt>.Get();
             cxt.OnClear();
             cxt.Init(Util.GenerateGUID(), "", m_roleId, 1, enCamp.camp2, m_curPos, m_curDir);
 
@@ -377,9 +377,9 @@ public class BornEffectEditor : EditorWindow
                     return;
                 }
 
-                if (role == null || role.RSM == null)
+                if (role == null || role.StatePart == null)
                 {
-                    RoleBornCxt cxt = IdTypePool<RoleBornCxt>.Get();
+                    RoleCxt cxt = IdTypePool<RoleCxt>.Get();
                     cxt.Init(Util.GenerateGUID(), "", m_roleId, 1, enCamp.camp2, m_curPos, m_curDir);
 
                     role = RoleMgr.instance.CreateRole(cxt);
@@ -413,7 +413,7 @@ public class BornEffectEditor : EditorWindow
 
                 if (role == null || role.StatePart == null)
                 {
-                    RoleBornCxt cxt = IdTypePool<RoleBornCxt>.Get();
+                    RoleCxt cxt = IdTypePool<RoleCxt>.Get();
                     cxt.Init(Util.GenerateGUID(), "", m_roleId, 1, enCamp.camp2, m_curPos, m_curDir);
 
                     role = RoleMgr.instance.CreateRole(cxt);

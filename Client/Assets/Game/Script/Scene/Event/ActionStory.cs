@@ -16,6 +16,6 @@ public class ActionStory : SceneAction
         if (SceneMgr.SceneDebug)
             Debug.Log(string.Format("触发剧情 : {0}", mActionCfg.storyId));
 
-        StoryMgr.instance.PlayStory(mActionCfg.storyId);
+        //StoryMgr.instance.PlayStory(mActionCfg.storyId);
     }
 }

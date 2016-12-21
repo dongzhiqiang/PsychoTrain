@@ -22,10 +22,7 @@ public class UILevelAreaHead : UILevelArea
     public ImageEx m_curWeapon;
     public ImageEx m_nextWeapon;
     public ImageEx m_nextNextWeapon;
-
-    public UILevelPetHead m_pet1;
-    public UILevelPetHead m_pet2;
-
+    
     int m_observer;
     int m_observer2;
     int m_observer3;
@@ -83,8 +80,6 @@ public class UILevelAreaHead : UILevelArea
         if (m_observer2 != EventMgr.Invalid_Id) { EventMgr.Remove(m_observer2); m_observer2 = EventMgr.Invalid_Id; }
         if (m_observer3 != EventMgr.Invalid_Id) { EventMgr.Remove(m_observer3); m_observer3 = EventMgr.Invalid_Id; }
         if (m_observer4 != EventMgr.Invalid_Id) { EventMgr.Remove(m_observer4); m_observer4 = EventMgr.Invalid_Id; }
-        m_pet1.Close();
-        m_pet2.Close();
     }
 
     protected override void OnRoleBorn()
@@ -120,7 +115,7 @@ public class UILevelAreaHead : UILevelArea
 
     public bool IsInMoniter(Role role)
     {
-        return role == Role || m_pet1.Pet == role || m_pet2.Pet == role;
+        return role == Role;
     }
     #endregion
 
@@ -129,7 +124,7 @@ public class UILevelAreaHead : UILevelArea
     {
         if (Role == null)
             return false;
-        return Role.RSM.CurState.CanLeave(Role.RSM.StateSwitchWeapon);
+        return Role.StatePart.CurState.CanLeave(Role.StatePart.StateSwitchWeapon);
     }
     //左上角切换技能被拖动
     void OnDragSwitch(int idx)
@@ -166,8 +161,6 @@ public class UILevelAreaHead : UILevelArea
         CombatPart c = Role.CombatPart;
         int i = c.Weapons.IndexOf(c.FightWeapon) + idx;
         c.FightWeapon = c.Weapons[Util.Clamp(i % c.Weapons.Count, 0, c.Weapons.Count)];
-
-        TeachMgr.instance.OnDirectTeachEvent("combat", "changeweapon");
     }
 
     void Update()
@@ -196,11 +189,6 @@ public class UILevelAreaHead : UILevelArea
 
         var oldMPVal = m_oldMPVal;
         m_oldMPVal = mp;
-        //跨边界才触发
-        if (mp < m_minNeedMP && oldMPVal >= m_minNeedMP)
-            TeachMgr.instance.OnDirectTeachEvent("hero", "lowMP");
-        else if (mp >= mpMax && oldMPVal < mpMax)
-            TeachMgr.instance.OnDirectTeachEvent("hero", "fullMP");                
     }
 
     void FindMinNeedMP()

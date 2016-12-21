@@ -191,7 +191,7 @@ public class UILevelSkillItem : MonoBehaviour
     {
         Skill s = DownSkill;
         if (s == null) return;
-        s.Parent.RSM.StateCombat.PressSkill = null;//向战斗系统取消按紧的技能
+        s.Parent.StatePart.StateCombat.PressSkill = null;//向战斗系统取消按紧的技能
     }
 
     public void OnPointDown(PointerEventData p)
@@ -199,7 +199,7 @@ public class UILevelSkillItem : MonoBehaviour
 
         Skill s = DownSkill;
         if (s == null) return;
-        s.Parent.RSM.StateCombat.PressSkill = s;//向战斗系统记下按紧的技能
+        s.Parent.StatePart.StateCombat.PressSkill = s;//向战斗系统记下按紧的技能
         parent.OnClickSkill(this, s);
     }
 

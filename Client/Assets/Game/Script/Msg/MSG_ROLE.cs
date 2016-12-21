@@ -78,6 +78,16 @@ public class MSG_ROLE
 
     //死亡效果播完
     public const int DEAD_END = 25;
+    
+    //技能事件否决
+    public const int SKILL_EVENT_AVOID = 26;
+
+    //状态创建否决
+    public const int BUFF_ADD_AVOID = 27;
+
+    //击飞和浮空是否要转换为被击
+    public const int CHANGE_HIT_EVENT = 28;
+
 
 
 

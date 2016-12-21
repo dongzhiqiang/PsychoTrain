@@ -70,13 +70,13 @@ public class RoleStateSwitchWeapon : RoleState
         {
             m_canLeave = true;
             //下落
-            if (m_rsm.CheckFall())
+            if (m_statePart.CheckFall())
                 return;
             //移动中切移动
-            else if (m_rsm.CheckMove())
+            else if (m_statePart.CheckMove())
                 return;
             //待机
-            else if (m_rsm.CheckFree())
+            else if (m_statePart.CheckFree())
                 return;
         }
     }

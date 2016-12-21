@@ -21,6 +21,7 @@ public class RoleMgr : SingletonMonoBehaviour<RoleMgr>
 
     public static string[] OrderRoleTypeName = new string[] { "默认", "最近" };
     public const string RoleMgrLocking = "RoleMgrLocking";
+    public const string GlobalEnemyId = "xj_global_enemy";
 
     #region Fields
 
@@ -32,8 +33,9 @@ public class RoleMgr : SingletonMonoBehaviour<RoleMgr>
     Role m_updatingDestroy;
     //正在update中的角色要update完才能死亡，记下来
     Role m_updatingDead;
-
     Role m_hero;
+    Role m_globalEnemy;
+    int m_globalEnemyId;
 
     #endregion
 
@@ -41,6 +43,18 @@ public class RoleMgr : SingletonMonoBehaviour<RoleMgr>
     public Role Hero { get { return m_hero; } }
     //取得用角色管理器创建出来的所有角色
     public ICollection<Role> Roles { get { return m_roles.Values; } }
+    public Role GlobalEnemy
+    {
+        get
+        {
+            if (m_globalEnemy != null && m_globalEnemy.IsUnAlive(m_globalEnemyId))
+            {
+                Debuger.LogError("全局敌人已经死亡却被访问");
+                return null;
+            }
+            return m_globalEnemy;
+        }
+    }
 
     #endregion
 
@@ -94,6 +108,38 @@ public class RoleMgr : SingletonMonoBehaviour<RoleMgr>
             role.PropPart.FreshBaseProp();
         return role;
     }
+
+
+    public Role CreateGlobalEnemy(enCamp camp)
+    {
+        var info = SceneMgr.instance.GetBornInfo();
+        if (camp == enCamp.max || info == null)
+        {
+            m_globalEnemy = null;
+            m_globalEnemyId = 0;
+            return null;
+        }
+
+        RoleCxt cxt = IdTypePool<RoleCxt>.Get();
+        cxt.roleId = RoleMgr.GlobalEnemyId;
+        cxt.level = Room.instance.roomCfg.levelLv;
+        cxt.camp = camp;
+        cxt.pos = info == null ? Vector3.zero : info.mPosition;
+        cxt.euler = info.mEulerAngles;
+
+        if (m_globalEnemy != null && !m_globalEnemy.IsUnAlive(m_globalEnemyId))
+        {
+            Debuger.LogError("创建全局敌人的时候发现之前的全局敌人没有销毁");
+            DestroyRole(m_globalEnemy);
+        }
+
+        Role globalEnemy = CreateRole(cxt);
+        m_globalEnemy = globalEnemy;
+        m_globalEnemyId = globalEnemy.Id;
+        LockRole(globalEnemy);
+        return globalEnemy;
+    }
+
 
     //锁定角色，如果这个角色被杀死会报错，用于调试和防止全局敌人被销毁
     public void LockRole(Role r)

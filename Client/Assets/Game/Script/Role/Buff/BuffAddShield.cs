@@ -56,16 +56,16 @@ public class BuffAddShield : Buff
     public override void OnBuffHandle()
     {
 
-        PropPart propPart = m_parent.PropPart;
-        float value = this.GetLvValue(ExCfg.value);
-        if (ExCfg.value.isPercent)
-        {
-            float v = ExCfg.baseOnMax ? propPart.GetFloat(enProp.shieldMax) : propPart.GetInt(enProp.shield);
-            value = v * value;
-        }
+        //PropPart propPart = m_parent.PropPart;
+        //float value = this.GetLvValue(ExCfg.value);
+        //if (ExCfg.value.isPercent)
+        //{
+        //    float v = ExCfg.baseOnMax ? propPart.GetFloat(enProp.shieldMax) : propPart.GetInt(enProp.shield);
+        //    value = v * value;
+        //}
 
 
-        CombatMgr.instance.AddShield(m_parent, (int)value);
+        //CombatMgr.instance.AddShield(m_parent, (int)value);
     }
 
     //结束
@@ -74,9 +74,6 @@ public class BuffAddShield : Buff
 
 
     }
-
-
-
-
+    
 }
 

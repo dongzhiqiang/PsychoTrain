@@ -38,14 +38,14 @@ public class BuffPauseAni : Buff
             Debuger.LogError("定身状态不需要执行多次，状态id:{0}", m_cfg.id);
             return;
         }
-        m_parent.RSM.StatePauseAni.GotoState(this);
+        m_parent.StatePart.StatePauseAni.GotoState(this);
     }
 
     //结束
     public override void OnBuffStop(bool isClear)
     {
         if (!isClear)
-            m_parent.RSM.StatePauseAni.CheckLeave(this);
+            m_parent.StatePart.StatePauseAni.CheckLeave(this);
     }
 
 }

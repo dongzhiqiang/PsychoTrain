@@ -238,7 +238,7 @@ public class RoleStateRound : RoleState
             || m_cxt.IsDestroy(m_curId)////如果寻路结束了，TranPart会销毁这个上下文
             )
         {
-            RSM.CheckFree();
+            StatePart.CheckFree();
             return;
         }
 
@@ -250,7 +250,7 @@ public class RoleStateRound : RoleState
             //和目标离得比较近则退出
             if (this.Parent.DistanceSq(m_target) < m_range * m_range)
             {
-                RSM.CheckFree();
+                StatePart.CheckFree();
                 return;
             }
 
@@ -271,7 +271,7 @@ public class RoleStateRound : RoleState
                 //目标停下来则退出
                 if (!movePart.IsMoveing)
                 {
-                    RSM.CheckFree();
+                    StatePart.CheckFree();
                     return;
                 }
 
@@ -304,7 +304,7 @@ public class RoleStateRound : RoleState
             aniName = "youyi";
 
         //如果角色没有这个动作，转换为跑步动作
-        AniPart aniPart = m_rsm.AniPart;
+        AniPart aniPart = m_statePart.AniPart;
         float speed = 1;
         if (!aniPart.Ani.Sts.ContainsKey(aniName))
         {
@@ -317,6 +317,6 @@ public class RoleStateRound : RoleState
         if (aniPart.CurSt.name == aniName)
             return;
 
-        m_rsm.AniPart.Play(aniName, WrapMode.Loop, 0.2f, speed, true);
+        m_statePart.AniPart.Play(aniName, WrapMode.Loop, 0.2f, speed, true);
     }
 }

@@ -116,17 +116,14 @@ public class DamageEventCfg : SkillEventCfg
 
     public override bool OnHandle(Role source, Role target, SkillEventFrame eventFrame)
     {
-
-
-        //扣气力值=攻击方技能气绝值/(1+气力系数*(1+Min(10%*n,50%)))
-        if (shield > 0)
-        {
-            int unshieldCounter = target.GetFlag("unshieldCounter");
-            float counterRate = Mathf.Min(unshieldCounter * ConfigValue.shieldRateAdd, ConfigValue.shieldRateLimit);
-            float v = shield / (1 + target.Cfg.shieldRate * (1 + counterRate));
-            CombatMgr.instance.AddShield(target, (int)-v);
-        }
-
+        ////扣气力值=攻击方技能气绝值/(1+气力系数*(1+Min(10%*n,50%)))
+        //if (shield > 0)
+        //{
+        //    int unshieldCounter = target.GetFlag("unshieldCounter");
+        //    float counterRate = Mathf.Min(unshieldCounter * ConfigValue.shieldRateAdd, ConfigValue.shieldRateLimit);
+        //    float v = shield / (1 + target.Cfg.shieldRate * (1 + counterRate));
+        //    CombatMgr.instance.AddShield(target, (int)-v);
+        //}
 
         //计算出碰撞的点，在target上
         Vector3 hitPos = GetHitPos(hitFxAdjust, source, target, eventFrame);
@@ -159,41 +156,41 @@ public class DamageEventCfg : SkillEventCfg
         Debuger.Log("伤害事件的技能伤害系数:{0}",lvRate);
 #endif
 
-        //计算元素属性
+        ////计算元素属性
         int srcId = source.Id;
         int targetId = target.Id;
-        enElement elementType;
-        string elemEventGroup = null;
-        if (elem == enElement.inherit)
-        {
-            if (source.CombatPart.IsElementOpen)
-            {
-                ElementCfg elementCfg = ElementCfg.GetRoleElementCfg(source);
-                if (elementCfg != null)
-                {
-                    elementType = elementCfg.ElementType;
-                    if (playElemEventGroup && (eventFrame.TargetCount == 0 && eventFrame.FrameTriggerCount == 0))//第一次打到触发
-                        elemEventGroup = elementCfg.GetEventGroup();
-                }
-                else
-                    elementType = source.Cfg.element;
-            }
-            else
-                elementType = enElement.none;
+        //enElement elementType;
+        //string elemEventGroup = null;
+        //if (elem == enElement.inherit)
+        //{
+        //    if (source.CombatPart.IsElementOpen)
+        //    {
+        //        ElementCfg elementCfg = ElementCfg.GetRoleElementCfg(source);
+        //        if (elementCfg != null)
+        //        {
+        //            elementType = elementCfg.ElementType;
+        //            if (playElemEventGroup && (eventFrame.TargetCount == 0 && eventFrame.FrameTriggerCount == 0))//第一次打到触发
+        //                elemEventGroup = elementCfg.GetEventGroup();
+        //        }
+        //        else
+        //            elementType = source.Cfg.element;
+        //    }
+        //    else
+        //        elementType = enElement.none;
 
-        }
-        else
-            elementType = elem;
+        //}
+        //else
+        //    elementType = elem;
 
         //伤害
-        bool ret = CombatMgr.instance.Damage(source, target, hitPos, lvRate * rate, hitFx, cutTargetHp, elementType);
+        bool ret = CombatMgr.instance.Damage(source, target, hitPos, lvRate * rate, hitFx, cutTargetHp);
         if (source.IsUnAlive(srcId) || target.IsUnAlive(targetId))
             return ret;
 
 
-        //元素属性附带事件组
-        if (!string.IsNullOrEmpty(elemEventGroup))
-            CombatMgr.instance.PlayEventGroup(source, elemEventGroup, hitPos, target, eventFrame.Skill);
+        ////元素属性附带事件组
+        //if (!string.IsNullOrEmpty(elemEventGroup))
+        //    CombatMgr.instance.PlayEventGroup(source, elemEventGroup, hitPos, target, eventFrame.Skill);
 
 
         return ret;

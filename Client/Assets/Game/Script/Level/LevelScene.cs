@@ -30,10 +30,6 @@ public class LevelScene : LevelBase
         //打开摇杆和魂值、金币、物品栏
         UILevel uiLevel = UIMgr.instance.Open<UILevel>();
 
-        //打开通关条件
-        //uiLevel.Open<UILevelAreaCondition>();
-        uiLevel.Open<UILevelAreaGizmos>();
-
         if (Room.instance.roomCfg.time > 0)     //大于0 倒计时
         {
             var area = uiLevel.Open<UILevelAreaTime>();
@@ -74,10 +70,6 @@ public class LevelScene : LevelBase
 
         //打开摇杆和魂值、金币、物品栏
         UILevel uiLevel = UIMgr.instance.Open<UILevel>();
-
-        //打开通关条件
-        //uiLevel.Open<UILevelAreaCondition>();
-        uiLevel.Open<UILevelAreaGizmos>();
 
         if (Room.instance.roomCfg.time > 0)     //大于0 倒计时
         {

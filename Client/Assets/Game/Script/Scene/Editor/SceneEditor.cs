@@ -331,7 +331,7 @@ public class SceneEditor : Editor
             Role hero = RoleMgr.instance.Hero;
             if (hero != null)
             {
-                RoleBornCxt cxt = IdTypePool<RoleBornCxt>.Get();
+                RoleCxt cxt = IdTypePool<RoleCxt>.Get();
                 cxt.OnClear();
                 cxt.pos = pos;
                 cxt.euler = ea;

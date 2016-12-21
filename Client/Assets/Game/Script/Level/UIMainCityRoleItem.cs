@@ -101,7 +101,7 @@ public class UIMainCityRoleItem : MonoBehaviour {
     void OnClick()
     {
         //if (role.GetInt(enProp.heroId)>0)
-            UIMgr.instance.Open<UIEquip>();
+            //UIMgr.instance.Open<UIEquip>();
         //else
         //    UIMgr.instance.Open<UIChoosePet>();
     }

@@ -46,14 +46,14 @@ public class BuffAni : Buff
             Debuger.LogError("动作序列状态不需要执行多次，状态id:{0}", m_cfg.id);
             return;
         }
-        m_parent.RSM.StateAni.Goto(ExCfg.cxt);
+        m_parent.StatePart.StateAni.Goto(ExCfg.cxt);
     }
 
     //结束
     public override void OnBuffStop(bool isClear)
     {
         if (!isClear)
-            m_parent.RSM.StateAni.CheckLeave(ExCfg.cxt);
+            m_parent.StatePart.StateAni.CheckLeave(ExCfg.cxt);
     }
 
 }

@@ -16,9 +16,9 @@ public class ActionNextTeach : SceneAction
         if (SceneMgr.SceneDebug)
             Debug.Log("推进引导");
 
-        if (string.IsNullOrEmpty(mActionCfg.eventType) || string.IsNullOrEmpty(mActionCfg.eventParam))
-            Debug.LogError("没有配置事件id");
-        else
-            TeachMgr.instance.OnDirectTeachEvent(mActionCfg.eventType, mActionCfg.eventParam);
+        //if (string.IsNullOrEmpty(mActionCfg.eventType) || string.IsNullOrEmpty(mActionCfg.eventParam))
+        //    Debug.LogError("没有配置事件id");
+        //else
+        //    TeachMgr.instance.OnDirectTeachEvent(mActionCfg.eventType, mActionCfg.eventParam);
     }
 }

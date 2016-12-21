@@ -120,11 +120,7 @@ public class FxEventCfg : SkillEventCfg
                 hitPos = GetHitPos(true, source, target, eventFrame);
         }
             
-
-        //计算元素属性
-        enElement elementType = ElementCfg.GetRoleElement(source);
-
-        createCfg.Create(source, target, hitPos, elementType, OnLoad, new object[] { source, target , eventFrame.EventGroup.ParentSkill});
+        createCfg.Create(source, target, hitPos, OnLoad, new object[] { source, target , eventFrame.EventGroup.ParentSkill});
         return true;
     }
 

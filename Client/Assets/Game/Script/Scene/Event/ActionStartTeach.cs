@@ -16,9 +16,9 @@ public class ActionStartTeach : SceneAction
         if (SceneMgr.SceneDebug)
             Debug.Log("开始引导");
 
-        if (string.IsNullOrEmpty(mActionCfg.teachId))
-            Debug.LogError("没有配置引导id");
-        else
-            TeachMgr.instance.PlayTeach(mActionCfg.teachId);
+        //if (string.IsNullOrEmpty(mActionCfg.teachId))
+        //    Debug.LogError("没有配置引导id");
+        //else
+        //    TeachMgr.instance.PlayTeach(mActionCfg.teachId);
     }
 }

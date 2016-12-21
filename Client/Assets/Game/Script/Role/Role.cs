@@ -112,6 +112,7 @@ public class Role : IdType
 
 
     //上层逻辑
+    public WeaponCfg FightWeapon { get { return CombatPart.FightWeapon; } }
     public RoleCxt RoleCxt { get { return m_roleCxt; } }
 
 
@@ -531,7 +532,7 @@ public class Role : IdType
         if (m_grabTargetId == -1)
             return null;
         Role r = RoleMgr.instance.GetRole(m_grabTargetId);
-        if (r == null || r.State != enState.alive || !(r.RSM.StateBehit.IsCur && r.RSM.StateBehit.CurStateType == enBehit.beGrab))
+        if (r == null || r.State != enState.alive || !(r.StatePart.StateBehit.IsCur && r.StatePart.StateBehit.CurStateType == enBehit.beGrab))
         {
 
             m_grabTargetId = -1;

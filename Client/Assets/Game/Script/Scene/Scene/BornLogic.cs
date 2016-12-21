@@ -276,7 +276,7 @@ public class BornLogic
         {
             m_statePlayFx = PlayState.Play;
             if (!string.IsNullOrEmpty(m_bornCfg.fx.name))
-                m_fxOb = m_bornCfg.fx.Create(m_role, null, Vector3.zero, enElement.none);
+                m_fxOb = m_bornCfg.fx.Create(m_role, null, Vector3.zero);
             else
                 m_fxOb = null;
         }

@@ -284,7 +284,7 @@ public class Flyer : MonoBehaviour
             //结束飞出物
             if(!string.IsNullOrEmpty(m_cfg.endFlyerCreateCfg.name))
             {
-                m_cfg.endFlyerCreateCfg.Create(Source, Target, m_root.position,enElement.none, OnLoadEndFx);
+                m_cfg.endFlyerCreateCfg.Create(Source, Target, m_root.position, OnLoadEndFx);
             }
             
             //结束事件组

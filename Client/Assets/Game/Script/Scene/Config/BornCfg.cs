@@ -96,10 +96,9 @@ public class BornCfg
         cfg.fx.PreLoad();
     }
 
-    public static void PreLoad(string n1, string n2, string n3)
+    public static void PreLoad(string n1, string n2)
     {
         BornCfg.PreLoad(n1);
         BornCfg.PreLoad(n2);
-        BornCfg.PreLoad(n3);
     }
 }

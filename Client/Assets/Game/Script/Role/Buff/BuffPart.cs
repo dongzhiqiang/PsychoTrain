@@ -103,15 +103,15 @@ public class BuffPart : RolePart
             AddBuff(bornBuffs[i]);
         }
 
-        //气力状态
-        if (m_parent.RuntimeShieldBuff > 0)
-        {
-            BuffCfg cfg = BuffCfg.Get(m_parent.RuntimeShieldBuff);
-            if (cfg == null || cfg.endBuffId.Length == 0)
-                Debuger.LogError("找不到气力状态或者气绝状态(在气力状态的结束状态里):{0}", m_parent.Cfg.id);
-            else
-                AddBuff(m_parent.RuntimeShieldBuff);
-        }
+        ////气力状态
+        //if (m_parent.RuntimeShieldBuff > 0)
+        //{
+        //    BuffCfg cfg = BuffCfg.Get(m_parent.RuntimeShieldBuff);
+        //    if (cfg == null || cfg.endBuffId.Length == 0)
+        //        Debuger.LogError("找不到气力状态或者气绝状态(在气力状态的结束状态里):{0}", m_parent.Cfg.id);
+        //    else
+        //        AddBuff(m_parent.RuntimeShieldBuff);
+        //}
 
 
     }

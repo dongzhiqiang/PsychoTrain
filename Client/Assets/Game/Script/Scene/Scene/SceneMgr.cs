@@ -75,7 +75,7 @@ public class SceneMgr : Singleton<SceneMgr>
         if (SceneData != null)
         {
             foreach (SceneCfg.BornInfo born in SceneData.mBornList)
-                BornCfg.PreLoad(born.mBornTypeId, born.mDeadTypeId, born.mGroundDeadTypeId);
+                BornCfg.PreLoad(born.mBornTypeId, born.mDeadTypeId);
         }
 
         return;
@@ -539,7 +539,7 @@ public class SceneMgr : Singleton<SceneMgr>
 
         refreshSaveData.Clear();
         SceneEventMgr.instance.OnExit();
-        StoryMgr.instance.OnExit();
+        //StoryMgr.instance.OnExit();
 
         PrevSceneIdx = 0;
         CurSceneIdx = 0;
@@ -575,7 +575,7 @@ public class SceneMgr : Singleton<SceneMgr>
         }
 
         SceneEventMgr.instance.OnSaveExit();
-        StoryMgr.instance.OnExit();
+        //StoryMgr.instance.OnExit();
 
         m_arrowShow = false;
         m_dirShow = false;

@@ -31,7 +31,7 @@ public class BuffLimitMove : Buff
     public override void OnBuffInit()
     {
 
-        this.Parent.RSM.AddLimitMove();
+        this.Parent.StatePart.AddLimitMove();
     }
 
     //处理，可能会调用多次
@@ -45,7 +45,7 @@ public class BuffLimitMove : Buff
     {
         if (isClear)
             return;
-        this.Parent.RSM.SubLimitMove();
+        this.Parent.StatePart.SubLimitMove();
     }
 
 

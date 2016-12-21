@@ -95,8 +95,8 @@ public class CameraInfo
     public bool isOverAfterDuration = false;                //渐变后就结束，永久过程不用加
 
     //镜头轨道参数
-    //public CameraPath cameraPath;
-    //public float pathLag = 0;
+    public CameraPath cameraPath;
+    public float pathLag = 0;
 
     //跟随对象盯着目标相关参数
     public string targetId = "";
