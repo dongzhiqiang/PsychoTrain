@@ -32,11 +32,11 @@ namespace Candlelight
 		{
 			// find the folder with this script
 			string scriptFolder = AssetDatabaseX.GetFolderContainingScript(
-                typeof(EditorGizmos), "Assets/ThridPart/Candlelight/Library/Gizmos"
+                typeof(EditorGizmos), "Assets/ThirdPart/Candlelight/Library/Gizmos"
 			);
 			if (string.IsNullOrEmpty(scriptFolder))
 			{
-                scriptFolder = AssetDatabaseX.GetFolderContainingScript(typeof(EditorGizmos), "Assets/ThridPart/Candlelight");
+                scriptFolder = AssetDatabaseX.GetFolderContainingScript(typeof(EditorGizmos), "Assets/ThirdPart/Candlelight");
 			}
 			if (string.IsNullOrEmpty(scriptFolder))
 			{
@@ -74,14 +74,14 @@ namespace Candlelight
 		/// <param name="fileName">Destination file name with extension.</param>
 		private static void RegisterGizmo(byte[] pngData, string destinationFileNameWithExtension)
 		{
-			string destIconPath = Path.Combine("Assets/ThridPart/Candlelight/Gizmos", destinationFileNameWithExtension);
+			string destIconPath = Path.Combine("Assets/ThirdPart/Candlelight/Gizmos", destinationFileNameWithExtension);
 			// skip ahead if icon has already been copied and hasn't changed
 			if (File.Exists(destIconPath) && pngData.SequenceEqual(File.ReadAllBytes(destIconPath)))
 			{
 				return;
 			}
 			// otherwise write the icon into the Gizmos folder
-            AssetDatabaseX.CreateFolderIfNecessary("Assets/ThridPart/Candlelight/Gizmos");
+            AssetDatabaseX.CreateFolderIfNecessary("Assets/ThirdPart/Candlelight/Gizmos");
 			File.WriteAllBytes(destIconPath, pngData);
 			// configure the import settings and import the asset
 			AssetDatabase.Refresh();
