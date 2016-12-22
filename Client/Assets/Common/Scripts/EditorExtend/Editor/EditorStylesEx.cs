@@ -13,7 +13,7 @@ public class EditorStyleEx
         {
             if (skin == null)
             {
-                var skinPath = "Assets/ThridPart/AstarPathfindingProject/Editor/EditorAssets/AstarEditorSkinDark.guiskin";
+                var skinPath = "Assets/ThirdPart/AstarPathfindingProject/Editor/EditorAssets/AstarEditorSkinDark.guiskin";
                 skin = AssetDatabase.LoadAssetAtPath(skinPath, typeof(GUISkin)) as GUISkin;
             }
             return skin;

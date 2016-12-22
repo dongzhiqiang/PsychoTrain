@@ -78,7 +78,7 @@ public class RoleSubBeGrab : RoleBehitSubState
     }
     public override void Leave()
     {
-        ClearTranCxt();
+        ClearTranCxt(enSkillStop.normal);
     }
 
     public override void Enter()
@@ -89,7 +89,7 @@ public class RoleSubBeGrab : RoleBehitSubState
     public override void Do()
     {
         //清空之前
-        ClearTranCxt();
+        ClearTranCxt(enSkillStop.force);
 
         //计算一些值
         m_beginTime = TimeMgr.instance.logicTime;
@@ -199,20 +199,20 @@ public class RoleSubBeGrab : RoleBehitSubState
     #endregion
 
     #region Private Methods
-    void ClearTranCxt()
+    void ClearTranCxt(enSkillStop stopType)
     {
         if (m_tranCxt != null)
         {
             //事件组
             if (m_eventGroup.IsPlaying)
             {
-                m_eventGroup.Stop();
+                m_eventGroup.Stop(stopType);
             }
 
 
             if (!m_tranCxt.IsDestroy(m_tranCxtId))
             {
-                Parent.TranPart.RomoveCxt(m_tranCxt);
+                Parent.TranPart.RemoveCxt(m_tranCxt);
             }
 
             m_tranCxtId = -1;

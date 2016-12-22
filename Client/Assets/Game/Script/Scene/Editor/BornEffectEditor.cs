@@ -46,8 +46,6 @@ public class BornEffectEditor : EditorWindow
         {
             DebugUI.instance.unAttack = true;
             DebugUI.instance.bRunLogic = false;
-            if (UIMgr.instance.Get<UILevel>().IsOpen)
-                UIMgr.instance.Get<UILevel>().Close<UILevelAreaGizmos>();
         }
     }
 

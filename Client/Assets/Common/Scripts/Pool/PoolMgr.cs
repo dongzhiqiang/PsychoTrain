@@ -15,12 +15,14 @@ public interface IPool
 
 public class PoolMgr : SingletonMonoBehaviour<PoolMgr>
 {
-    const float COLLECT_TIME = 2 * 60;
+    const float COLLECT_TIME = 3 * 60;
     float m_lastGCCollect;
 
     public string m_debugIdTypePool = "";
 
     SortedDictionary<string, IPool> m_pools = new SortedDictionary<string, IPool>();
+
+    public SortedDictionary<string, IPool> Pools { get { return m_pools; } }
 
     public void AddPool(IPool pool)
     {
@@ -34,6 +36,10 @@ public class PoolMgr : SingletonMonoBehaviour<PoolMgr>
 
     public void Clear()
     {
+        GameObjectPool.GetPool(GameObjectPool.enPool.Fx).Clear();
+        GameObjectPool.GetPool(GameObjectPool.enPool.Role).Clear();
+        GameObjectPool.GetPool(GameObjectPool.enPool.Other).Clear();
+
         GCCollect();
     }
 

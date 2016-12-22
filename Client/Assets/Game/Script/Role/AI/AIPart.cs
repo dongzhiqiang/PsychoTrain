@@ -1,6 +1,12 @@
-﻿using System.Collections;
-using System.Collections.Generic;
+﻿#region Header
+/**
+ * 名称：ai部件
+ * 描述：
+ **/
+#endregion
 using UnityEngine;
+using System.Collections;
+using System.Collections.Generic;
 using Simple.BehaviorTree;
 
 //ai类型
@@ -27,6 +33,7 @@ public class AIPart : RolePart
     float m_lastOperation;
     #endregion
 
+
     #region Properties
     public override enPart Type { get { return enPart.ai; } }
     public BehaviorTree BehaviorTree { get { return m_behaviorTree; } }
@@ -36,42 +43,15 @@ public class AIPart : RolePart
     public float LastOperation { get { return m_lastOperation; } }
     #endregion
 
-    #region Frame    
+
+    #region Frame
+
     //属于角色的部件在角色第一次创建的时候调用，属于模型的部件在模型第一次创建的时候调用
     public override void OnCreate(RoleModel model)
     {
         m_behaviorTree = model.AddComponentIfNoExist<BehaviorTree>();
         m_behaviorTree.onCanUpdateTree += CanUpdateAI;
     }
-
-    //初始化，不保证模型已经创建，每次角色从对象池取出来都会调用(可以理解为Awake)
-    public override bool OnInit()
-    {
-        m_curBehavior = string.Empty;
-        m_lastOperation = -1;
-        return true;
-    }
-
-    //后置初始化，模型已经创建，每个模块都初始化过一次，每次角色从对象池取出来都会调用(可以理解为Start())
-    public override void OnPostInit()
-    {
-        m_behaviorTree.SetOwner(this.Parent);
-    }
-
-    //每帧更新
-    public override void OnUpdate()
-    {
-    }
-
-
-    public override void OnDestroy()
-    {
-        m_behaviorTree.Stop();
-        m_behaviorTree.ClearOwner();
-    }
-    #endregion
-
-    #region Private Methods
     bool CanUpdateAI()
     {
         if (TimeMgr.instance.IsPause)
@@ -92,8 +72,41 @@ public class AIPart : RolePart
 
         return true;
     }
+
+    //初始化，不保证模型已经创建，每次角色从对象池取出来都会调用(可以理解为Awake)
+    public override bool OnInit()
+    {
+        m_curBehavior = string.Empty;
+        m_lastOperation = -1;
+        return true;
+    }
+
+
+    //后置初始化，模型已经创建，每个模块都初始化过一次，每次角色从对象池取出来都会调用(可以理解为Start())
+    public override void OnPostInit()
+    {
+        m_behaviorTree.SetOwner(this.Parent);
+    }
+
+    public override void OnDestroy()
+    {
+        m_behaviorTree.Stop();
+        m_behaviorTree.ClearOwner();
+
+    }
+
+    public override void OnUpdate()
+    {
+
+
+    }
     #endregion
 
+
+    #region Private Methods
+
+
+    #endregion
     //播放，如果已经在播放中了会报错
     public void Play(string behavior)
     {

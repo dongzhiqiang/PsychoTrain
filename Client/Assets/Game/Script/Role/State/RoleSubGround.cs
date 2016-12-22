@@ -41,7 +41,7 @@ public class RoleSubGround : RoleBehitSubState
 
     public override void Leave()
     {
-        Parent.TranPart.RomoveCxt(m_tranCxt);
+        Parent.TranPart.RemoveCxt(m_tranCxt);
         m_tranCxt = null;
     }
 

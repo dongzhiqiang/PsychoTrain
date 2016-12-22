@@ -1,16 +1,19 @@
-﻿using System;
+﻿#region Header
+/**
+ * 名称：位置部件
+ * 描述：控制角色位置、方向和大小,获取骨骼等
+ **/
+#endregion
+using UnityEngine;
 using System.Collections;
 using System.Collections.Generic;
-using UnityEngine;
+
 
 public class TranPart : RolePart
 {
-    //模仿重力的贴近地面时的速度
-    public static Vector3 Default_Gravity_Speed = new Vector3(0, -20.0f, 0);
-    //重力加速度
-    public static Vector3 Default_Gravity = new Vector3(0, -9.8F, 0);
-    //模仿重力 全局的
-    public static Vector3 s_gravity_speed = Default_Gravity_Speed;
+    public static Vector3 Default_Gravity_Speed = new Vector3(0, -20.0F, 0);//模仿重力的贴近地面时的速度
+    public static Vector3 Default_Gravity = new Vector3(0, -9.8F, 0);//重力加速度
+    public static Vector3 s_gravity_speed = Default_Gravity_Speed;//模仿重力，全局的
 
     #region Fields
     Transform m_root;
@@ -18,7 +21,9 @@ public class TranPart : RolePart
     List<TranPartCxt> m_cxts = new List<TranPartCxt>();//这里sample要保证一定顺序，以后如果删除操作有效率问题，考虑用System.Collections.Specialized.OrderedDictionary\
     List<TranPartCxt> m_removes = new List<TranPartCxt>();
     float m_lastSampleTime = 0;
+
     #endregion
+
 
     #region Properties
     public override enPart Type { get { return enPart.tran; } }
@@ -40,7 +45,9 @@ public class TranPart : RolePart
 
     #endregion
 
-    #region Frame
+
+    #region Frame   
+
 
     //初始化，不保证模型已经创建，每次角色从对象池取出来都会调用(可以理解为Awake)
     public override bool OnInit()
@@ -89,8 +96,8 @@ public class TranPart : RolePart
         }
         Sample();
     }
-
     #endregion
+
 
     #region Private Methods
     void Sample()
@@ -367,16 +374,20 @@ public class TranPart : RolePart
             return;
         m_root.forward = dir;
     }
-
     public void ResetHight()
     {
         if (!RoleModel.IsShow)
+        {
+            //Debuger.LogError("隐藏中，不能设置模型的位置：{0}", m_parent.Cfg.id);
             return;
+        }
 
-        //if (m_root.GetComponent<SimpleRole>().m_needResetPos)
-        m_tranModel.localPosition = Vector3.zero;
+        if (m_root.GetComponent<SimpleRole>().m_needResetPos)
+            m_tranModel.localPosition = Vector3.zero;
+
     }
 
+    //用于设置怪物在空中的位置和方向，一般情况下外部不需要调用
     public void SetModelPosAndRot(Vector3 pos, Quaternion rot)
     {
         if (!RoleModel.IsShow)

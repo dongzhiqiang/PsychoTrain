@@ -44,6 +44,7 @@ public abstract class RoleState
     public MovePart MovePart { get { return m_statePart.MovePart; } }
     public CombatPart CombatPart { get { return m_statePart.CombatPart; } }
 
+    public AIPart AIPart { get { return m_statePart.AIPart; } }
 
     #endregion
 

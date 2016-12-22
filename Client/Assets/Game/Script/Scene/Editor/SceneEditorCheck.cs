@@ -60,7 +60,6 @@ public class SceneEditorCheck : SceneEditorBase
                 if (!SceneMgr.instance.SceneData.mStoryIdList.Contains(cfg.storyId))
                 {
                     SceneMgr.instance.SceneData.mStoryIdList.Add(cfg.storyId);
-                    StorySaveCfg.GetCfg(cfg.storyId);
                 }
             }
 

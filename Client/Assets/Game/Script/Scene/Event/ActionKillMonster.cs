@@ -18,7 +18,7 @@ public class ActionKillMonster : SceneAction
         {
             Role hero = RoleMgr.instance.Hero;
             if (hero != null && hero.BuffPart != null)
-                hero.DeadPart.Handle(true, false, mActionCfg.bHeroKill);
+                hero.DeadPart.Handle(true, mActionCfg.bHeroKill);
         }
 
         //获取到标记的角色 添加buff 不包括主角
@@ -32,7 +32,7 @@ public class ActionKillMonster : SceneAction
                 {
                     if (role.GetFlag(flagArr[i]) > 0)
                     {
-                        role.DeadPart.Handle(true, false, mActionCfg.bHeroKill);
+                        role.DeadPart.Handle(true, mActionCfg.bHeroKill);
                         LevelMgr.instance.CurLevel.RemoveRole(role);
                         break;
                     }
