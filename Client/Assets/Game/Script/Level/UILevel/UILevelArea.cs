@@ -16,12 +16,8 @@ public enum enLevelArea{
     time,//上边的时间提示
     bossHead,//右上角boss血条
     setting,//关闭和挂机按钮
-    gizmos,//方向箭头和非屏幕内的小怪箭头提示
-    soulFly,//飞魂值
-    condition,//通关条件
     blood,//血条
     wave, //怪物波次
-    reward,//奖励计数
     arena,//多人竞技
     monster,//怪物数量
     familyHead,//家人血条

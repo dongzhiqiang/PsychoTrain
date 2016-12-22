@@ -86,7 +86,7 @@ public class LogUtil{
         
         //一些用到unity的函数最好在这里初始化
 #if UNITY_EDITOR
-        PathName = Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/Log";//E:/MySvn/GOW20150819/Client/Assets
+        PathName = Application.dataPath.Substring(0, Application.dataPath.Length - 7) + "/Log";
 
 #elif UNITY_ANDROID
         //尽量先放sd卡目录下，方便获取

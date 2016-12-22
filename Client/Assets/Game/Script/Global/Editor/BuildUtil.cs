@@ -17,8 +17,8 @@ public class BuildUtil
     [MenuItem("Tool/打包/single")]
     public static void SetSingle()
     {
-        PlayerSettings.productName = "GOWSingle";
-        PlayerSettings.bundleIdentifier = "com.Eyesblack.GOWSingle";
+        PlayerSettings.productName = "PsychoTrain-S";
+        PlayerSettings.bundleIdentifier = "com.Dzq.PsychoTrain-S";
         GameObject go = GameObject.Find("Main");
         if (go == null) return;
         go.GetComponent<Main>().isSingle = true;
@@ -27,8 +27,8 @@ public class BuildUtil
     [MenuItem("Tool/打包/normal")]
     public static void SetNormal()
     {
-        PlayerSettings.productName = "GOW";
-        PlayerSettings.bundleIdentifier = "com.Eyesblack.GOW";
+        PlayerSettings.productName = "PsychoTrain-N";
+        PlayerSettings.bundleIdentifier = "com.Dzq.PsychoTrain-N";
         GameObject go = GameObject.Find("Main");
         if (go == null) return;
         go.GetComponent<Main>().isSingle = false;
@@ -37,18 +37,7 @@ public class BuildUtil
     [MenuItem("Tool/打包/设置需要加载的场景")]
     public static void SetBuildSettingsScene()
     {
-
-        //EditorBuildSettings.scenes = new EditorBuildSettingsScene[0];
         List<EditorBuildSettingsScene> ebss = new List<EditorBuildSettingsScene>();
-
-        //ebss.Add(new EditorBuildSettingsScene("Assets/Game/main.unity", true));
-        //int i = Application.dataPath.Length-6;
-        //string[] files = System.IO.Directory.GetFiles(Application.dataPath + "/Scene/levels", "*.unity", System.IO.SearchOption.AllDirectories);
-        //foreach(string f in files){
-        //    if(f.IndexOf("_G.unity")!=-1)
-        //        continue;
-        //    ebss.Add(new EditorBuildSettingsScene(f.Substring(i), true));
-        //}
 
         foreach (var s in GetScenes())
         {
@@ -61,7 +50,7 @@ public class BuildUtil
     public static List<string> GetScenes()
     {
         List<string> l = new List<string>();
-        l.Add("Assets/Game/main.unity");
+        l.Add("Assets/Game/Main.unity");
 
         if (RoomCfg.mAllRoomList.Count == 0)
             RoomCfg.Init();
@@ -71,7 +60,7 @@ public class BuildUtil
             {
                 if (string.IsNullOrEmpty(sceneId))
                     continue;
-                var s = "Assets/Scene/levels/" + sceneId + ".unity";
+                var s = "Assets/Scene/Levels/" + sceneId + ".unity";
                 if (l.Contains(s))
                     continue;
                 l.Add(s);
@@ -117,9 +106,9 @@ public class BuildUtil
         {
             //设置需要加载的场景
             //List<string> scenes = new List<string>();
-            //scenes.Add("Assets/Game/main.unity");
+            //scenes.Add("Assets/Game/Main.unity");
             //int i = Application.dataPath.Length - 6;
-            //string[] files = System.IO.Directory.GetFiles(Application.dataPath + "/Scene/levels", "*.unity", System.IO.SearchOption.AllDirectories);
+            //string[] files = System.IO.Directory.GetFiles(Application.dataPath + "/Scene/Levels", "*.unity", System.IO.SearchOption.AllDirectories);
             //foreach (string f in files)
             //{
             //    scenes.Add(f.Substring(i));
@@ -147,7 +136,7 @@ public class BuildUtil
             Directory.CreateDirectory(locationPathName);
 
 #if UNITY_ANDROID
-            string fileName = locationPathName + "/GOW.apk";
+            string fileName = locationPathName + "/PsychoTrain.apk";
             BuildTarget buildTarget = BuildTarget.Android;
 #endif
 
@@ -157,7 +146,7 @@ public class BuildUtil
 #endif
 
 #if UNITY_STANDALONE_WIN
-            string fileName = locationPathName + "/GOW.exe";
+            string fileName = locationPathName + "/PsychoTrain.exe";
             BuildTarget buildTarget = BuildTarget.StandaloneWindows;
 #endif
 
