@@ -10,7 +10,7 @@ public class UIMgr : MonoBehaviour {
     
     public static System.Type[] PANEL_SHOW_ALWAYS = new System.Type[] { 
         typeof(UIMessage) ,
-        typeof(UIFxPanel),
+        //typeof(UIFxPanel),
         typeof(UITip),
 #if !ART_DEBUG
         

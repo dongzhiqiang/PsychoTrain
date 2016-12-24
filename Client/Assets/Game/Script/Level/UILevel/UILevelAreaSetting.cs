@@ -38,7 +38,6 @@ public class UILevelAreaSetting : UILevelArea
         //m_toggleFov.AddClick(OnToggleFov);
         m_btnBack.AddClick(OnClickPause);
         m_btnGuaji.AddClick(OnClickGuaji);
-        m_pause.Set("ui_guanqia_anniu_00");
     }
 
     //显示

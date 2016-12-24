@@ -6,8 +6,8 @@ using System.Collections.Generic;
 public class UIMessage : UIPanel
 {
     public SimplePool m_pool;
-    public float m_split=30;
-    
+    public float m_split = 30;
+
     public static void Show(string msg)
     {
         UIMgr.instance.Get<UIMessage>().ShowMsg(msg);
@@ -18,7 +18,7 @@ public class UIMessage : UIPanel
     {
 #if !ART_DEBUG
         UIMgr.instance.Get<UIMessage>().ShowMsg(string.Format(LanguageCfg.Get(key), param));
-     
+
 #endif
     }
 

@@ -22,16 +22,16 @@ public enum enGameLayer
 
 public class LayerMgr : Singleton<LayerMgr>
 {
-    static string[] LayerName = new string[] 
+    static string[] LayerName = new string[]
     {
-        "挡板碰撞","小怪碰撞","大怪碰撞","主角碰撞",
+        "挡板碰撞","小怪碰撞","大怪碰撞","主角碰撞","主角翻滚碰撞",
         "死亡碰撞","飞出物触发","关卡触发","镜头触发",
         "角色渲染","地板渲染","场景渲染"
     };
 
     static string[] LayerTag = new string[]
     {
-        "ObstructCollider","MonsterCollider","BossCollider",
+        "ObstructCollider","MonsterCollider","BossCollider","HeroAvoidCollider",
         "HeroCollider","DeadCollider","FlyerTrigger",
         "LevelTrigger","CameraTrigger","RoleRender",
         "TerrainRender","SceneRender"

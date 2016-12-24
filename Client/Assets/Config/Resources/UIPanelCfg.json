@@ -6,21 +6,9 @@
         "UIMessage",
         "UIMainCity",
         "UIFxPanel",
-        "UIItemInfo",
         "UILevelBossBorn",
-        "UICreateRole",
-        "UIWaitResponse",
-        "UITalk",
         "UILevelPause",
-        "UICombatLog",
-        "UICombatBegin",
-        "UICombatEnd",
-        "UIDamageData",
-        "UITxtFloatPanel",
         "UITip",
-        "UIMessageBox2",
-        "UIInputBox",
-        "UISystemSetting",
-        "UIRuleDesc"
+        "UIInputBox"
     ]
 }

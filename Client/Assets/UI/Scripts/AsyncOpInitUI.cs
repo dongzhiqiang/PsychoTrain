@@ -21,8 +21,8 @@ public class AsyncOpInitUI
     IEnumerator CoInit()
     {
         //先加载loading界面
-        _mgr.AddPrefab(Resources.Load<GameObject>("UILoading"));
-        yield return 2;
+        //_mgr.AddPrefab(Resources.Load<GameObject>("UILoading"));
+        //yield return 2;
 
         //加载所有图片
         var resMgr = UIResMgr.instance;
