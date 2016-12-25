@@ -38,7 +38,7 @@ public class UILevelAreaBlood : UILevelArea
 
     #region Properties
     public override enLevelArea Type { get { return enLevelArea.blood; } }
-    public override bool IsOpenOnStart { get{return true;} }
+    public override bool IsOpenOnStart { get{return false;} }
     #endregion
 
     #region Frame

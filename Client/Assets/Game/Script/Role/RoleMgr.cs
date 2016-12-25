@@ -67,7 +67,8 @@ public class RoleMgr : SingletonMonoBehaviour<RoleMgr>
         cxt.euler = Vector3.zero;
         cxt.camp = camp;
         cxt.aiBehavior = "";
-
+        m_hero = CreateRole(cxt, true);
+        
         EventMgr.FireAll(MSG.MSG_ROLE, MSG_ROLE.HERO_CREATED);
     }
 

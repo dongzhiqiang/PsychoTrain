@@ -14,6 +14,19 @@ using UnityEditor.Callbacks;
 
 public class BuildUtil
 {
+    [MenuItem("Tool/Run")]
+    public static void RunGame()
+    {
+        if (EditorApplication.isPlaying)
+        {
+            Debug.Log("正在运行中。。。");
+            return;
+        }
+
+        EditorApplication.OpenScene("Assets/Game/Main.unity");
+        EditorApplication.isPlaying = true;
+    }
+
     [MenuItem("Tool/打包/single")]
     public static void SetSingle()
     {

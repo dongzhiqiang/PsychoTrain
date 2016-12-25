@@ -88,14 +88,14 @@ public class LevelMgr : Singleton<LevelMgr>
         TimeMgr.instance.AddPause();
         // 界面销毁
         UIMgr.instance.CloseAll();
-        UILoading uiLoding = UIMgr.instance.Open<UILoading>();
+        //UILoading uiLoding = UIMgr.instance.Open<UILoading>();
         {
             //yield return DebugUI.Step(2);
             if (CameraMgr.instance != null)
                 CameraMgr.instance.CurCamera.enabled = false;
-            uiLoding.tipsIdList = cfg.GetLoadingTipsId();
-            uiLoding.SetBgImg(cfg.loadingBg);
-            uiLoding.SetProgress(0, 10);
+            //uiLoding.tipsIdList = cfg.GetLoadingTipsId();
+            //uiLoding.SetBgImg(cfg.loadingBg);
+            //uiLoding.SetProgress(0, 10);
             yield return 0;
 
             //yield return DebugUI.Step(3);
@@ -127,7 +127,7 @@ public class LevelMgr : Singleton<LevelMgr>
             yield return 3;
 
             //yield return DebugUI.Step(5);
-            uiLoding.SetProgress(5, 10);
+            //uiLoding.SetProgress(5, 10);
             TimeCheck checkStepDeleteOld = new TimeCheck();
             //先手动删掉老场景，不然异步加载的过程中会存在两个场景的资源，内存占用比较大
             var scene = SceneManager.GetActiveScene();
@@ -143,7 +143,7 @@ public class LevelMgr : Singleton<LevelMgr>
             log += string.Format("卸载老场景耗时:{0}秒\n", checkStepDeleteOld.delay);
             yield return 2;
 
-            uiLoding.SetProgress(10, 10);
+            //uiLoding.SetProgress(10, 10);
             //yield return DebugUI.Step(6);
             // 资源回收
             TimeCheck checkStep1 = new TimeCheck();
@@ -158,13 +158,13 @@ public class LevelMgr : Singleton<LevelMgr>
             //yield return DebugUI.Step(7);
             // 切换场景
             TimeCheck checkStep3 = new TimeCheck();
-            uiLoding.SetProgress(10, 60);
+            //uiLoding.SetProgress(10, 60);
             AsyncOperation op = SceneManager.LoadSceneAsync(cfg.sceneId[0]);
             log += string.Format("加载场景卡住耗时:{0}秒\n", checkStep3.delay);
             TimeCheck checkStep33 = new TimeCheck();
             while (!op.isDone)
             {
-                uiLoding.m_progress = 10f + 60f * op.progress;
+                //uiLoding.m_progress = 10f + 60f * op.progress;
                 yield return 1;
             }
             log += string.Format("加载等待场景耗时:{0}秒\n", checkStep33.delay);
@@ -173,7 +173,7 @@ public class LevelMgr : Singleton<LevelMgr>
 
             //yield return DebugUI.Step(8);
             TimeCheck checkStep4 = new TimeCheck();
-            uiLoding.SetProgress(60, 100);
+            //uiLoding.SetProgress(60, 100);
             CurLevel = SceneFactory.GetScene(cfg);
             CurLevel.mParam = param;
             CurLevel.roomCfg = cfg;
@@ -186,7 +186,7 @@ public class LevelMgr : Singleton<LevelMgr>
             Main.instance.StartCoroutine(SceneMgr.instance.CoLoad(cfg));
             while (SceneMgr.LoadingProgress < 100)
             {
-                uiLoding.m_progress = 60f + 40f * (SceneMgr.LoadingProgress / 100);
+                //uiLoding.m_progress = 60f + 40f * (SceneMgr.LoadingProgress / 100);
                 yield return 0;
             }
             log += string.Format("预加载耗时:{0}秒\n", checkStep4.delay);
@@ -195,9 +195,9 @@ public class LevelMgr : Singleton<LevelMgr>
 
         //yield return DebugUI.Step(9);
         TimeCheck checkStep5 = new TimeCheck();
-        uiLoding.SetProgress(100, 100);
-        while (uiLoding.CurProgress < 100)
-            yield return 0;
+        //uiLoding.SetProgress(100, 100);
+        //while (uiLoding.CurProgress < 100)
+        //    yield return 0;
         TimeMgr.instance.ResetPause();
         CurLevel.OnLoadFinish();
         CurLevel.State = LevelState.Runing;
@@ -210,7 +210,7 @@ public class LevelMgr : Singleton<LevelMgr>
         log += string.Format("初始化时的逻辑耗时:{0}秒\n", checkStep5.delay);
 
 
-        uiLoding.Close();
+        //uiLoding.Close();
         yield return 1;//等两帧，场景相机看到场景后也会有可马上清理的内存的增长
         TimeCheck checkStep6 = new TimeCheck();
         PoolMgr.instance.GCCollect();//垃圾回收下

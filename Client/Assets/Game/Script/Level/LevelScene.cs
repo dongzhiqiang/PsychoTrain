@@ -30,15 +30,15 @@ public class LevelScene : LevelBase
         //打开摇杆和魂值、金币、物品栏
         UILevel uiLevel = UIMgr.instance.Open<UILevel>();
 
-        if (Room.instance.roomCfg.time > 0)     //大于0 倒计时
-        {
-            var area = uiLevel.Open<UILevelAreaTime>();
-            area.SetTime(Room.instance.roomCfg.time);
-        }
-        else if (Room.instance.roomCfg.time == 0)   //等于0 正计时
-        {
-            uiLevel.Open<UILevelAreaTime>();
-        }
+        //if (Room.instance.roomCfg.time > 0)     //大于0 倒计时
+        //{
+        //    var area = uiLevel.Open<UILevelAreaTime>();
+        //    area.SetTime(Room.instance.roomCfg.time);
+        //}
+        //else if (Room.instance.roomCfg.time == 0)   //等于0 正计时
+        //{
+        //    uiLevel.Open<UILevelAreaTime>();
+        //}
 
         //SceneCfg.SceneData sceneData = SceneMgr.instance.SceneData;
         //curWaveGroupFlag = sceneData.mShowWaveGroupId;

@@ -16,11 +16,6 @@ public class UIMainCity : UIPanel
 {
     #region SerializeFields
     public UIMainCityItem[] m_items;
-    public UIArtFont m_power;
-    public Image m_exp;
-    public StateHandle m_toggle;
-    public GameObject m_toggleTip;
-    public StateGroup roleInfoGroup;
     #endregion
 
     #region Fields
@@ -64,22 +59,22 @@ public class UIMainCity : UIPanel
     public override void OnInitPanel()
     {
         //建立索引，并设置点击回调     
-        foreach (UIMainCityItem item in m_items)
-        {
-            if (m_itemsBySys.ContainsKey(item.sys))
-            {
-                Debuger.LogError("主城界面有重复的系统图标，是不是复制黏贴新图标后没有修改系统枚举？{0}", item.sys);
-                continue;
-            }
+        //foreach (UIMainCityItem item in m_items)
+        //{
+        //    if (m_itemsBySys.ContainsKey(item.sys))
+        //    {
+        //        Debuger.LogError("主城界面有重复的系统图标，是不是复制黏贴新图标后没有修改系统枚举？{0}", item.sys);
+        //        continue;
+        //    }
 
-            m_itemsBySys[item.sys] = item;
+        //    m_itemsBySys[item.sys] = item;
 
-            item.btn.AddClickEx(OnClickItem);
-            if (item.tip)
-            {
-                item.tip.SetActive(false);
-            }
-        }
+        //    item.btn.AddClickEx(OnClickItem);
+        //    if (item.tip)
+        //    {
+        //        item.tip.SetActive(false);
+        //    }
+        //}
 
     }
 
@@ -98,9 +93,6 @@ public class UIMainCity : UIPanel
     //关闭，保证在初始化之后
     public override void OnClosePanel()
     {
-        //要缩回右边栏
-        m_toggle.SetState(0);
-
         //界面关掉的时候要取消监听
         if (m_observer != EventMgr.Invalid_Id) { EventMgr.Remove(m_observer); m_observer = EventMgr.Invalid_Id; }
         if (m_observer2 != EventMgr.Invalid_Id) { EventMgr.Remove(m_observer2); m_observer2 = EventMgr.Invalid_Id; }

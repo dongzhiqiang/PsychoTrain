@@ -39,7 +39,7 @@ public class UILevelAreaHead : UILevelArea
 
     #region Properties
     public override enLevelArea Type { get{return enLevelArea.head;}}
-    public override bool IsOpenOnStart { get{return true;} }
+    public override bool IsOpenOnStart { get{return false;} }
     #endregion
 
     #region Frame
